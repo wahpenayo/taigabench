@@ -1,15 +1,47 @@
-\documentclass[11pt,american,usenames,dvipsnames,svgnames,x11names,table]{article}
+% !TEX TS-program = arara
+% arara: xelatex: { synctex: on, options: '-halt-on-error' } 
+% arara: biber
+% arara: makeindex
+% arara: xelatex: { synctex: on, options: '-halt-on-error'  } 
+% arara: xelatex: { synctex: on, options: '-halt-on-error'   } 
+% arara: clean: { files: [ taigabench.aux, taigabench.bbl] }
+% arara: clean: { files: [ taigabench.bcf, taigabench.blg] }
+% arara: clean: { files: [ taigabench.glg, taigabench.glo] }
+% arara: clean: { files: [ taigabench.gls, taigabench.gls] }
+% arara: clean: { files: [ taigabench.idx, taigabench.ilg] }
+% arara: clean: { files: [ taigabench.ind, taigabench.loe] }
+% arara: clean: { files: [ taigabench.lof, taigabench.log ] }
+% arara: clean: { files: [ taigabench.log, taigabench.lol ] }
+% arara: clean: { files: [ taigabench.out ] }
+% arara: clean: { files: [ taigabench.run.xml] }
+% arara: clean: { files: [ taigabench.toc, taigabench.xdy] }
+% arara: clean: { files: [ taigabench.synctex.gz] }
+%-------------------------------------------------------------------------------
+\documentclass[10pt]{article}
+\input{head}
 \input{portrait-1col-header}
-%\input{landscape-2col-header}
-\input{header}
-%\input{symbols}
-\begin{document}
-\input{clj-listings} 
-
+\input{clj-listings}
+\addbibresource{clojure.bib}
+\addbibresource{tex.bib}
+%-------------------------------------------------------------------------------
 \title{Random forest benchmarks}
-\author{ \textsc{John Alan McDonald} }
+\author{\textsc{John Alan McDonald} (wahpenayo at gmail.com)}
 \date{\today}
+%-------------------------------------------------------------------------------
+\begin{document}
+
 \maketitle
+
+%\frontmatter
+
+%\begingroup
+%\let\onecolumn\twocolumn
+%\sffamily
+%\tableofcontents
+%\rmfamily
+%\endgroup
+
+%\mainmatter
 
 \def\dollar{\text{\$}}    
 
@@ -79,21 +111,18 @@ interfaces.
 scikit-learn was version $0.18.1$, run in Python $3.5.2$, Anaconda
 custom $64$-bit.
 
-
-
-
 \section{\label{sec:ontime}Will a flight will arrive on time?}
 
 \begin{figure}[H]
 \noindent \begin{centering}
-\includegraphics[width=16cm]{ontime/traintime.png}
+\includegraphics[width=14cm]{ontime/traintime.png}
 \par\end{centering}
 \protect\caption{\label{fig:ontime-traintime}Training time in seconds.}
 \end{figure}
 
 \begin{figure}[H]
 \noindent \begin{centering}
-\includegraphics[width=16cm]{ontime/auc.png}
+\includegraphics[width=14cm]{ontime/auc.png}
 \par\end{centering}
 \protect\caption{\label{fig:ontime-auc}Area under the ROC curve.}
 \end{figure}
@@ -113,7 +142,15 @@ The non-Taiga benchmarking code is inspired by Szilard Pafka's
 and the \href{https://github.com/szilard/benchm-ml}
 {original benchmarking code}).
 
-%\bibliographystyle{plainurl}
-%\bibliography{bib,cactus}
+%\glsaddallunused
+%-------------------------------------------------------------------------------
+\appendix
+%\part{Appendices}
+\input{typesetting}
+%-------------------------------------------------------------------------------
+%\backmatter
 
+%\part{Backmatter}
+\input{tail}
+%-------------------------------------------------------------------------------
 \end{document}
