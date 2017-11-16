@@ -1,7 +1,7 @@
 Contributed by Amazon.com as open source under the Apache 2.0 license, 2017-11-15.
 
 Initial commit: 
-https://github.com/wahpenayo/taigabench/commit/xxxxxxxxxx
+https://github.com/wahpenayo/taigabench/commit/009ef8ba22139041b8ed0414d86b145de1c30dd7
 Copyright 2017 Amazon.com, Inc. or its affiliates. 
 
 Subsequent modifications copyrighted by their contributors.
