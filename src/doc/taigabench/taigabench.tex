@@ -1,0 +1,119 @@
+\documentclass[11pt,american,usenames,dvipsnames,svgnames,x11names,table]{article}
+\input{portrait-1col-header}
+%\input{landscape-2col-header}
+\input{header}
+%\input{symbols}
+\begin{document}
+\input{clj-listings} 
+
+\title{Random forest benchmarks}
+\author{ \textsc{John Alan McDonald} }
+\date{\today}
+\maketitle
+
+\def\dollar{\text{\$}}    
+
+\section{Introduction}
+The document compares several implementations of random forests,
+running on a single CPU (ie not distributed).
+The main point is to compare 
+\href{https://github.com/wahpenayo/taiga/tree/master}{Taiga},
+a Clojure library, with open source libraries in
+R, Python, C++, and Java.
+
+The high level conclusion is that Taiga is either as fast or as
+accurate, and sometimes both, as any of the other libraries tested.
+
+\href{https://xgboost.readthedocs.io/en/latest/}{XGBoost}, a C++
+library, consistently suffers in accuracy.
+
+\href{http://www.h2o.ai/}{$\mathrm{H_{2}0.ai}$}, a Java library, is
+close to Taiga in both accuracy and performance on some examples,
+winning on speed and losing on accuracy in others.
+
+The original R+C 
+\href{https://cran.r-project.org/web/packages/randomForest/randomForest.pdf}{randomForest}
+library, based on Breiman and Cutler's Fortran implementation,
+suffers in both speed and accuracy on small data sets,
+and runs out of memory on moderate sized ones (eg $>10^5$ cases in the
+example in section~\ref{sec:ontime}).
+
+\href{http://scikit-learn.org/stable/}{scikit-learn}, a widely used
+Python machine learning library, has a random forest implementation.
+scikit-learn's random forest is comparable to Taiga in speed, 
+but signioficantly worse in accuracy, and, like the R randomForest, runs
+out of memory on moderate sized datasets (eg $>10^5$ cases in the
+example in section~\ref{sec:ontime}).
+
+\href{https://cran.r-project.org/web/packages/randomForestSRC/index.html}{randomForestSRC},
+so far only tested on a vector-valued regression example, has the same accuracy as Taiga, but takes
+$4-5$ times as long to run.
+
+The code for the benchmarks, as well as this document, can be found in the
+\href{https://github.com/wahpenayo/taigabench/tree/master}{TaigaBench}
+ library.
+
+The results in this version of the document were run on a
+Dell Precision $\mathrm{M}6800$ laptop with a Intel Core
+$\mathrm{i}1-4900\mathrm{MQ}$ CPU, an NVIDIA Quadro
+$\mathrm{K}5100\mathrm{M}$ GPU, and $32$ GB RAM,
+running Windows $7$.
+
+The Taiga Clojure code ran in Java HotSpot(TM) 64-Bit Server VM (build
+25.121-b13, mixed mode), with:
+\begin{verbatim}
+set GC=-XX:+AggressiveHeap -XX:+UseStringDeduplication 
+set THRUPUT=-d64 -server -XX:+AggressiveOpts 
+:: Leave a couple gb for Windows, Xmx about 2 times Xmn
+set XMX=-Xms24g -Xmx24g -Xmn10g 
+set CP=-cp ./src/scripts/clojure;lib/*
+set JAVA="%JAVA_HOME%\bin\java"
+set CMD=%JAVA% %THRUPUT% -ea %GC% %XMX% %CP% clojure.main %*
+\end{verbatim}
+
+R libraries ran in Rx$64$ version $3.3.2$. 
+
+XGboost and $\mathrm{H_{2}0.ai}$ were called from their corresponding R
+interfaces.
+
+scikit-learn was version $0.18.1$, run in Python $3.5.2$, Anaconda
+custom $64$-bit.
+
+
+
+
+\section{\label{sec:ontime}Will a flight will arrive on time?}
+
+\begin{figure}[H]
+\noindent \begin{centering}
+\includegraphics[width=16cm]{ontime/traintime.png}
+\par\end{centering}
+\protect\caption{\label{fig:ontime-traintime}Training time in seconds.}
+\end{figure}
+
+\begin{figure}[H]
+\noindent \begin{centering}
+\includegraphics[width=16cm]{ontime/auc.png}
+\par\end{centering}
+\protect\caption{\label{fig:ontime-auc}Area under the ROC curve.}
+\end{figure}
+
+
+This section uses 
+\href{http://stat-computing.org/dataexpo/2009/}
+{public data on airline on-time performance} 
+from the Data Expo poster session at the
+$2009$ Joint Statistical Meetings.
+The non-Taiga benchmarking code is inspired by Szilard Pafka's
+\href{http://datascience.la/benchmarking-random-forest-implementations/}
+{Benchmarking random forest implementations}.
+(See also the
+\href{https://www.r-bloggers.com/benchmarking-random-forest-implementations/}
+{R-Bloggers version}
+and the \href{https://github.com/szilard/benchm-ml}
+{original benchmarking code}).
+
+%\bibliographystyle{plainurl}
+%\bibliography{bib,cactus}
+
+\end{document}
