@@ -71,7 +71,8 @@ thru the GUI:
 * xgboost 0.6-4
 * parallel 3.4.2
 * Matrix 1.2-11
-* h2o 3.14.0.3
+* [h2o](http://docs.h2o.ai/h2o/latest-stable/h2o-docs/welcome.html#r-users)
+   3.15.0.4103
 * ggplot2 2.2.1
 
 **Note:** can use `sessionInfo()` to check the versions of

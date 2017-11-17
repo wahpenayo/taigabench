@@ -39,8 +39,8 @@ load.packages()
 if (! eval(call('require','h2o',quietly=TRUE))) {
   install.packages(
     'h2o', 
-    Sys.getenv('R_LIBS_USER'),
-    type='source', 
+    #Sys.getenv('R_LIBS_USER'),
+    #type='source', 
     repos=(c('http://h2o-release.s3.amazonaws.com/h2o/latest_stable_R'))) 
 }
 #-----------------------------------------------------------------
@@ -168,6 +168,66 @@ model.colors <- c(
   '#e41a1cFF',
   '#75707050')
 #-----------------------------------------------------------------
+h2o_randomForest <- function (suffix='0.01m') {
+  # H2O requires Java 8 as of 2017-11-17, version 3.15.0.4103
+  old.java.home <- Sys.getenv('JAVA_HOME')
+  Sys.setenv(JAVA_HOME=Sys.getenv('JAVA8'))
+  
+  set.seed(740189)
+  h2o.init(max_mem_size="32g", nthreads=-1)
+  
+  start <- proc.time()
+  dx_train <- h2o.importFile(path = train.file(suffix))
+  dx_test <- h2o.importFile(path = test.file())
+  Xnames <- 
+    names(dx_train)[which(names(dx_train)!="dep_delayed_15min")]
+  datatime <- proc.time() - start
+  
+  start <- proc.time()
+  md <- h2o.randomForest(
+    x = Xnames, 
+    y = "dep_delayed_15min", 
+    training_frame = dx_train, 
+    ntrees = 500,
+    min_rows = 10,
+    max_depth = 20)
+  traintime <- proc.time() - start
+  
+  #show(md)
+  
+  start <- proc.time()
+  prediction <- as.data.frame(predict(md,dx_test))
+  truth <- as.data.frame(dx_test[,"dep_delayed_15min"])
+  truth <- ifelse(truth$dep_delayed_15min=='Y',1,0)
+  prtr <- data.frame(
+    prediction=prediction$Y,
+    truth=as.numeric(truth))
+  summary(prtr)
+  predicttime <- proc.time() - start
+  
+  write.tsv(
+    data=prtr,
+    file=predicted.file(paste('h2o',suffix,sep='-')))
+  
+  start <- proc.time()
+  perf <- h2o.performance(md, dx_test)
+  #show(perf)
+  auc <- h2o.auc(perf)
+  auctime <- proc.time() - start
+  
+  results <- list(
+    model='h2o',
+    ntrain=nrow(dx_train),
+    ntest=nrow(dx_test),
+    datatime=datatime['elapsed'],
+    traintime=traintime['elapsed'],
+    predicttime=predicttime['elapsed'],
+    auctime=auctime['elapsed'],
+    auc=auc)
+  Sys.setenv(JAVA_HOME=old.java.home)
+  results
+}
+#-----------------------------------------------------------------
 xgboost_randomForest <- function (suffix='0.01m') {
   
   set.seed(169544)
@@ -229,76 +289,16 @@ xgboost_randomForest <- function (suffix='0.01m') {
     auc=auc@y.values[[1]])
 }
 #-----------------------------------------------------------------
-h2o_randomForest <- function (suffix='0.01m') {
-  # H2O requires Java 8 as of 2017-11-17
-  old.java.home <- Sys.getenv('JAVA_HOME')
-  Sys.setenv(JAVA_HOME=Sys.getenv('JAVA8'))
-  
-  set.seed(740189)
-  h2o.init(max_mem_size="26g", nthreads=-1)
-  
-  start <- proc.time()
-  dx_train <- h2o.importFile(path = train.file(suffix))
-  dx_test <- h2o.importFile(path = test.file())
-  Xnames <- 
-    names(dx_train)[which(names(dx_train)!="dep_delayed_15min")]
-  datatime <- proc.time() - start
-  
-  start <- proc.time()
-  md <- h2o.randomForest(
-    x = Xnames, 
-    y = "dep_delayed_15min", 
-    training_frame = dx_train, 
-    ntrees = 500,
-    min_rows = 10,
-    max_depth = 20)
-  traintime <- proc.time() - start
-  
-  #show(md)
-  
-  start <- proc.time()
-  prediction <- as.data.frame(predict(md,dx_test))
-  truth <- as.data.frame(dx_test[,"dep_delayed_15min"])
-  truth <- ifelse(truth$dep_delayed_15min=='Y',1,0)
-  prtr <- data.frame(
-    prediction=prediction$Y,
-    truth=as.numeric(truth))
-  summary(prtr)
-  predicttime <- proc.time() - start
-  
-  write.tsv(
-    data=prtr,
-    file=predicted.file(paste('h2o',suffix,sep='-')))
-  
-  start <- proc.time()
-  perf <- h2o.performance(md, dx_test)
-  #show(perf)
-  auc <- h2o.auc(perf)
-  auctime <- proc.time() - start
-  
-  list(
-    model='h2o',
-    ntrain=nrow(dx_train),
-    ntest=nrow(dx_test),
-    datatime=datatime['elapsed'],
-    traintime=traintime['elapsed'],
-    predicttime=predicttime['elapsed'],
-    auctime=auctime['elapsed'],
-    auc=auc)
-  
-  Sys.setenv(JAVA_HOME=old.java.home)
-  }
-#-----------------------------------------------------------------
 parallel_randomForest <- function (suffix='0.01m') {
   set.seed(1244985)
   
   start <- proc.time()
-  d_train <- as.data.frame(fread(train.file(suffix)))
-  d_test <- as.data.frame(fread(test.file()))
+  d_train <- as.data.frame(read_csv(train.file(suffix)))
+  d_test <- as.data.frame(read_csv(test.file()))
   datatime <- proc.time() - start
   
-  #summary(d_train)
-  #summary(d_test)
+  print(summary(d_train))
+  print(summary(d_test))
   ## "Can not handle categorical predictors with more than 53 
   ## categories."
   ## so need dummy variables/1-hot encoding
@@ -365,8 +365,8 @@ single_randomForest <- function (suffix='0.01m') {
   
   start <- proc.time()
   
-  d_train <- as.data.frame(fread(train.file(suffix)))
-  d_test <- as.data.frame(fread(test.file()))
+  d_train <- as.data.frame(read_csv(train.file(suffix)))
+  d_test <- as.data.frame(read_csv(test.file()))
   
   X_train_test <- model.matrix(
     dep_delayed_15min ~ ., 

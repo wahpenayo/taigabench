@@ -17,7 +17,7 @@
 ;; clj src\scripts\clojure\taiga\bench\scripts\ontime\bench.clj > output\ontime.bench.txt
 ;; clj12g src\scripts\clojure\taiga\bench\scripts\ontime\bench.clj > output\ontime.bench.txt
 ;;----------------------------------------------------------------
-(doseq [[mincount suffixes] [[10 ["0.01m" "0.1m" "1m" "10m"]]]]
+(doseq [[mincount suffixes] [[10 ["0.01m" "0.1m" "1m" #_"10m"]]]]
   (with-open [w (z/print-writer 
                   (data/output-file "taiga.results" "csv.gz"))]
     (.println w 

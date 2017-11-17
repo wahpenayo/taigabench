@@ -53,3 +53,5 @@ pom.xml.asc
 /old-pom.xml
 
 
+/.pydevproject
+/xgboost.model

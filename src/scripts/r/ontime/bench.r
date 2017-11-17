@@ -13,7 +13,7 @@ for (suffix in c('0.01m','0.1m','1m','10m')) {
  write.csv(results,file=results.file('h2o'),row.names=FALSE)
 }
 results <- NULL
-for (suffix in c('0.01m','0.1m','1m','10m')) {
+for (suffix in c('0.01m', '0.1m','1m','10m')) {
  gc()
  results <- rbind(results,xgboost_randomForest(suffix=suffix)); 
  print(results)
