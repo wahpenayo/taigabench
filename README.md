@@ -53,6 +53,11 @@ Automatic via Maven dependencies in `pom.xml`.
 ### [R 3.4.2](https://www.r-project.org/)
 
 Download from [CRAN mirror](https://www.python.org/) and install.
+
+Libraries installed with `install.packages()` or manually
+thru the GUI:
+
+* data.table 1.10.4-3
  
 ### [Python 3.6.3](https://www.python.org/)
 
@@ -92,3 +97,26 @@ activate my_root
 `conda install scikit-learn`
 
 
+## Benchmarks
+
+### [Airline ontime data](http://stat-computing.org/dataexpo/2009)
+
+Download at least 2005, 2006, and 2007 by hand.
+Use `src/scripts/r/ontime/classification-data.r` 
+to sample and split into `train`, `test`, and `valid` sets,
+as was done for 
+[BENCHMARKING RANDOM FOREST IMPLEMENTATIONS](http://datascience.la/benchmarking-random-forest-implementations/).
+See also the [R-bloggers version](https://www.r-bloggers.com/benchmarking-random-forest-implementations/)
+and the [original code](https://github.com/szilard/benchm-ml).
+
+
+**Note:** `gendata` randomly splits 2007 into `test` and `valid`
+sets. A better approach would use 2007 for `test` 
+(actually something like meta-train), and 2008 for `valid`,
+or split the training data into `pre-train`, `meta-train`,
+and are-combine those and re-train once the meta/hyper parameters
+have been chosen.
+
+
+
+'

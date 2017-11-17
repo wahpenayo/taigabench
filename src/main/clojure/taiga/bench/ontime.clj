@@ -28,39 +28,50 @@
         label  (str model-name "-" suffix)
         start (System/nanoTime)
         train ((:csv-reader options) 
-                (ontime/data-file (str "train-" suffix) "csv"))
-        test ((:csv-reader options) (ontime/data-file "test" "csv"))
+                (ontime/data-file (str "train-" suffix) "csv.gz"))
+        test ((:csv-reader options) 
+               (ontime/data-file "test" "csv.gz"))
         _(System/gc)
-        datatime (/ (double (- (System/nanoTime) start)) 1000000000.0)
-;        _ (println "test:" (z/count test))
-;        _ (ontime/write-binary-file 
-;            test (ontime/data-file (str "test-" suffix) "bin.gz"))
+        datatime (/ (double (- (System/nanoTime) start)) 
+                    1000000000.0)
+        #_(println "test:" (z/count test))
+        #_(ontime/write-binary-file 
+            test (ontime/data-file (str "test-" suffix) "bin.gz"))
         options (assoc options :data train)
-;        _ (println "train:" (z/count train))
-;        _ (ontime/write-binary-file 
-;            train (ontime/data-file (str "train-" suffix) "bin.gz"))
+        #_(println "train:" (z/count train))
+        #_(ontime/write-binary-file 
+           train (ontime/data-file (str "train-" suffix) "bin.gz"))
         start (System/nanoTime)
         ^clojure.lang.IFn$OOD model (learner options)
-        traintime (/ (double (- (System/nanoTime) start)) 1000000000.0)
-;        model-file (ontime/output-file label "edn.gz")
-;        _ (io/make-parents model-file)
-;        _ (taiga/write-edn model model-file)
+        traintime (/ (double (- (System/nanoTime) start)) 
+                     1000000000.0)
+        ;;model-file (ontime/output-file label "edn.gz")
+        #_(io/make-parents model-file)
+        #_(taiga/write-edn model model-file)
         start (System/nanoTime)
         attributes (:attributes options)
-        test (z/pmap #(assoc % :score (.invokePrim model attributes %)) test)
-        predicttime (/ (double (- (System/nanoTime) start)) 1000000000.0)
+        test (z/pmap #(assoc 
+                        % 
+                        :score (.invokePrim model attributes %)) 
+                     test)
+        predicttime (/ (double (- (System/nanoTime) start)) 
+                       1000000000.0)
         #_train #_(z/seconds
                 (print-str "predict train" label) 
-                (z/pmap #(assoc % :score (.invokePrim model attributes %)) 
+                (z/pmap #(assoc 
+                           % 
+                           :score (.invokePrim model attributes %)) 
                        train))
         start (System/nanoTime)
         ^clojure.lang.IFn$OD truth (:ground-truth attributes)
         ^clojure.lang.IFn$OD score (:prediction attributes)
         auc (metrics/roc-auc truth score test)
-        auctime (/ (double (- (System/nanoTime) start)) 1000000000.0)]
+        auctime (/ (double (- (System/nanoTime) start)) 
+                   1000000000.0)]
     (pt/write-predictions 
       truth score test (ontime/output-file label "pred.tsv.gz"))
-    #_(println "Train AUC:" model-name suffix (metrics/roc-auc truth score train))
+    #_(println "Train AUC:" model-name suffix 
+               (metrics/roc-auc truth score train))
     #_(ontime/write-tsv-file 
       test (ontime/output-file (str "test-" label) "tsv.gz"))
     #_(ontime/write-binary-file 

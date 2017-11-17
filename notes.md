@@ -36,7 +36,7 @@ library(xgboost)
 
 already installed in Ubuntu 16.04, use python3 cmd line.
 
-#### Voxpal Wabbit
+#### Vowpal Wabbit
  skipped
  
 #### Java
