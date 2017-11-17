@@ -1,6 +1,8 @@
-# John Alan McDonald 2016-11-11
+# wahpenayo at gmail dot com
+# since 2016-11-11
+# 2017-11-17
 #-------------------------------------------------------------------------------
-setwd('e:/workplace/tu-projects/taigabench')
+setwd('e:/porta/projects/taigabench')
 source('src/scripts/r/ontime/functions.r')
 #-------------------------------------------------------------------------------
 results <- NULL

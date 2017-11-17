@@ -19,12 +19,19 @@ Oracle installation puts `C:\ProgramData\Oracle\Java\javapath`
 on the system path, which makes it hard to control which JDK is used.
 
 The Clojure launcher scripts use `JAVA8` and `JAVA9` environment
-variables to get at the desired ins tallation directly.
+variables to get at the desired installation directly.
 
 This PC -> Properties -> Advanced System Settings -> Environment Variables
 
 Define `JAVA9`, for example, `C:\Program Files\Java\jdk-9.0.1`,
 and `JAVA8`, if desired. 
+
+**Note:** H2O requires 
+[Java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+(as of 2017-11-17). The H2O benchmarks use the `JAVA8` 
+environment variable to get at this, so you will need to both
+install a Java 8 JDK or JRE and point `JAVA8` at the installation,
+something like `C:\Program Files\Java\jdk1.8.0_152`.
 
 #### Linux 
 #### OSX
@@ -58,7 +65,18 @@ Libraries installed with `install.packages()` or manually
 thru the GUI:
 
 * data.table 1.10.4-3
- 
+* readr 1.1.1
+* ROCR 1.0-7
+* randomForest 4.6-12
+* xgboost 0.6-4
+* parallel 3.4.2
+* Matrix 1.2-11
+* h2o 3.14.0.3
+* ggplot2 2.2.1
+
+**Note:** can use `sessionInfo()` to check the versions of
+the loaded packages.
+
 ### [Python 3.6.3](https://www.python.org/)
 
 #### Windows 10
