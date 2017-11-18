@@ -18,8 +18,8 @@ set PROF=
 set THRUPUT=-d64 -server
 ::set THRUPUT=
 
-::set XMX=-Xms48g -Xmx48g -Xmn20g 
-set XMX=-Xms12g -Xmx12g -Xmn5g 
+set XMX=-Xms48g -Xmx48g -Xmn20g 
+::set XMX=-Xms12g -Xmx12g -Xmn5g 
 
 set OPENS=--add-opens java.base/java.lang=ALL-UNNAMED
 set CP=-cp ./src/scripts/clojure;lib/*

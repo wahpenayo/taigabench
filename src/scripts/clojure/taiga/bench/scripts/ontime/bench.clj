@@ -2,7 +2,7 @@
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
       :since "2017-01-30"
-      :date "2017-11-16"
+      :date "2017-11-17"
       :doc "Public airline ontime data benchmark:
             https://www.r-bloggers.com/benchmarking-random-forest-implementations/
             http://stat-computing.org/dataexpo/2009/" }
@@ -16,8 +16,9 @@
             [taiga.bench.ontime :as ontime]))
 ;; clj src\scripts\clojure\taiga\bench\scripts\ontime\bench.clj > output\ontime.bench.txt
 ;; clj12g src\scripts\clojure\taiga\bench\scripts\ontime\bench.clj > output\ontime.bench.txt
+;; clj48g src\scripts\clojure\taiga\bench\scripts\ontime\bench.clj > output\ontime.bench.txt
 ;;----------------------------------------------------------------
-(doseq [[mincount suffixes] [[10 ["0.01m" "0.1m" "1m" #_"10m"]]]]
+(doseq [[mincount suffixes] [[10 ["0.01m" "0.1m" "1m" "10m"]]]]
   (with-open [w (z/print-writer 
                   (data/output-file "taiga.results" "csv.gz"))]
     (.println w 
@@ -32,14 +33,15 @@
                       (assoc ontime/prototype
                              :maxdepth 20
                              :mincount mincount
-                             :nterms 500))]
-        (.println w ^String (s/join "," ["taiga"
-                                         (:ntrain results)
-                                         (:ntest results)
-                                         (:datatime results)
-                                         (:traintime results)
-                                         (:predicttime results)
-                                         (:auctime results)
-                                         (:auc results)]))
+                             :nterms 500))
+            ^String line (s/join "," ["taiga"
+                                      (:ntrain results)
+                                      (:ntest results)
+                                      (:datatime results)
+                                      (:traintime results)
+                                      (:predicttime results)
+                                      (:auctime results)
+                                      (:auc results)])]
+        (.println w line)
         (.flush w)))))
 ;;----------------------------------------------------------------

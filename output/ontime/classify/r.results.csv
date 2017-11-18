@@ -1,0 +1,2 @@
+"model","ntrain","ntest","datatime","traintime","predicttime","auctime","auc"
+randomForest,10000,100000,0.819999999999709,898.810000000001,18.5299999999988,0.0299999999988358,0.677549585446366
