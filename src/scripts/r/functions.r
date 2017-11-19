@@ -125,33 +125,55 @@ read.tsv <- function (file) {
     file=file) }
 
 #-----------------------------------------------------------------
-data.folder <- file.path('data','ontime','classify')
+data.folder <- function (
+  dataset='ontime', 
+  problem='classify') {
+  file.path('data',dataset,problem)
+}
 
-train.file <- function (suffix='0.1m') {
+train.file <- function (
+  dataset='ontime', 
+  problem='classify',
+  suffix='0.1m') {
   file.path(
-    data.folder,
+    data.folder(dataset,problem),
     paste("train-",suffix,".csv.gz",sep='')) }
 
-test.file <- function () {
+test.file <- function (
+  dataset='ontime', 
+  problem='classify') {
   file.path(
-    data.folder,
+    data.folder(dataset,problem),
     paste("test.csv.gz",sep='')) }
 
-output.folder <- file.path('output','ontime','classify')
+output.folder <- function (
+  dataset='ontime', 
+  problem='classify') {
+  file.path('output',dataset,problem)
+}
 
-predicted.file <- function (prefix) {
+predicted.file <- function (
+  dataset='ontime', 
+  problem='classify',
+  prefix) {
   gzfile(
     file.path(
-      output.folder, 
+      output.folder(dataset,problem), 
       paste(prefix,"pred.tsv.gz",sep='.'))) }
 
-results.file <- function (prefix='all') {
+results.file <- function (
+  dataset='ontime', 
+  problem='classify',
+  prefix='all') {
   file.path(
-    output.folder,
+    output.folder(dataset,problem),
     paste(paste(prefix,"results.csv",sep='.'))) }
 
-plot.file <- function (prefix) { 
-  file.path(output.folder,prefix) }
+plot.file <- function (
+  dataset='ontime', 
+  problem='classify',
+  prefix) { 
+  file.path(output.folder(dataset,problem),prefix) }
 #-----------------------------------------------------------------
 models <- c(
   'h2o',
@@ -168,7 +190,9 @@ model.colors <- c(
   '#e41a1cFF',
   '#75707050')
 #-----------------------------------------------------------------
-h2o_randomForest <- function (suffix='0.01m') {
+classify.h2o.randomForest <- function (
+  dataset='ontime',
+  suffix='0.01m') {
   # H2O requires Java 8 as of 2017-11-17, version 3.15.0.4103
   old.java.home <- Sys.getenv('JAVA_HOME')
   Sys.setenv(JAVA_HOME=Sys.getenv('JAVA8'))
@@ -177,7 +201,8 @@ h2o_randomForest <- function (suffix='0.01m') {
   h2o.init(max_mem_size="32g", nthreads=-1)
   
   start <- proc.time()
-  dx_train <- h2o.importFile(path = train.file(suffix))
+  dx_train <- h2o.importFile(path = 
+      train.file(suffix))
   dx_test <- h2o.importFile(path = test.file())
   Xnames <- 
     names(dx_train)[which(names(dx_train)!="dep_delayed_15min")]
@@ -228,7 +253,7 @@ h2o_randomForest <- function (suffix='0.01m') {
   results
 }
 #-----------------------------------------------------------------
-xgboost_randomForest <- function (suffix='0.01m') {
+classify.xgboost.randomForest <- function (suffix='0.01m') {
   
   set.seed(169544)
   
@@ -289,7 +314,7 @@ xgboost_randomForest <- function (suffix='0.01m') {
     auc=auc@y.values[[1]])
 }
 #-----------------------------------------------------------------
-parallel_randomForest <- function (suffix='0.01m') {
+classify.parallel.randomForest <- function (suffix='0.01m') {
   set.seed(1244985)
   
   start <- proc.time()
@@ -360,7 +385,7 @@ parallel_randomForest <- function (suffix='0.01m') {
     auc=auc@y.values[[1]])
 }
 #-----------------------------------------------------------------
-single_randomForest <- function (suffix='0.01m') {
+classify.single.randomForest <- function (suffix='0.01m') {
   set.seed(1244985)
   
   start <- proc.time()

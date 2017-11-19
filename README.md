@@ -209,7 +209,7 @@ Use `src/scripts/r/ontime/classification-data.r`
 to sample and split into `train`, `test`, and `valid` sets,
 as was done for 
 
-**Note:** `calssification-data.r` randomly splits 2007 into 
+**Note:** `classification-data.r` randomly splits 2007 into 
 `test` and `valid`
 sets. A better approach would use 2007 for `test` 
 (actually something like meta-train), and 2008 for `valid`,
