@@ -149,7 +149,12 @@ test.file <- function (
 output.folder <- function (
   dataset='ontime', 
   problem='classify') {
-  file.path('output',dataset,problem)
+  path <- file.path('output',dataset,problem)
+  dir.create(
+    path=path,
+    showWarnings=FALSE,
+    recursive=TRUE)
+  path
 }
 
 predicted.file <- function (
@@ -201,9 +206,15 @@ classify.h2o.randomForest <- function (
   h2o.init(max_mem_size="32g", nthreads=-1)
   
   start <- proc.time()
-  dx_train <- h2o.importFile(path = 
-      train.file(suffix))
-  dx_test <- h2o.importFile(path = test.file())
+  dx_train <- h2o.importFile(
+    path = train.file(
+      dataset=dataset,
+      problem='classify',
+      suffix=suffix))
+  dx_test <- h2o.importFile(
+    path = test.file(
+      dataset=dataset,
+      problem='classify'))
   Xnames <- 
     names(dx_train)[which(names(dx_train)!="dep_delayed_15min")]
   datatime <- proc.time() - start
@@ -232,7 +243,10 @@ classify.h2o.randomForest <- function (
   
   write.tsv(
     data=prtr,
-    file=predicted.file(paste('h2o',suffix,sep='-')))
+    file=predicted.file(
+      dataset=dataset,
+      problem='classify',
+      prefix=paste('h2o',suffix,sep='-')))
   
   start <- proc.time()
   perf <- h2o.performance(md, dx_test)
@@ -253,14 +267,23 @@ classify.h2o.randomForest <- function (
   results
 }
 #-----------------------------------------------------------------
-classify.xgboost.randomForest <- function (suffix='0.01m') {
+classify.xgboost.randomForest <- function (
+  dataset='ontime',
+  suffix='0.01m') {
   
   set.seed(169544)
   
   start <- proc.time()
   
-  d_train <- read_csv(train.file(suffix))
-  d_test <- read_csv(test.file())
+  d_train <- read_csv(
+    file=train.file(
+      dataset=dataset,
+      problem='classify',
+      suffix=suffix))
+  d_test <- read_csv(
+    file=test.file(
+      dataset=dataset,
+      problem='classify'))
   
   X_train_test <- sparse.model.matrix(
     dep_delayed_15min ~ .-1, 
@@ -284,7 +307,8 @@ classify.xgboost.randomForest <- function (suffix='0.01m') {
     min_child_weight = 10,
     num_parallel_tree = 500, 
     subsample = 0.632,
-    colsample_bytree = 1.0 / sqrt(length(X_train@x)/nrow(X_train)))
+    colsample_bytree = 
+      1.0 / sqrt(length(X_train@x)/nrow(X_train)))
   traintime <- proc.time() - start
   
   start <- proc.time()
@@ -296,7 +320,10 @@ classify.xgboost.randomForest <- function (suffix='0.01m') {
   
   write.tsv(
     data=prtr, 
-    file=predicted.file(paste('xgboost',suffix,sep='-')))
+    file=predicted.file(
+      prefix=paste('xgboost',suffix,sep='-'),
+      dataset=dataset,
+      problem='classify'))
   
   start <- proc.time()
   rocr_pred <- prediction(phat, d_test$dep_delayed_15min)
@@ -314,12 +341,23 @@ classify.xgboost.randomForest <- function (suffix='0.01m') {
     auc=auc@y.values[[1]])
 }
 #-----------------------------------------------------------------
-classify.parallel.randomForest <- function (suffix='0.01m') {
+classify.parallel.randomForest <- function (
+  dataset='ontime',
+  suffix='0.01m') {
   set.seed(1244985)
   
   start <- proc.time()
-  d_train <- as.data.frame(read_csv(train.file(suffix)))
-  d_test <- as.data.frame(read_csv(test.file()))
+  d_train <- as.data.frame(
+    read_csv(
+      file=train.file(
+        dataset=dataset,
+        problem='classify',
+        suffix=suffix)))
+  d_test <- as.data.frame(
+    read_csv(
+      file=test.file(
+        dataset=dataset,
+        problem='classify')))
   datatime <- proc.time() - start
   
   print(summary(d_train))
@@ -364,7 +402,9 @@ classify.parallel.randomForest <- function (suffix='0.01m') {
       prediction=phat,
       truth=ifelse(d_train$dep_delayed_15min=='Y',1,0)),
     file=predicted.file(
-      paste('parallel.randomForest',suffix,sep='-')))
+      prefix=paste('parallel.randomForest',suffix,sep='-'),
+      dataset=dataset,
+      problem='classify'))
   
   start <- proc.time()
   rocr_pred <- prediction(phat, d_test$dep_delayed_15min)
@@ -385,13 +425,24 @@ classify.parallel.randomForest <- function (suffix='0.01m') {
     auc=auc@y.values[[1]])
 }
 #-----------------------------------------------------------------
-classify.single.randomForest <- function (suffix='0.01m') {
+classify.randomForest <- function (
+  dataset='ontime',
+  suffix='0.01m') {
   set.seed(1244985)
   
   start <- proc.time()
   
-  d_train <- as.data.frame(read_csv(train.file(suffix)))
-  d_test <- as.data.frame(read_csv(test.file()))
+  d_train <- as.data.frame(
+    read_csv(
+      file=train.file(
+        dataset=dataset,
+        problem='classify',
+        suffix=suffix)))
+  d_test <- as.data.frame(
+    read_csv(
+      file=test.file(
+        dataset=dataset,
+        problem='classify')))
   
   X_train_test <- model.matrix(
     dep_delayed_15min ~ ., 
@@ -418,7 +469,9 @@ classify.single.randomForest <- function (suffix='0.01m') {
       prediction=phat,
       truth=ifelse(d_test$dep_delayed_15min=='Y',1,0)),
     file=predicted.file(
-      paste('single.randomForest',suffix,sep='-')))
+      prefix=paste('randomForest',suffix,sep='-'),
+      dataset=dataset,
+      problem='classify'))
   
   start <- proc.time()
   rocr_pred <- prediction(phat, d_test$dep_delayed_15min)
