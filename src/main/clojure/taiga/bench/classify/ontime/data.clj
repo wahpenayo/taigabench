@@ -1,18 +1,18 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
-(ns ^{:author "John Alan McDonald" 
+(ns ^{:author "wahpenayo at gmail dot com" 
       :since "2016-11-10"
-      :date "2017-11-16"
+      :date "2017-11-20"
       :doc "Public airline ontime data for benchmarking:
             http://stat-computing.org/dataexpo/2009/" }
     
-    taiga.bench.data.ontime
+    taiga.bench.classify.ontime.data
   
   (:require [clojure.string :as s]
             [clojure.java.io :as io]
             [zana.api :as z]
             [taiga.api :as taiga]
-            [taiga.bench.metrics :as metrics])
+            [taiga.bench.classify.metrics :as metrics])
   (:import [java.time DayOfWeek Month]
            [taigabench.java.ontime Airline Airport DayOfMonth]))
 ;;----------------------------------------------------------------
@@ -97,15 +97,15 @@
     :prediction score))
 ;;----------------------------------------------------------------
 (defn data-file ^java.io.File [fname ext]
-  (io/file "data" "ontime" "classify" 
+  (io/file "data" "classify" "ontime" 
            (str fname "." ext)))
 (defn output-file ^java.io.File [fname ext]
-  (let [f (io/file "output" "ontime" "classify"
+  (let [f (io/file "output" "classify" "ontime"
                    (str fname "." ext))]
     (io/make-parents f)
     f))
 (defn results-file ^java.io.File [fname mincount] 
-  (let [f (io/file "output" "ontime" "classify"
+  (let [f (io/file "output" "classify" "ontime"
                    (str fname ".results.csv"))]
     (io/make-parents f)
     f))

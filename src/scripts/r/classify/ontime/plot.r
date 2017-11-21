@@ -1,19 +1,30 @@
-# John Alan McDonald 2017-01-31
-#-------------------------------------------------------------------------------
-setwd('e:/workplace/tu-projects/taigabench')
-source('src/scripts/r/ontime/functions.r')
+# wahpenayo at gmail dot com
+# since 2016-01-31
+# 2017-11-20
+#-----------------------------------------------------------------
+setwd('e:/porta/projects/taigabench')
+source('src/scripts/r/functions.r')
 #-------------------------------------------------------------------------------
 
 results <- NULL
-results <- rbind(results,read.csv(file=results.file('h2o')))
-results <- rbind(results,read.csv(file=results.file('r')))
-results <- rbind(results,read.csv(file=results.file('scikit-learn')))
-results <- rbind(results,read.csv(file=results.file('taiga')))
-results <- rbind(results,read.csv(file=results.file('xgboost')))
+for (prefix in 
+  c('h2o','randomForest','scikit-learn','taiga','xgboost')) {
+  f <- results.file(
+    dataset='ontime',
+    problem='classify',
+    prefix=prefix)
+  results <- rbind(results,read_csv(file=f))
+}
 
 results$model <- factor(results$model,levels=models)
 
-dev.on(file=plot.file("traintime"),aspect=0.5,width=1280)
+dev.on(
+  file=plot.file(
+    dataset='ontime',
+    problem='classify',
+    prefix='traintime'),
+  aspect=0.5,
+  width=1280)
 ggplot(results, aes(x = ntrain, y = traintime, color = model)) +
   geom_point(size=4.0) + 
   geom_line(size=2.0) + 
@@ -24,7 +35,13 @@ ggplot(results, aes(x = ntrain, y = traintime, color = model)) +
   ggtitle("lower is better")
 dev.off()
 
-dev.on(file=plot.file("auc"),aspect=0.5,width=1280)
+dev.on(
+  file=plot.file(
+    dataset='ontime',
+    problem='classify',
+    prefix="auc"),
+  aspect=0.5,
+  width=1280)
 ggplot(results, aes(x = ntrain, y = auc, color = model)) +
   geom_point(size=4.0) + 
   geom_line(size=2.0) + 

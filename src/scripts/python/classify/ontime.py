@@ -18,8 +18,8 @@ results = []
 for suffix in ["0.01", "0.1", "1", "10"] :  
     start = time.clock()
     d_train = \
-    pd.read_csv("data/ontime/classify/" + "train-" + suffix + "m.csv.gz")
-    d_test = pd.read_csv("data/ontime/classify/test.csv.gz")
+    pd.read_csv("data/classify/ontime/" + "train-" + suffix + "m.csv.gz")
+    d_test = pd.read_csv("data/classify/ontime/test.csv.gz")
     d_train_test = d_train.append(d_test)
     X_train_test_categ = \
     pd.concat([get_dummies(d_train_test, col) for col in vars_categ], \
@@ -60,6 +60,6 @@ for suffix in ["0.01", "0.1", "1", "10"] :
                     'auctime' : auctime, \
                     'auc' : auc, })
     df = pd.DataFrame(data=results)
-    df.to_csv('output/ontime/classify/scikit-learn.results.csv', \
+    df.to_csv('output/classify/ontime/scikit-learn.results.csv', \
               index=False)
 

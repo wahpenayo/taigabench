@@ -1,21 +1,23 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
-(ns ^{:author "John Alan McDonald" :date "2017-01-30"
+(ns ^{:author "wahpenayo at gmail dot com" 
+      :since "2016-11-10"
+      :date "2017-11-20"
       :doc "Compute auc in one place for all benchmarked libraries, to check that
             AUC imp-lementations are consistent.
             https://www.r-bloggers.com/benchmarking-random-forest-implementations/
             http://stat-computing.org/dataexpo/2009/" }
     
-    taiga.bench.scripts.ontime.auc
+    taiga.bench.scripts.ontime.classify.auc
   
   (:require [clojure.string :as s]
             [zana.api :as z]
             [taiga.bench.pt :as pt]
-            [taiga.bench.metrics :as metrics]
-            [taiga.bench.data.ontime :as ontime]))
-;; clj src\scripts\clojure\taiga\bench\scripts\ontime\auc.clj
+            [taiga.bench.classify.metrics :as metrics]
+            [taiga.bench.classify.ontime.data :as data]))
+;; clj src\scripts\clojure\taiga\bench\scripts\classify\ontime\auc.clj
 ;;------------------------------------------------------------------------------
-(with-open [w (z/print-writer (ontime/output-file "auc" "csv"))]
+(with-open [w (z/print-writer (data/output-file "auc" "csv"))]
   (.println w "model,ntrain,ntest,auc")
   (doseq [[prefix suffixes] 
           [["taiga" ["0.01m" "0.1m" "1m" "10m"]]
@@ -24,7 +26,7 @@
            ["xgboost" ["0.01m" "0.1m" "1m" "10m"]]]]
     (doseq [suffix suffixes]
       (let [fname (str prefix "-" suffix)
-            pt (pt/read-tsv-file (ontime/output-file fname "pred.tsv.gz"))
+            pt (pt/read-tsv-file (data/output-file fname "pred.tsv.gz"))
             pt (z/drop-missing pt/truth pt/prediction pt)
             ntrain (int (* 1000000 (Double/parseDouble (s/replace suffix "m" ""))))
             ntest (z/count pt)]

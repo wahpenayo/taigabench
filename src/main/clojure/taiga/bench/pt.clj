@@ -1,6 +1,8 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
-(ns ^{:author "John Alan McDonald" :date "2016-11-16"
+(ns ^{:author "wahpenayo at gmail dot com" 
+      :since "2016-11-16"
+      :date "2017-11-20"
       :doc "simple prediction/truth datum" }
     
     taiga.bench.pt

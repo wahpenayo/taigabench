@@ -1,24 +1,26 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
-(ns ^{:author "John Alan McDonald" :date "2016-11-15"
+(ns ^{:author "wahpenayo at gmail dot com" 
+      :since "2016-11-15"
+      :date "2017-11-20"
       :doc "Public airline ontime data for benchmarking:
             http://stat-computing.org/dataexpo/2009/" }
     
-    taiga.bench.ontime
+    taiga.bench.classify.ontime.traintest
   
   (:require [clojure.string :as s]
             [clojure.java.io :as io]
             [zana.api :as z]
             [taiga.api :as taiga]
             [taiga.bench.pt :as pt]
-            [taiga.bench.metrics :as metrics]
-            [taiga.bench.data.ontime :as ontime]))
+            [taiga.bench.classify.metrics :as metrics]
+            [taiga.bench.classify.ontime.data :as ontime]))
 ;;------------------------------------------------------------------------------
 (def prototype 
-  {:attributes ontime/attributes
-   :csv-reader #(ontime/read-tsv-file % #"\,")
-   :bin-reader ontime/read-binary-file
-   :bin-writer ontime/write-binary-file
+  {:attributes data/attributes
+   :csv-reader #(data/read-tsv-file % #"\,")
+   :bin-reader data/read-binary-file
+   :bin-writer data/write-binary-file
    ;;:mincount 1
    :nterms 500})
 ;;------------------------------------------------------------------------------
@@ -28,24 +30,24 @@
         label  (str model-name "-" suffix)
         start (System/nanoTime)
         train ((:csv-reader options) 
-                (ontime/data-file (str "train-" suffix) "csv.gz"))
+                (data/data-file (str "train-" suffix) "csv.gz"))
         test ((:csv-reader options) 
-               (ontime/data-file "test" "csv.gz"))
+               (data/data-file "test" "csv.gz"))
         _(System/gc)
         datatime (/ (double (- (System/nanoTime) start)) 
                     1000000000.0)
         #_(println "test:" (z/count test))
-        #_(ontime/write-binary-file 
-            test (ontime/data-file (str "test-" suffix) "bin.gz"))
+        #_(data/write-binary-file 
+            test (data/data-file (str "test-" suffix) "bin.gz"))
         options (assoc options :data train)
         #_(println "train:" (z/count train))
-        #_(ontime/write-binary-file 
-           train (ontime/data-file (str "train-" suffix) "bin.gz"))
+        #_(data/write-binary-file 
+           train (data/data-file (str "train-" suffix) "bin.gz"))
         start (System/nanoTime)
         ^clojure.lang.IFn$OOD model (learner options)
         traintime (/ (double (- (System/nanoTime) start)) 
                      1000000000.0)
-        ;;model-file (ontime/output-file label "edn.gz")
+        ;;model-file (data/output-file label "edn.gz")
         #_(io/make-parents model-file)
         #_(taiga/write-edn model model-file)
         start (System/nanoTime)
@@ -69,17 +71,17 @@
         auctime (/ (double (- (System/nanoTime) start)) 
                    1000000000.0)]
     (pt/write-predictions 
-      truth score test (ontime/output-file label "pred.tsv.gz"))
+      truth score test (data/output-file label "pred.tsv.gz"))
     #_(println "Train AUC:" model-name suffix 
                (metrics/roc-auc truth score train))
-    #_(ontime/write-tsv-file 
-      test (ontime/output-file (str "test-" label) "tsv.gz"))
-    #_(ontime/write-binary-file 
-      test (ontime/output-file (str "test-" label) "bin.gz"))
-    #_(ontime/write-tsv-file 
-      train (ontime/output-file (str "train-" label) "tsv.gz"))
-    #_(ontime/write-binary-file 
-      train (ontime/output-file (str "train-" label) "bin.gz"))
+    #_(data/write-tsv-file 
+      test (data/output-file (str "test-" label) "tsv.gz"))
+    #_(data/write-binary-file 
+      test (data/output-file (str "test-" label) "bin.gz"))
+    #_(data/write-tsv-file 
+      train (data/output-file (str "train-" label) "tsv.gz"))
+    #_(data/write-binary-file 
+      train (data/output-file (str "train-" label) "bin.gz"))
   {:model model-name 
    :ntrain (z/count train)
    :ntest (z/count test) 

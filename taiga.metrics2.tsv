@@ -1,2 +1,0 @@
-model	mincount	nterms	attributes	data	test	traintime	predicttime	displacement-mse	mean-center-rmse
-taiga	511	128	33	500000	500000	638.798644123			

@@ -1,9 +1,11 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
-(ns ^{:author "John Alan McDonald" :date "2016-11-16"
+(ns ^{:author "wahpenayo at gmail dot com" 
+      :since "2016-11-16"
+      :date "2017-11-20"
       :doc "benchmark result datum" }
     
-    taiga.bench.result
+    taiga.bench.classify.result
   
   (:require [zana.api :as z]))
 ;;------------------------------------------------------------------------------

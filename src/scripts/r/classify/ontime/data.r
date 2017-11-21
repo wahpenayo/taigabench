@@ -2,7 +2,7 @@
 # 2017-11-16
 # from https://github.com/szilard/benchm-ml/blob/master/0-init/2-gendata.txt
 #-----------------------------------------------------------------
-setwd('e:/porta/projects/taigabench/data/ontime')
+setwd('e:/porta/projects/taigabench/data')
 #library(data.table)
 set.seed(123)
 
@@ -15,9 +15,9 @@ set.seed(123)
 #d1b <- fread('2006.csv')
 #d2 <- fread('2007.csv')
 # very slow, but no 700gb temp files, and only do it once
-d1a <- read.csv('2005.csv.bz2')
-d1b <- read.csv('2006.csv.bz2')
-d2 <- read.csv('2007.csv.bz2')
+d1a <- read.csv('ontime/2005.csv.bz2')
+d1b <- read.csv('ontime/2006.csv.bz2')
+d2 <- read.csv('ontime/2007.csv.bz2')
 
 d1 <- rbind(d1a, d1b)
 
@@ -41,7 +41,8 @@ d2 <- d2[, cols]
 # changed from original to write gzipped directly
 for (n in c(1e4,1e5,1e6,1e7)) {
   f <- gzfile(
-    file.path('classify',paste0('train-',n/1e6,'m.csv.gz')),'w')
+    file.path('classify','ontime',
+      paste0('train-',n/1e6,'m.csv.gz')),'w')
   write.table(
     d1[sample(nrow(d1),n),], 
     file = f, 
@@ -52,7 +53,7 @@ for (n in c(1e4,1e5,1e6,1e7)) {
 }
 idx_test <- sample(nrow(d2),1e5)
 idx_valid <- sample(setdiff(1:nrow(d2),idx_test),1e5)
-testf <- gzfile(file.path('classify','test.csv.gz'),'w')
+testf <- gzfile(file.path('classify','ontime','test.csv.gz'),'w')
 write.table(
   d2[idx_test,], 
   file = testf, 
@@ -60,7 +61,7 @@ write.table(
   sep = ',',
   quote=FALSE)
 close(testf)
-validf <- gzfile(file.path('classify','valid.csv.gz'),'w')
+validf <- gzfile(file.path('classify','ontime','valid.csv.gz'),'w')
 write.table(
   d2[idx_valid,], 
   file = validf, 

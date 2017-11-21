@@ -1,9 +1,13 @@
 (set! *warn-on-reflection* true)
 (set! *unchecked-math* :warn-on-boxed)
-(ns ^{:author "John Alan McDonald Kristina Lisa Klinkner" :date "2016-11-15"
+(ns ^{:author ["wahpenayo at gmail dot com"
+               "John Alan McDonald"
+               "Kristina Lisa Klinkner" ]
+      :since "2016-11-15"
+      :date "2017-11-20"
       :doc "Accuracy metrics designed for permutation importance measures." }
     
-    taiga.bench.metrics
+    taiga.bench.classify.metrics
   
   (:require [clojure.string :as s]
             [clojure.java.io :as io]
@@ -53,4 +57,5 @@
               n1 (- (z/count data) n0)
               u1 (- (* n0 n1) u0)]
           (/ (Math/max u0 u1) (* n0 n1)))))))
+;;------------------------------------------------------------------------------
 

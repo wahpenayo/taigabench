@@ -7,16 +7,16 @@
             https://www.r-bloggers.com/benchmarking-random-forest-implementations/
             http://stat-computing.org/dataexpo/2009/" }
     
-    taiga.bench.scripts.ontime.bench
+    taiga.bench.scripts.classify.ontime.bench
   
   (:require [clojure.string :as s]
             [zana.api :as z]
             [taiga.api :as taiga]
-            [taiga.bench.data.ontime :as data]
-            [taiga.bench.ontime :as ontime]))
-;; clj src\scripts\clojure\taiga\bench\scripts\ontime\bench.clj > output\ontime.bench.txt
-;; clj12g src\scripts\clojure\taiga\bench\scripts\ontime\bench.clj > output\ontime.bench.txt
-;; clj48g src\scripts\clojure\taiga\bench\scripts\ontime\bench.clj > output\ontime.bench.txt
+            [taiga.bench.classify.ontime.data :as data]
+            [taiga.bench.classify.ontime.traintest :as traintest]))
+;; clj src\scripts\clojure\taiga\bench\scripts\ontime\classify\bench.clj > output\ontime.bench.txt
+;; clj12g src\scripts\clojure\taiga\bench\scripts\ontime\classify\bench.clj > output\ontime.bench.txt
+;; clj48g src\scripts\clojure\taiga\bench\scripts\ontime\classify\bench.clj > output\ontime.bench.txt
 ;;----------------------------------------------------------------
 (doseq [[mincount suffixes] [[10 ["0.01m" "0.1m" "1m" "10m"]]]]
   (with-open [w (z/print-writer 
@@ -27,7 +27,7 @@
       (System/gc)
       (println "taiga" mincount suffix)
       (let [learner  taiga/positive-fraction-probability
-            results (ontime/traintest 
+            results (traintest/traintest 
                       suffix 
                       learner 
                       (assoc ontime/prototype
