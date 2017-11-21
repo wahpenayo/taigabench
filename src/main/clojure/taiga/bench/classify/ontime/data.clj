@@ -105,8 +105,7 @@
     (io/make-parents f)
     f))
 (defn results-file ^java.io.File [fname mincount] 
-  (let [f (io/file "output" "classify" "ontime"
-                   (str fname ".results.csv"))]
+  (let [f (output-file fname ".results.csv")]
     (io/make-parents f)
     f))
 ;;----------------------------------------------------------------

@@ -14,7 +14,7 @@
             [taiga.api :as taiga]
             [taiga.bench.pt :as pt]
             [taiga.bench.classify.metrics :as metrics]
-            [taiga.bench.classify.ontime.data :as ontime]))
+            [taiga.bench.classify.ontime.data :as data]))
 ;;------------------------------------------------------------------------------
 (def prototype 
   {:attributes data/attributes

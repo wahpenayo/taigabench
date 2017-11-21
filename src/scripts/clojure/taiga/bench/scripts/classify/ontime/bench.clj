@@ -2,7 +2,7 @@
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
       :since "2017-01-30"
-      :date "2017-11-17"
+      :date "2017-11-20"
       :doc "Public airline ontime data benchmark:
             https://www.r-bloggers.com/benchmarking-random-forest-implementations/
             http://stat-computing.org/dataexpo/2009/" }
@@ -14,13 +14,13 @@
             [taiga.api :as taiga]
             [taiga.bench.classify.ontime.data :as data]
             [taiga.bench.classify.ontime.traintest :as traintest]))
-;; clj src\scripts\clojure\taiga\bench\scripts\ontime\classify\bench.clj > output\ontime.bench.txt
-;; clj12g src\scripts\clojure\taiga\bench\scripts\ontime\classify\bench.clj > output\ontime.bench.txt
-;; clj48g src\scripts\clojure\taiga\bench\scripts\ontime\classify\bench.clj > output\ontime.bench.txt
+;; clj src\scripts\clojure\taiga\bench\scripts\classify\ontime\bench.clj > output\\classify\ontime.bench.txt
+;; clj12g src\scripts\clojure\taiga\bench\scripts\classify\ontime\bench.clj > output\\classify\ontime.bench.txt
+;; clj48g src\scripts\clojure\taiga\bench\scripts\classify\ontime\bench.clj > output\\classify\ontime.bench.txt
 ;;----------------------------------------------------------------
-(doseq [[mincount suffixes] [[10 ["0.01m" "0.1m" "1m" "10m"]]]]
+(doseq [[mincount suffixes] [[10 ["0.01m" "0.01m" "0.1m" "1m" "10m"]]]]
   (with-open [w (z/print-writer 
-                  (data/output-file "taiga.results" "csv.gz"))]
+                  (data/output-file "taiga.results" "csv"))]
     (.println w 
       "model,ntrain,ntest,datatime,traintime,predicttime,auctime,auc")
     (doseq [suffix suffixes]
@@ -30,7 +30,7 @@
             results (traintest/traintest 
                       suffix 
                       learner 
-                      (assoc ontime/prototype
+                      (assoc traintest/prototype
                              :maxdepth 20
                              :mincount mincount
                              :nterms 500))

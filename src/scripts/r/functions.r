@@ -85,7 +85,11 @@ my.theme <- function () {
 # Open a png graphics device.
 # aspect ratio is height/width
 
-dev.on <- function (filename,aspect=(1050/1400),width=1400,theme=my.theme) {
+dev.on <- function (
+  filename,
+  aspect=(1050/1400),
+  width=1400,
+  theme=my.theme) {
   
   # make sure the folder is there
   dir.create(dirname(filename),showWarnings=FALSE,recursive=TRUE)
@@ -138,14 +142,14 @@ train.file <- function (
   problem=NULL,
   suffix=NULL) {
   file.path(
-    data.folder(problem,dataset),
+    data.folder(problem=problem,dataset=dataset),
     paste("train-",suffix,".csv.gz",sep='')) }
 
 test.file <- function (
   dataset=NULL, 
   problem=NULL) {
   file.path(
-    data.folder(problem,dataset),
+    data.folder(problem=problem,dataset=dataset),
     paste("test.csv.gz",sep='')) }
 
 output.folder <- function (
@@ -165,7 +169,7 @@ predicted.file <- function (
   prefix) {
   gzfile(
     file.path(
-      output.folder(problem,dataset), 
+      output.folder(problem=problem,dataset=dataset), 
       paste(prefix,"pred.tsv.gz",sep='.'))) }
 
 results.file <- function (
@@ -173,14 +177,14 @@ results.file <- function (
   problem=NULL,
   prefix='all') {
   file.path(
-    output.folder(problem,dataset),
+    output.folder(problem=problem,dataset=dataset),
     paste(paste(prefix,"results.csv",sep='.'))) }
 
 plot.file <- function (
   dataset=NULL, 
   problem=NULL,
   prefix) { 
-  file.path(output.folder(problem,dataset),prefix) }
+  file.path(output.folder(problem=problem,dataset=dataset),prefix) }
 #-----------------------------------------------------------------
 models <- c(
   'h2o',
@@ -273,6 +277,27 @@ classify.h2o.randomForest <- function (
   results
 }
 #-----------------------------------------------------------------
+# save mode callback that does nothing
+cb.save.model <- function(
+  save_period = 0, 
+  save_name = "xgboost.model") {
+  
+  if (save_period < 0)
+    stop("'save_period' cannot be negative")
+  
+  callback <- function(env = parent.frame()) {
+#    if (is.null(env$bst))
+#      stop("'save_model' callback requires the 'bst' booster object in its calling frame")
+#    
+#    if ((save_period > 0 && (env$iteration - env$begin_iteration) %% save_period == 0) ||
+#      (save_period == 0 && env$iteration == env$end_iteration))
+#      xgb.save(env$bst, sprintf(save_name, env$iteration))
+  }
+  attr(callback, 'call') <- match.call()
+  attr(callback, 'name') <- 'cb.save.model'
+  callback
+}
+
 classify.xgboost.randomForest <- function (
   dataset=NULL,
   trainfile=NULL,
@@ -311,6 +336,9 @@ classify.xgboost.randomForest <- function (
   
   datatime <- proc.time() - start
   
+  modelfile <-file.path(
+    output.folder(dataset=dataset,problem='classify'),
+    'xgboost.model')
   # random forest with xgboost
   start <- proc.time()
   n_proc <- detectCores()
@@ -324,8 +352,15 @@ classify.xgboost.randomForest <- function (
     num_parallel_tree = 500, 
     subsample = 0.632,
     colsample_bytree = 
-      1.0 / sqrt(length(X_train@x)/nrow(X_train)))
+      1.0 / sqrt(length(X_train@x)/nrow(X_train)),
+    save_name=modelfile,
+    callbacks=list(cb.save.model(save_name=modelfile)))
   traintime <- proc.time() - start
+  
+  # can't figure out how to prevent this being saved.
+  # at least want to be able to time training and model
+  # serialization separately
+  # file.remove(modelfile)
   
   start <- proc.time()
   phat <- predict(md, newdata = X_test)
