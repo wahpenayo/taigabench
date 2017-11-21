@@ -14,9 +14,9 @@
             [taiga.api :as taiga]
             [taiga.bench.classify.ontime.data :as data]
             [taiga.bench.classify.ontime.traintest :as traintest]))
-;; clj src\scripts\clojure\taiga\bench\scripts\classify\ontime\bench.clj > output\\classify\ontime.bench.txt
-;; clj12g src\scripts\clojure\taiga\bench\scripts\classify\ontime\bench.clj > output\\classify\ontime.bench.txt
-;; clj48g src\scripts\clojure\taiga\bench\scripts\classify\ontime\bench.clj > output\\classify\ontime.bench.txt
+;; clj src\scripts\clojure\taiga\bench\scripts\classify\ontime\bench.clj > output\ontime.bench.txt
+;; clj12g src\scripts\clojure\taiga\bench\scripts\classify\ontime\bench.clj > output\ontime.bench.txt
+;; clj48g src\scripts\clojure\taiga\bench\scripts\classify\ontime\bench.clj > output\ontime.bench.txt
 ;;----------------------------------------------------------------
 (doseq [[mincount suffixes] [[10 ["0.01m" "0.01m" "0.1m" "1m" "10m"]]]]
   (with-open [w (z/print-writer 
