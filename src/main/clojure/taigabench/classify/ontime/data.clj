@@ -2,7 +2,7 @@
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
       :since "2016-11-10"
-      :date "2017-11-21"
+      :date "2017-11-22"
       :doc "Public airline ontime data for benchmarking:
             http://stat-computing.org/dataexpo/2009/
             <p>
@@ -23,7 +23,8 @@
             unknownable when a prediction would be useful)
             by `CRSDepTime`, the scheduled departure time.
             <p> 
-            Different attributes are used for other benchmarks." }
+            I've added scheduled arrival and elasped times as
+            predictors." }
     
     taigabench.classify.ontime.data
   
@@ -83,31 +84,30 @@
       (.get ^java.util.List days i))))
 ;;----------------------------------------------------------------
 (z/define-datum Ontime
-  [^java.time.Month 
-   [month parse-month]
-   ^taigabench.java.ontime.DayOfMonth 
-   [dayofmonth parse-dayofmonth]
-   ^java.time.DayOfWeek 
-   [dayofweek parse-dow]
-   ^float
-   [crsdeptime (fn ^double [tuple _] 
-                 (parse-int (:crsdeptime tuple)))]
-   ^taigabench.java.ontime.Airline 
-   [uniquecarrier parse-carrier]
-   ^taigabench.java.ontime.Airport 
-   [origin (fn [tuple _] (parse-airport (:origin tuple)))]
-   ^taigabench.java.ontime.Airport 
-   [dest (fn [tuple _] (parse-airport (:dest tuple)))]
-   ^float 
-   [distance (fn ^double [tuple _] 
-               (parse-int (:distance tuple)))]
-   ^float 
-   [dep-delayed-15min 
-    (fn ^double [tuple _] 
-      (let [yn (strip-quotes (:dep-delayed-15min tuple))]
-        (case yn
-          "Y" (double 1.0)
-          "N" (double 0.0))))]
+  [^java.time.Month [month parse-month]
+   ^taigabench.java.ontime.DayOfMonth [dayofmonth parse-dayofmonth]
+   ^java.time.DayOfWeek [dayofweek parse-dow]
+   ^float [crsdeptime (fn ^double [tuple _] 
+                        (parse-int (:crsdeptime tuple)))]
+   ^float [crsarrtime (fn ^double [tuple _] 
+                        (parse-int (:crsarrtime tuple)))]
+   ^float [crselapsedtime (fn ^double [tuple _] 
+                            (parse-int (:crselapsedtime tuple)))]
+   ^float [distance (fn ^double [tuple _] 
+                      (parse-int (:distance tuple)))]
+   ^taigabench.java.ontime.Airline [uniquecarrier parse-carrier]
+   ^taigabench.java.ontime.Airport [origin (fn [tuple _] 
+                                             (parse-airport 
+                                               (:origin tuple)))]
+   ^taigabench.java.ontime.Airport [dest (fn [tuple _] 
+                                           (parse-airport 
+                                             (:dest tuple)))]
+   ^float [arr-delayed-15min 
+           (fn ^double [tuple _] 
+             (let [yn (strip-quotes (:arr-delayed-15min tuple))]
+               (case yn
+                 "Y" (double 1.0)
+                 "N" (double 0.0))))]
    ^float score])
 ;;----------------------------------------------------------------
 (def attributes 
@@ -117,7 +117,7 @@
     (into {} (map #(vector (keyword (z/name %)) %)
                   [month dayofmonth dayofweek crsdeptime 
                    uniquecarrier origin dest distance]))
-    :ground-truth dep-delayed-15min
+    :ground-truth arr-delayed-15min
     :prediction score))
 ;;----------------------------------------------------------------
 (defn data-file ^java.io.File [fname ext]

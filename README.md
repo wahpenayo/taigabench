@@ -164,7 +164,7 @@ Not benchmarking distributed implmentations (yet) anyway.
 </tr><tr>
  <td>15 </td><td> ArrDelay          </td><td>arrival delay, in minutes</td>
 </tr><tr>
- <td>16 </td><td> DepDelay          </td><td>departure delay, in minutes</td>
+ <td>16 </td><td> ArrDelay          </td><td>departure delay, in minutes</td>
 </tr><tr>
  <td>17 </td><td> Origin            </td><td>origin <a href="supplemental-data.html">IATA airport code</a></td>
 </tr><tr>

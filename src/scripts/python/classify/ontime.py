@@ -9,9 +9,9 @@ def get_dummies(d, col):
     dd.columns = [col + "_%s" % c for c in dd.columns]
     return(dd)
 
-vars_categ = ["Month","DayofMonth","DayOfWeek","UniqueCarrier", \
-              "Origin", "Dest"]
-vars_num = ["DepTime","Distance"]
+vars_categ = ["Month","DayofMonth","DayOfWeek",\
+              "UniqueCarrier", "Origin", "Dest"]
+vars_num = ["CRSDepTime","CRSArrTime","CRSElapsedTime","Distance"]
 
 results = []
 
@@ -27,7 +27,7 @@ for suffix in ["0.01", "0.1", "1", "10"] :
     X_train_test = \
     pd.concat([X_train_test_categ, d_train_test.ix[:,vars_num]], \
               axis = 1)
-    y_train_test = np.where(d_train_test["dep_delayed_15min"]=="Y", 1, 0)
+    y_train_test = np.where(d_train_test["arr_delayed_15min"]=="Y", 1, 0)
     X_train = X_train_test[0:d_train.shape[0]]
     y_train = y_train_test[0:d_train.shape[0]]
     X_test = X_train_test[d_train.shape[0]:]
