@@ -5,7 +5,7 @@
       :date "2017-11-20"
       :doc "simple prediction/truth datum" }
     
-    taiga.bench.pt
+    taigabench.pt
   
   (:require [zana.api :as z]))
 ;;------------------------------------------------------------------------------

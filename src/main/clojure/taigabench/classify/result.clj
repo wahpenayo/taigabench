@@ -5,7 +5,7 @@
       :date "2017-11-20"
       :doc "benchmark result datum" }
     
-    taiga.bench.classify.result
+    taigabench.classify.result
   
   (:require [zana.api :as z]))
 ;;------------------------------------------------------------------------------

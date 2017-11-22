@@ -2,19 +2,19 @@
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
       :since "2016-11-15"
-      :date "2017-11-20"
+      :date "2017-11-21"
       :doc "Public airline ontime data for benchmarking:
             http://stat-computing.org/dataexpo/2009/" }
     
-    taiga.bench.classify.ontime.traintest
+    taigabench.classify.ontime.traintest
   
   (:require [clojure.string :as s]
             [clojure.java.io :as io]
             [zana.api :as z]
             [taiga.api :as taiga]
-            [taiga.bench.pt :as pt]
-            [taiga.bench.classify.metrics :as metrics]
-            [taiga.bench.classify.ontime.data :as data]))
+            [taigabench.pt :as pt]
+            [taigabench.metrics :as metrics]
+            [taigabench.classify.ontime.data :as data]))
 ;;------------------------------------------------------------------------------
 (def prototype 
   {:attributes data/attributes

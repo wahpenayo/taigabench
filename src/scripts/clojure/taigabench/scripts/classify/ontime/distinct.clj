@@ -7,13 +7,13 @@
             https://www.r-bloggers.com/benchmarking-random-forest-implementations/
             http://stat-computing.org/dataexpo/2009/" }
     
-    taiga.bench.scripts.ontime.classify.distinct
+    taigabench.scripts.ontime.classify.distinct
   
   (:require [clojure.string :as s]
             [zana.api :as z]
             [taiga.api :as taiga]
-            [taiga.bench.classify.ontime.data :as data]))
-;; clj src\scripts\clojure\taiga\bench\scripts\classify\ontime\distinct.clj > output\classify\ontime\distinct.txt
+            [taigabench.classify.ontime.data :as data]))
+;; clj src\scripts\clojure\taigabench\scripts\classify\ontime\distinct.clj > output\classify\ontime\distinct.txt
 ;;----------------------------------------------------------------
 (let [data (z/mapcat
                #(data/read-tsv-file (data/data-file % "csv") 

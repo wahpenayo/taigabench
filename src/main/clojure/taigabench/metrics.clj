@@ -5,9 +5,10 @@
                "Kristina Lisa Klinkner" ]
       :since "2016-11-15"
       :date "2017-11-20"
-      :doc "Accuracy metrics designed for permutation importance measures." }
+      :doc "Accuracy metrics designed for permutation importance 
+            measures." }
     
-    taiga.bench.classify.metrics
+    taigabench.metrics
   
   (:require [clojure.string :as s]
             [clojure.java.io :as io]

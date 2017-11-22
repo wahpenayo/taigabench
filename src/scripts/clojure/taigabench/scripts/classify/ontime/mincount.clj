@@ -7,13 +7,13 @@
             https://www.r-bloggers.com/benchmarking-random-forest-implementations/
             http://stat-computing.org/dataexpo/2009/" }
     
-    taiga.bench.scripts.classify.ontime.mincount
+    taigabench.scripts.classify.ontime.mincount
   
   (:require [clojure.java.io :as io]
             [zana.api :as z]
             [taiga.api :as taiga]
-            [taiga.bench.classify.ontime.traintest :as traintest]))
-;; clj src\scripts\clojure\taiga\bench\scripts\ontime\mincount.clj > ontime.mincount.txt
+            [taigabench.classify.ontime.traintest :as traintest]))
+;; clj src\scripts\clojure\taigabench\scripts\ontime\mincount.clj > ontime.mincount.txt
 ;;----------------------------------------------------------------
 (doseq [learner [taiga/positive-fraction-probability
                  taiga/majority-vote-probability]]

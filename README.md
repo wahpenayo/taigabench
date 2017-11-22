@@ -87,9 +87,11 @@ the loaded packages.
 #### Linux 
 #### OSX
 
-### [Anaconda 5.0.1](https://www.anaconda.com/download/)
+### [scikit-learn 0.19.1](http://scikit-learn.org/stable/)
 
-#### Windows 10
+#### [Anaconda 5.0.1](https://www.anaconda.com/download/)
+
+##### Windows 10
 
 [Windows installer Python 3.6 version](https://www.anaconda.com/download/#windows)
 
@@ -101,24 +103,29 @@ conda create -n my_root --clone="C:\ProgramData\Anaconda3"
 activate my_root
 ```
 
-
-#### Linux 
-#### OSX
-
-### [SciPy 1.0.0](http://www.scipy.org/) and [NumPy 1.13.3](http://www.numpy.org/)
+scikit-learn needs [SciPy 1.0.0](http://www.scipy.org/) 
+and [NumPy 1.13.3](http://www.numpy.org/),
+whach are probably already present in the anaconda distribution.
 
 `conda install numpy  
 
 `conda install scipy`
 
-### [scikit-learn 0.19.1](http://scikit-learn.org/stable/)
-
 `conda install scikit-learn`
 
+##### Linux 
+##### OSX
+
+### [Spark mlib](https://spark.apache.org/mllib/)
+
+Installation and version complexity off-putting.
+Not benchmarking distributed implmentations (yet) anyway.
 
 ## Benchmarks
 
-### [Airline ontime data](http://stat-computing.org/dataexpo/2009)
+### classify (Binary classification)
+
+#### [Airline ontime data](http://stat-computing.org/dataexpo/2009)
 
 <table width="100%">
 <tbody><tr>
@@ -193,8 +200,6 @@ for more details and
 [data](https://www.transtats.bts.gov/OT_Delay/OT_DelayCause1.asp)
  for the years after 2009.
 
-#### classify
-
 Benchmark algorithms attempting to predict whether a flight's
 departure delay is at least 15 minutes, that is,
 binary classification, as in
@@ -202,7 +207,13 @@ binary classification, as in
 See also the [R-bloggers version](https://www.r-bloggers.com/benchmarking-random-forest-implementations/)
 and the [original code](https://github.com/szilard/benchm-ml).
 
-_(I don't know why 
+_(I don't know why this uses departure delay as the outcome ---
+most passengers would be more interested in arrival delay.
+Also, only a subset of the predictors are used:
+`month`, `dayofmonth`, `dayofweek`, `deptime`,
+`uniquecarrier`, `origin`, `dest`, `distance`.
+Our regression versions of this benchmark use arrival delay
+and more predictors.)
 
 Download at least 2005, 2006, and 2007 by hand.
 Use `src/scripts/r/ontime/classification-data.r` 
@@ -217,5 +228,3 @@ or split the training data into `pre-train`, `meta-train`,
 and are-combine those and re-train once the meta/hyper parameters
 have been chosen.
 
-
-'

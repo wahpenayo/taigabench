@@ -1,2 +1,0 @@
-"model","ntrain","ntest","datatime","traintime","predicttime","auctime","auc"
-h2o,10000,100000,2.11,8.72,23.16,20.24,0.673497060350043

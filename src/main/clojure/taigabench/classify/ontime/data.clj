@@ -2,17 +2,36 @@
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
       :since "2016-11-10"
-      :date "2017-11-20"
+      :date "2017-11-21"
       :doc "Public airline ontime data for benchmarking:
-            http://stat-computing.org/dataexpo/2009/" }
+            http://stat-computing.org/dataexpo/2009/
+            <p>
+            <b>Note:</b>Using attributes mostly as defined as in 
+            [BENCHMARKING RANDOM FOREST IMPLEMENTATIONS](http://datascience.la/benchmarking-random-forest-implementations/):
+            a subset of possible predictors and departure delay
+            greater than 15 minutes as the outcome.
+            <p>
+            The [original benchmark data sampling code](https://github.com/szilard/benchm-ml/blob/master/0-init/2-gendata.txt)
+            appears to use actual departure time as a predictor,
+            which would make the model useless for predicting
+            departure delay, since if you know the actual departure 
+            time and the scheduled departure time, you can 
+            compute the delay without any model.
+            See [Issue 33](https://github.com/szilard/benchm-ml/issues/33).
+            <p>
+            Here, I've replaced `DepTime` (actual departure time,
+            unknownable when a prediction would be useful)
+            by `CRSDepTime`, the scheduled departure time.
+            <p> 
+            Different attributes are used for other benchmarks." }
     
-    taiga.bench.classify.ontime.data
+    taigabench.classify.ontime.data
   
   (:require [clojure.string :as s]
             [clojure.java.io :as io]
             [zana.api :as z]
             [taiga.api :as taiga]
-            [taiga.bench.classify.metrics :as metrics])
+            [taigabench.metrics :as metrics])
   (:import [java.time DayOfWeek Month]
            [taigabench.java.ontime Airline Airport DayOfMonth]))
 ;;----------------------------------------------------------------
@@ -20,7 +39,10 @@
   (.replaceAll s "[\"]+" ""))
 
 (defn- parse-int ^double [^String s] 
-  (double (Integer/parseInt (strip-quotes s))))
+  (let [^String s (strip-quotes s)]
+    (if (= "NA" s)
+      Double/NaN
+      (double (Integer/parseInt s)))))
 
 (defn- parse-month ^Month [tuple _]
   (Month/of 
@@ -68,7 +90,8 @@
    ^java.time.DayOfWeek 
    [dayofweek parse-dow]
    ^float
-   [deptime (fn ^double [tuple _] (parse-int (:deptime tuple)))]
+   [crsdeptime (fn ^double [tuple _] 
+                 (parse-int (:crsdeptime tuple)))]
    ^taigabench.java.ontime.Airline 
    [uniquecarrier parse-carrier]
    ^taigabench.java.ontime.Airport 
@@ -76,7 +99,8 @@
    ^taigabench.java.ontime.Airport 
    [dest (fn [tuple _] (parse-airport (:dest tuple)))]
    ^float 
-   [distance (fn ^double [tuple _] (parse-int (:distance tuple)))]
+   [distance (fn ^double [tuple _] 
+               (parse-int (:distance tuple)))]
    ^float 
    [dep-delayed-15min 
     (fn ^double [tuple _] 
@@ -91,7 +115,7 @@
    <code>:ground-truth</code> and <code>:prediction</code>."
   (assoc
     (into {} (map #(vector (keyword (z/name %)) %)
-                  [month dayofmonth dayofweek deptime 
+                  [month dayofmonth dayofweek crsdeptime 
                    uniquecarrier origin dest distance]))
     :ground-truth dep-delayed-15min
     :prediction score))

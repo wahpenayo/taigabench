@@ -2,20 +2,20 @@
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
       :since "2016-11-10"
-      :date "2017-11-20"
+      :date "2017-11-21"
       :doc "Compute auc in one place for all benchmarked libraries, to check that
             AUC imp-lementations are consistent.
             https://www.r-bloggers.com/benchmarking-random-forest-implementations/
             http://stat-computing.org/dataexpo/2009/" }
     
-    taiga.bench.scripts.ontime.classify.auc
+    taigabench.scripts.ontime.classify.auc
   
   (:require [clojure.string :as s]
             [zana.api :as z]
-            [taiga.bench.pt :as pt]
-            [taiga.bench.classify.metrics :as metrics]
-            [taiga.bench.classify.ontime.data :as data]))
-;; clj src\scripts\clojure\taiga\bench\scripts\classify\ontime\auc.clj
+            [taigabench.pt :as pt]
+            [taigabench..metrics :as metrics]
+            [taigabench.classify.ontime.data :as data]))
+;; clj src\scripts\clojure\taigabench\scripts\classify\ontime\auc.clj
 ;;------------------------------------------------------------------------------
 (with-open [w (z/print-writer (data/output-file "auc" "csv"))]
   (.println w "model,ntrain,ntest,auc")

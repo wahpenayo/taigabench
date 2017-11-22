@@ -1,8 +1,12 @@
 # wahpenayo at gmail dot com
-# 2017-11-20
+# 2017-11-21
 # after https://github.com/szilard/benchm-ml/blob/master/0-init/2-gendata.txt
 #-----------------------------------------------------------------
-setwd('e:/porta/projects/taigabench')
+if (file.exists('e:/porta/projects/taigabench')) {
+  setwd('e:/porta/projects/taigabench')
+} else {
+  setwd('c:/porta/projects/taigabench')
+  }
 #source('src/scripts/r/functions.r')
 #-----------------------------------------------------------------
 set.seed(123)
@@ -33,7 +37,11 @@ for (k in c('Month','DayofMonth','DayOfWeek')) {
 d1$dep_delayed_15min <- ifelse(d1$DepDelay>=15,'Y','N') 
 d2$dep_delayed_15min <- ifelse(d2$DepDelay>=15,'Y','N') 
 
-cols <- c('Month', 'DayofMonth', 'DayOfWeek', 'DepTime', 
+# Note: szilard uses DepTime (unknowable actual departure time)
+# as a predictor. I've replaced that by CRSDepTime (scheduled
+# departure time).
+
+cols <- c('Month', 'DayofMonth', 'DayOfWeek', 'CRSDepTime', 
   'UniqueCarrier','Origin', 'Dest', 'Distance',
   'dep_delayed_15min')
 d1 <- d1[, cols]

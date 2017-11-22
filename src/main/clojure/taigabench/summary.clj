@@ -5,7 +5,7 @@
       :date "2017-11-20"
       :doc "Compute summary statistics for sanity checking." }
     
-    taiga.bench.summary
+    taigabench.summary
   
   (:require [clojure.string :as s]
             [clojure.java.io :as io]
