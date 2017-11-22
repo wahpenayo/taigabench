@@ -62,14 +62,14 @@
 ;;----------------------------------------------------------------
 (z/define-datum Ontime
   [^java.time.Month [month parse-month]
-   ^float [monthNumber (fn ^double [tuple _] 
-                         (parse-double (:month tuple)))]
+   ^float [mon (fn ^double [tuple _] 
+                 (parse-double (:month tuple)))]
    ^taigabench.java.ontime.DayOfMonth [dayofmonth parse-dayofmonth]
-   ^float [domNumber (fn ^double [tuple _] 
-                       (parse-double (:dayofmonth tuple)))]
+   ^float [dom (fn ^double [tuple _] 
+                 (parse-double (:dayofmonth tuple)))]
    ^java.time.DayOfWeek [dayofweek parse-dow]
-   ^float [dowNumber  (fn ^double [tuple _] 
-                        (parse-double (:dayofweek tuple)))]
+   ^float [dow  (fn ^double [tuple _] 
+                  (parse-double (:dayofweek tuple)))]
    ;; TODO: rotate as periodicity hack?
    ^float [crsdeptime (fn ^double [tuple _] 
                         (parse-double (:crsdeptime tuple)))]
@@ -90,10 +90,12 @@
                       (parse-double (:distance tuple)))]
    ^float [arrdelay 
            (fn ^double [tuple _] 
-             ;; Treating cancelled as 24 hour delay, but should be
-             ;; until actual arrival of next available flight.
-             (let [cancelled (Integer/parseInt (:cancelled tuple))]
-               (if (zero? cancelled)
+             ;; Treating cancelled/diverted as 24 hour delay, 
+             ;; but should be until actual arrival of next 
+             ;; available flight.
+             (let [cancelled (Integer/parseInt (:cancelled tuple))
+                   diverted (Integer/parseInt (:diverted tuple))]
+               (if (and (zero? cancelled) (zero? diverted))
                  (parse-double (:arrdelay tuple))
                  (* 24.0 60.0))))]
    ^float arrdelayhat])
@@ -102,27 +104,52 @@
   "An attribute map for Taiga training/prediction, including
    <code>:ground-truth</code> and <code>:prediction</code>."
   (assoc
-    (into {} (map #(vector (keyword (z/name %)) %)
-                  [month monthNumber dayofmonth domNumber 
-                   dayofweek dowNumber crsdeptime crsarrtime 
-                   crselapsedtime uniquecarrier origin dest 
-                   distance]))
+    (into 
+      {} 
+      (map #(vector (keyword (z/name %)) %)
+           [month mon dayofmonth dom dayofweek dow 
+            crsdeptime crsarrtime crselapsedtime distance
+            uniquecarrier origin dest]))
     :ground-truth arrdelay
     :prediction arrdelayhat))
-(def csv-attributes 
-  "Attributes to write to sampled data files."
-  {:month monthNumber :dayofmonth domNumber :dayofweek dowNumber 
-   :crsdeptime crsdeptime :crsarrtime crsarrtime 
-   :crselapsedtime crselapsedtime :uniquecarrier uniquecarrier 
-   :origin origin :dest dest :distance distance 
-   :arrdelay arrdelay})
 ;;----------------------------------------------------------------
 (defn raw-data-file ^java.io.File [year]
   (io/file "data" "ontime" (str year ".csv.bz2")))
 (defn read-raw-data ^Iterable  [year]
   (read-tsv-file (raw-data-file year) #"\,"))
-(defn data-file ^java.io.File [fname ext]
+;;----------------------------------------------------------------
+;; TODO: fix z/define-datum io so round trip csv <-> data 
+;; consistency is easy to ensure, also save writing and reading
+;; redundant attributes (categorial and numerical).
+(defn- data-file ^java.io.File [fname ext]
   (io/file "data" "ontime" (str fname "." ext)))
+(def ^{:private true :tag String} csv-header 
+  (s/join "," 
+          ["month" "dayofmonth" "dayofweek" 
+           "crsdeptime" "crsarrtime" "crselapsedtime" "distance" 
+           "uniquecarrier" "origin" "dest"
+           "arrdelay"]))
+(defn- csv-line ^String [^Ontime r]
+  (s/join 
+    "," 
+    (mapv str
+          [(int (mon r))
+           (int (dom r))
+           (int (dow r)) 
+           (int (crsdeptime r)) 
+           (int (crsarrtime r)) 
+           (int (crselapsedtime r))
+           (int (distance r))
+           (uniquecarrier r) 
+           (origin r)
+           (dest r)
+           (int (arrdelay r))])))
+(defn write-data-file [^Iterable data ^String prefix]
+  (with-open [w (z/print-writer (data-file prefix ".csv.gz"))]
+    (z/mapc #(.println w (csv-line %)) data)))
+(defn read-data-file ^Iterable [^String prefix]
+  (read-tsv-file (data-file prefix "csv.gz") #"\,"))
+;;----------------------------------------------------------------
 (defn output-file ^java.io.File [fname ext]
   (let [f (io/file "output" "l2" "ontime" (str fname "." ext))]
     (io/make-parents f)

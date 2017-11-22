@@ -1,0 +1,237 @@
+read train 2017-11-22 00:55:32
+2003 2017-11-22 00:55:32
+[:year
+ :month
+ :dayofmonth
+ :dayofweek
+ :deptime
+ :crsdeptime
+ :arrtime
+ :crsarrtime
+ :uniquecarrier
+ :flightnum
+ :tailnum
+ :actualelapsedtime
+ :crselapsedtime
+ :airtime
+ :arrdelay
+ :depdelay
+ :origin
+ :dest
+ :distance
+ :taxiin
+ :taxiout
+ :cancelled
+ :cancellationcode
+ :diverted
+ :carrierdelay
+ :weatherdelay
+ :nasdelay
+ :securitydelay
+ :lateaircraftdelay]
+6488540
+{:origin "ORD", :dest "MSY", :uniquecarrier "UA"}
+2003 2017-11-22 00:56:38 (66404ms) (1m) 66s
+2004 2017-11-22 00:56:38
+[:year
+ :month
+ :dayofmonth
+ :dayofweek
+ :deptime
+ :crsdeptime
+ :arrtime
+ :crsarrtime
+ :uniquecarrier
+ :flightnum
+ :tailnum
+ :actualelapsedtime
+ :crselapsedtime
+ :airtime
+ :arrdelay
+ :depdelay
+ :origin
+ :dest
+ :distance
+ :taxiin
+ :taxiout
+ :cancelled
+ :cancellationcode
+ :diverted
+ :carrierdelay
+ :weatherdelay
+ :nasdelay
+ :securitydelay
+ :lateaircraftdelay]
+7129270
+{:origin "ORD", :dest "CLT", :uniquecarrier "UA"}
+2004 2017-11-22 00:57:47 (68786ms) (1m) 69s
+2005 2017-11-22 00:57:47
+[:year
+ :month
+ :dayofmonth
+ :dayofweek
+ :deptime
+ :crsdeptime
+ :arrtime
+ :crsarrtime
+ :uniquecarrier
+ :flightnum
+ :tailnum
+ :actualelapsedtime
+ :crselapsedtime
+ :airtime
+ :arrdelay
+ :depdelay
+ :origin
+ :dest
+ :distance
+ :taxiin
+ :taxiout
+ :cancelled
+ :cancellationcode
+ :diverted
+ :carrierdelay
+ :weatherdelay
+ :nasdelay
+ :securitydelay
+ :lateaircraftdelay]
+7140596
+{:origin "BOS", :dest "ORD", :uniquecarrier "UA"}
+2005 2017-11-22 00:58:57 (69322ms) (1m) 69s
+2006 2017-11-22 00:58:57
+[:year
+ :month
+ :dayofmonth
+ :dayofweek
+ :deptime
+ :crsdeptime
+ :arrtime
+ :crsarrtime
+ :uniquecarrier
+ :flightnum
+ :tailnum
+ :actualelapsedtime
+ :crselapsedtime
+ :airtime
+ :arrdelay
+ :depdelay
+ :origin
+ :dest
+ :distance
+ :taxiin
+ :taxiout
+ :cancelled
+ :cancellationcode
+ :diverted
+ :carrierdelay
+ :weatherdelay
+ :nasdelay
+ :securitydelay
+ :lateaircraftdelay]
+7141922
+{:origin "ATL", :dest "PHX", :uniquecarrier "US"}
+2006 2017-11-22 01:00:06 (69318ms) (1m) 69s
+2007 2017-11-22 01:00:07
+[:year
+ :month
+ :dayofmonth
+ :dayofweek
+ :deptime
+ :crsdeptime
+ :arrtime
+ :crsarrtime
+ :uniquecarrier
+ :flightnum
+ :tailnum
+ :actualelapsedtime
+ :crselapsedtime
+ :airtime
+ :arrdelay
+ :depdelay
+ :origin
+ :dest
+ :distance
+ :taxiin
+ :taxiout
+ :cancelled
+ :cancellationcode
+ :diverted
+ :carrierdelay
+ :weatherdelay
+ :nasdelay
+ :securitydelay
+ :lateaircraftdelay]
+7453215
+{:origin "SMF", :dest "ONT", :uniquecarrier "WN"}
+2007 2017-11-22 01:01:19 (72503ms) (1m) 73s
+2007 2017-11-22 01:01:19
+[:year
+ :month
+ :dayofmonth
+ :dayofweek
+ :deptime
+ :crsdeptime
+ :arrtime
+ :crsarrtime
+ :uniquecarrier
+ :flightnum
+ :tailnum
+ :actualelapsedtime
+ :crselapsedtime
+ :airtime
+ :arrdelay
+ :depdelay
+ :origin
+ :dest
+ :distance
+ :taxiin
+ :taxiout
+ :cancelled
+ :cancellationcode
+ :diverted
+ :carrierdelay
+ :weatherdelay
+ :nasdelay
+ :securitydelay
+ :lateaircraftdelay]
+7453215
+{:origin "SMF", :dest "ONT", :uniquecarrier "WN"}
+2007 2017-11-22 01:02:32 (72340ms) (1m) 72s
+2008 2017-11-22 01:02:32
+[:year
+ :month
+ :dayofmonth
+ :dayofweek
+ :deptime
+ :crsdeptime
+ :arrtime
+ :crsarrtime
+ :uniquecarrier
+ :flightnum
+ :tailnum
+ :actualelapsedtime
+ :crselapsedtime
+ :airtime
+ :arrdelay
+ :depdelay
+ :origin
+ :dest
+ :distance
+ :taxiin
+ :taxiout
+ :cancelled
+ :cancellationcode
+ :diverted
+ :carrierdelay
+ :weatherdelay
+ :nasdelay
+ :securitydelay
+ :lateaircraftdelay]
+7009728
+{:origin "IAD", :dest "TPA", :uniquecarrier "WN"}
+2008 2017-11-22 01:03:41 (68973ms) (1m) 69s
+read train 2017-11-22 01:03:41 (489559ms) (8m) 490s
+{:origin "ORD", :dest "MSY", :uniquecarrier "UA"}
+{:records 49816486, :carriers 23, :airports 333}
+["9E" "AA" "AQ" "AS" "B6" "CO" "DH" "DL" "EV" "F9" "FL" "HA" "HP" "MQ" "NW" "OH" "OO" "TZ" "UA" "US" "WN" "XE" "YV"]
+["ABE" "ABI" "ABQ" "ABY" "ACK" "ACT" "ACV" "ACY" "ADK" "ADQ" "AEX" "AGS" "AKN" "ALB" "ALO" "AMA" "ANC" "APF" "ASE" "ATL" "ATW" "AUS" "AVL" "AVP" "AZO" "BDL" "BET" "BFF" "BFL" "BGM" "BGR" "BHM" "BIL" "BIS" "BJI" "BLI" "BMI" "BNA" "BOI" "BOS" "BPT" "BQK" "BQN" "BRO" "BRW" "BTM" "BTR" "BTV" "BUF" "BUR" "BWI" "BZN" "CAE" "CAK" "CBM" "CDC" "CDV" "CEC" "CHA" "CHO" "CHS" "CIC" "CID" "CKB" "CLD" "CLE" "CLL" "CLT" "CMH" "CMI" "CMX" "COD" "COS" "CPR" "CRP" "CRW" "CSG" "CVG" "CWA" "CYS" "DAB" "DAL" "DAY" "DBQ" "DCA" "DEN" "DFW" "DHN" "DLG" "DLH" "DRO" "DSM" "DTW" "DUT" "EAU" "EFD" "EGE" "EKO" "ELM" "ELP" "ERI" "EUG" "EVV" "EWN" "EWR" "EYW" "FAI" "FAR" "FAT" "FAY" "FCA" "FLG" "FLL" "FLO" "FMN" "FNT" "FSD" "FSM" "FWA" "GCC" "GEG" "GFK" "GGG" "GJT" "GLH" "GNV" "GPT" "GRB" "GRK" "GRR" "GSO" "GSP" "GST" "GTF" "GTR" "GUC" "HDN" "HHH" "HKY" "HLN" "HNL" "HOU" "HPN" "HRL" "HSV" "HTS" "HVN" "IAD" "IAH" "ICT" "IDA" "ILE" "ILG" "ILM" "IND" "INL" "IPL" "ISO" "ISP" "ITH" "ITO" "IYK" "JAC" "JAN" "JAX" "JFK" "JNU" "KOA" "KTN" "LAN" "LAR" "LAS" "LAW" "LAX" "LBB" "LBF" "LCH" "LEX" "LFT" "LGA" "LGB" "LIH" "LIT" "LMT" "LNK" "LNY" "LRD" "LSE" "LWB" "LWS" "LYH" "MAF" "MBS" "MCI" "MCN" "MCO" "MDT" "MDW" "MEI" "MEM" "MFE" "MFR" "MGM" "MHT" "MIA" "MKC" "MKE" "MKG" "MKK" "MLB" "MLI" "MLU" "MOB" "MOD" "MOT" "MQT" "MRY" "MSN" "MSO" "MSP" "MSY" "MTH" "MTJ" "MYR" "OAJ" "OAK" "OGD" "OGG" "OKC" "OMA" "OME" "ONT" "ORD" "ORF" "OTH" "OTZ" "OXR" "PBI" "PDX" "PFN" "PHF" "PHL" "PHX" "PIA" "PIE" "PIH" "PIR" "PIT" "PLN" "PMD" "PNS" "PSC" "PSE" "PSG" "PSP" "PUB" "PVD" "PVU" "PWM" "RAP" "RCA" "RDD" "RDM" "RDU" "RFD" "RHI" "RIC" "RKS" "RNO" "ROA" "ROC" "ROW" "RST" "RSW" "SAN" "SAT" "SAV" "SBA" "SBN" "SBP" "SCC" "SCE" "SDF" "SEA" "SFO" "SGF" "SGU" "SHV" "SIT" "SJC" "SJT" "SJU" "SKA" "SLC" "SLE" "SMF" "SMX" "SNA" "SOP" "SPI" "SPS" "SRQ" "STL" "STT" "STX" "SUN" "SUX" "SWF" "SYR" "TEX" "TLH" "TOL" "TPA" "TRI" "TTN" "TUL" "TUP" "TUS" "TVC" "TWF" "TXK" "TYR" "TYS" "VCT" "VIS" "VLD" "VPS" "WRG" "WYS" "XNA" "YAK" "YKM" "YUM"]
