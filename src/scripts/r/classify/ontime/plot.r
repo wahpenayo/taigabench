@@ -2,7 +2,11 @@
 # since 2016-01-31
 # 2017-11-20
 #-----------------------------------------------------------------
-setwd('e:/porta/projects/taigabench')
+if (file.exists('e:/porta/projects/taigabench')) {
+  setwd('e:/porta/projects/taigabench')
+} else {
+  setwd('c:/porta/projects/taigabench')
+}
 source('src/scripts/r/functions.r')
 #-------------------------------------------------------------------------------
 

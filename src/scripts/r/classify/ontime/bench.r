@@ -15,7 +15,7 @@ testfile=test.file(dataset=dataset,problem=problem)
 print(testfile)
 
 results <- NULL
-for (suffix in c('0.01m')){#,'0.1m','1m','10m')) {
+for (suffix in c('0.01m','0.1m','1m','10m')) {
   gc()
   trainfile <-train.file(
     dataset=dataset,
@@ -37,7 +37,7 @@ for (suffix in c('0.01m')){#,'0.1m','1m','10m')) {
 }
 
 results <- NULL
-for (suffix in c('0.01m')){#,'0.1m','1m','10m')) {
+for (suffix in c('0.01m','0.1m','1m','10m')) {
  gc()
  trainfile <-train.file(
    dataset=dataset,
@@ -63,7 +63,7 @@ for (suffix in c('0.01m')){#,'0.1m','1m','10m')) {
 
 results <- NULL
 # crashes in 64gb at 1m
-for (suffix in c('0.01m')){#,'0.1m')) { #,'1m','10m')) {
+for (suffix in c('0.01m','0.1m')) { #,'1m','10m')) {
  gc()
  trainfile <-train.file(
    dataset=dataset,
