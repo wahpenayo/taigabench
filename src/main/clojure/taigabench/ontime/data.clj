@@ -97,8 +97,7 @@
                    diverted (Integer/parseInt (:diverted tuple))]
                (if (and (zero? cancelled) (zero? diverted))
                  (parse-double (:arrdelay tuple))
-                 (* 24.0 60.0))))]
-   ^float arrdelayhat])
+                 (* 24.0 60.0))))])
 ;;----------------------------------------------------------------
 (def attributes 
   "An attribute map for Taiga training/prediction, including

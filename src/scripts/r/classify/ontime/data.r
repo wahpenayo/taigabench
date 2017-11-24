@@ -1,18 +1,20 @@
 # wahpenayo at gmail dot com
-# 2017-11-22
+# 2017-11-23
 # after https://github.com/szilard/benchm-ml/blob/master/0-init/2-gendata.txt
 # Note: 
 # * Replacing DepTime (actual departure time => target leak) 
 # by CRSDepTIme (scheduled departure time).
 # * Replacing dep_delayed_15min by arr_delayed_15min,
 # because customers care about arrival delay, not departure delay.
+# * Treated a cancelled or diverted flight as delayed, rather than
+# missing.
 # * Adding other obvious predictors, because ... why not?
 #-----------------------------------------------------------------
 if (file.exists('e:/porta/projects/taigabench')) {
   setwd('e:/porta/projects/taigabench')
 } else {
   setwd('c:/porta/projects/taigabench')
-  }
+}
 #source('src/scripts/r/functions.r')
 #-----------------------------------------------------------------
 set.seed(123)
@@ -32,20 +34,31 @@ d2 <- read.csv('data/ontime/2007.csv.bz2')
 
 d1 <- rbind(d1a, d1b)
 
-d1 <- d1[!is.na(d1$ArrDelay),]
-d2 <- d2[!is.na(d2$ArrDelay),]
+#-----------------------------------------------------------------
+delayed <- function (data) {
+  ((data$Cancelled == 1) 
+  | (data$Diverted == 1) 
+  | (data$ArrDelay>=15))
+}
+#-----------------------------------------------------------------
+d1$arr_delayed_15min <- ifelse(delayed(d1),'Y','N') 
+d2$arr_delayed_15min <- ifelse(delayed(d2),'Y','N') 
+
+# handling cancelled and diverted flights takes care of missing
+# delay values
+#d1 <- d1[!is.na(d1$ArrDelay),]
+#d2 <- d2[!is.na(d2$ArrDelay),]
 
 for (k in c('Month','DayofMonth','DayOfWeek')) {
   d1[,k] <- paste0('c-',as.character(d1[,k]))
   d2[,k] <- paste0('c-',as.character(d2[,k]))
 }
 
-d1$arr_delayed_15min <- ifelse(d1$ArrDelay>=15,'Y','N') 
-d2$arr_delayed_15min <- ifelse(d2$ArrDelay>=15,'Y','N') 
 
 # Note: szilard uses DepTime (unknowable actual departure time)
 # as a predictor. I've replaced that by CRSDepTime (scheduled
-# departure time).
+# departure time), and added scheduled arrival time and 
+# scheduled elapsed time.
 
 cols <- c('Month', 'DayofMonth', 'DayOfWeek', 
   'CRSDepTime', 'CRSArrTime', 'CRSElapsedTime', 'Distance',
