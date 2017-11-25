@@ -516,14 +516,13 @@ classify.randomForest <- function (
       file=test.file(
         dataset=dataset,
         problem='classify')))
-  
-  X_train_test <- model.matrix(
-    as.formula(paste(response,' ~ .')), 
-    data = rbind(d_train, d_test))
-  X_train <- X_train_test[1:nrow(d_train),]
+  d <- rbind(d_train, d_test)
+  X <- model.matrix(as.formula(paste(response,' ~ .')), data = d)
+  X_train <- X[1:nrow(d_train),]
   i0 <- (nrow(d_train)+1)
   i1 <- (nrow(d_train)+nrow(d_test))
-  X_test <- X_train_test[i0:i1,]
+  print(c(i0,i1,nrow(X),nrow(d)))
+  X_test <- X[i0:i1,]
   
   datatime <- proc.time() - start
   

@@ -76,7 +76,15 @@
    ^float [crsarrtime (fn ^double [tuple _] 
                         (parse-double (:crsarrtime tuple)))]
    ^float [crselapsedtime (fn ^double [tuple _] 
-                            (parse-double (:crselapsedtime tuple)))]
+                            (let [elapsed 
+                                  (parse-double 
+                                    (:crselapsedtime tuple))]
+                              (if (Double/isNaN elapsed)
+                                (- (parse-double 
+                                     (:crsarrtime tuple))
+                                   (parse-double 
+                                     (:crsdeptime tuple)))
+                                elapsed)))]
    ^taigabench.java.ontime.Airline [uniquecarrier parse-carrier]
    ^taigabench.java.ontime.Airport [origin 
                                     (fn [tuple _] 
@@ -97,7 +105,8 @@
                    diverted (Integer/parseInt (:diverted tuple))]
                (if (and (zero? cancelled) (zero? diverted))
                  (parse-double (:arrdelay tuple))
-                 (* 24.0 60.0))))])
+                 (* 24.0 60.0))))]
+   ^float arrdelayhat])
 ;;----------------------------------------------------------------
 (def attributes 
   "An attribute map for Taiga training/prediction, including

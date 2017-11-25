@@ -1,3 +1,6 @@
+# wahpenayo at gmail dot com
+# since 2016-11-11
+# 2017-11-24
 import time
 import numpy as np
 import pandas as pd

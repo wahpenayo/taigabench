@@ -1,6 +1,6 @@
 # wahpenayo at gmail dot com
 # since 2016-11-11
-# 2017-11-22
+# 2017-11-24
 #-----------------------------------------------------------------
 if (file.exists('e:/porta/projects/taigabench')) {
   setwd('e:/porta/projects/taigabench')

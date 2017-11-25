@@ -1,5 +1,6 @@
 # wahpenayo at gmail dot com
-# 2017-11-23
+# since 2016-11-11
+# 2017-11-24
 # after https://github.com/szilard/benchm-ml/blob/master/0-init/2-gendata.txt
 # Note: 
 # * Replacing DepTime (actual departure time => target leak) 
@@ -44,6 +45,13 @@ delayed <- function (data) {
 d1$arr_delayed_15min <- ifelse(delayed(d1),'Y','N') 
 d2$arr_delayed_15min <- ifelse(delayed(d2),'Y','N') 
 
+# scheduled elapsed time missing in some cases
+d1$CRSElapsedTime <- ifelse(is.na(d1$CRSElapsedTime),
+  d1$CRSArrTime - d1$CRSDepTime,
+  d1$CRSElapsedTime) 
+d2$CRSElapsedTime <- ifelse(is.na(d2$CRSElapsedTime),
+  d2$CRSArrTime - d2$CRSDepTime,
+  d2$CRSElapsedTime) 
 # handling cancelled and diverted flights takes care of missing
 # delay values
 #d1 <- d1[!is.na(d1$ArrDelay),]
