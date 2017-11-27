@@ -48,20 +48,12 @@
 (defn- parse-month ^Month [tuple _]
   (Month/of 
     (Integer/parseInt 
-      (.substring (strip-quotes (:month tuple)) 2))))
+      (.substring (strip-quotes (:cmonth tuple)) 1))))
 
 (defn- parse-dow ^DayOfWeek [tuple _]
   (DayOfWeek/of 
     (Integer/parseInt 
-      (.substring (strip-quotes (:dayofweek tuple)) 2))))
-
-(defn- parse-carrier ^Airline [tuple _]
-  (let [^String name (strip-quotes (:uniquecarrier tuple))
-        ^String name (if (.startsWith name "9") (str "_" name) name)]
-    (Airline/valueOf Airline name)))
-
-(defn- parse-airport ^Airport [^String airport]
-  (Airport/valueOf Airport (strip-quotes airport)))
+      (.substring (strip-quotes (:cdayofweek tuple)) 1))))
 
 (let [days [DayOfMonth/TSUITACHI DayOfMonth/FUTSUKA 
             DayOfMonth/MIKKA DayOfMonth/YOKKA DayOfMonth/ITSUKA 
@@ -79,14 +71,29 @@
             DayOfMonth/NIJUUKUNICHI DayOfMonth/SANJUUNICHI
             DayOfMonth/SANJUUICHINICHI]]
   (defn- parse-dayofmonth ^DayOfMonth [tuple _]
-    (let [^String s (strip-quotes (:dayofmonth tuple))
-          i (- (Integer/parseInt (.substring s (int 2))) (int 1))]
+    (let [^String s (strip-quotes (:cdayofmonth tuple))
+          i (- (Integer/parseInt (.substring s (int 1))) (int 1))]
       (.get ^java.util.List days i))))
+
+(defn- parse-carrier ^Airline [tuple _]
+  (let [^String name (strip-quotes (:uniquecarrier tuple))
+        ^String name (if (.startsWith name "9") (str "_" name) name)]
+    (Airline/valueOf Airline name)))
+
+(defn- parse-airport ^Airport [^String airport]
+  (Airport/valueOf Airport (strip-quotes airport)))
 ;;----------------------------------------------------------------
 (z/define-datum Ontime
-  [^java.time.Month [month parse-month]
-   ^taigabench.java.ontime.DayOfMonth [dayofmonth parse-dayofmonth]
-   ^java.time.DayOfWeek [dayofweek parse-dow]
+  [^float [month (fn ^double [tuple _] 
+                   (parse-int (:month tuple)))]
+   ^float [dayofmonth (fn ^double [tuple _] 
+                        (parse-int (:dayofmonth tuple)))]
+   ^float [dayofweek (fn ^double [tuple _] 
+                       (parse-int (:dayofweek tuple)))]
+   ^float [dayofyear (fn ^double [tuple _] 
+                       (parse-int (:dayofyear tuple)))]
+   ^float [daysaftermar1 (fn ^double [tuple _] 
+                           (parse-int (:daysaftermar1 tuple)))]
    ^float [crsdeptime (fn ^double [tuple _] 
                         (parse-int (:crsdeptime tuple)))]
    ^float [crsarrtime (fn ^double [tuple _] 
@@ -95,6 +102,9 @@
                             (parse-int (:crselapsedtime tuple)))]
    ^float [distance (fn ^double [tuple _] 
                       (parse-int (:distance tuple)))]
+   ^java.time.Month [cmonth parse-month]
+   ^taigabench.java.ontime.DayOfMonth [cdayofmonth parse-dayofmonth]
+   ^java.time.DayOfWeek [cdayofweek parse-dow]
    ^taigabench.java.ontime.Airline [uniquecarrier parse-carrier]
    ^taigabench.java.ontime.Airport [origin (fn [tuple _] 
                                              (parse-airport 

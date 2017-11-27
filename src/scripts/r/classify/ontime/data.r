@@ -34,16 +34,21 @@ d1b <- read.csv('data/ontime/2006.csv.bz2')
 d2 <- read.csv('data/ontime/2007.csv.bz2')
 
 d1 <- rbind(d1a, d1b)
-
 #-----------------------------------------------------------------
+# handling cancelled and diverted flights takes care of missing
+# delay values
 delayed <- function (data) {
   ((data$Cancelled == 1) 
   | (data$Diverted == 1) 
   | (data$ArrDelay>=15))
 }
 #-----------------------------------------------------------------
-d1$arr_delayed_15min <- ifelse(delayed(d1),'Y','N') 
-d2$arr_delayed_15min <- ifelse(delayed(d2),'Y','N') 
+d1$arr_delayed_15min <- factor(
+  ifelse(delayed(d1),'Y','N'),
+  levels=(c('Y','N')))
+d2$arr_delayed_15min <- factor(
+  ifelse(delayed(d2),'Y','N'),
+  levels=(c('Y','N'))) 
 
 # scheduled elapsed time missing in some cases
 d1$CRSElapsedTime <- ifelse(is.na(d1$CRSElapsedTime),
@@ -52,29 +57,53 @@ d1$CRSElapsedTime <- ifelse(is.na(d1$CRSElapsedTime),
 d2$CRSElapsedTime <- ifelse(is.na(d2$CRSElapsedTime),
   d2$CRSArrTime - d2$CRSDepTime,
   d2$CRSElapsedTime) 
-# handling cancelled and diverted flights takes care of missing
-# delay values
 #d1 <- d1[!is.na(d1$ArrDelay),]
 #d2 <- d2[!is.na(d2$ArrDelay),]
-
-for (k in c('Month','DayofMonth','DayOfWeek')) {
-  d1[,k] <- paste0('c-',as.character(d1[,k]))
-  d2[,k] <- paste0('c-',as.character(d2[,k]))
+#-----------------------------------------------------------------
+# Note: add dayOfYear and daysAfterMar 1 to enable holiday 
+# detection, etc.
+DOY <- function (year,month,day) {
+  as.POSIXlt(ISOdate(year=year,month=month,day=day))$yday
 }
-
-
+addDOYs <- function (data) {
+  data$DayOfYear <-DOY(
+    year=data$Year,month=data$Month,day=data$DayofMonth)
+  data$DaysAfterMar1 <- 
+    (data$DayOfYear - DOY(year=data$Year,month=3,day=1)) %% 365
+  data 
+}
+#-----------------------------------------------------------------
+d1 <- addDOYs(d1)
+d2 <- addDOYs(d2)
+#-----------------------------------------------------------------
+# Note: retain numerical Month, etc., alongside categorical
+# versions
+categorizeDateParts <- function (data) {
+  for (k in c('Month','DayofMonth','DayOfWeek')) {
+    c <- paste0('c',k) 
+    data[,c] <- paste0('c',as.character(data[,k]))
+    data[,c] <- as.factor(data[,c])
+  }
+  data
+}
+#-----------------------------------------------------------------
+d1 <- categorizeDateParts(d1)
+d2 <- categorizeDateParts(d2)
+#-----------------------------------------------------------------
 # Note: szilard uses DepTime (unknowable actual departure time)
 # as a predictor. I've replaced that by CRSDepTime (scheduled
 # departure time), and added scheduled arrival time and 
 # scheduled elapsed time.
 
-cols <- c('Month', 'DayofMonth', 'DayOfWeek', 
+cols <- c(
+  'Month', 'DayofMonth', 'DayOfWeek', 'DayOfYear','DaysAfterMar1', 
+  'cMonth', 'cDayofMonth', 'cDayOfWeek', 
   'CRSDepTime', 'CRSArrTime', 'CRSElapsedTime', 'Distance',
   'UniqueCarrier','Origin', 'Dest',
   'arr_delayed_15min')
 d1 <- d1[, cols]
 d2 <- d2[, cols]
-
+#-----------------------------------------------------------------
 data.folder <- file.path('data','classify','ontime')
 dir.create(
   path=data.folder,

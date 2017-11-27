@@ -14,27 +14,27 @@ problem <- 'classify'
 testfile=test.file(dataset=dataset,problem=problem)
 print(testfile)
 
-results <- NULL
-for (suffix in c('0.01m','0.1m','1m','10m')) {
-  gc()
-  trainfile <-train.file(
-    dataset=dataset,
-    problem=problem,
-    suffix=suffix)
-  tmp <- classify.h2o.randomForest(
-    dataset=dataset,
-    trainfile=trainfile,
-    suffix=suffix,
-    testfile=testfile,
-    response='arr_delayed_15min') 
-  results <- rbind(results,tmp)
-  print(results)
-  write.csv(results,file=results.file(
-      dataset=dataset,
-      problem=problem,
-      prefix='h2o'),
-    row.names=FALSE)
-}
+#results <- NULL
+#for (suffix in c('0.01m','0.1m','1m','10m')) {
+#  gc()
+#  trainfile <-train.file(
+#    dataset=dataset,
+#    problem=problem,
+#    suffix=suffix)
+#  tmp <- classify.h2o.randomForest(
+#    dataset=dataset,
+#    trainfile=trainfile,
+#    suffix=suffix,
+#    testfile=testfile,
+#    response='arr_delayed_15min') 
+#  results <- rbind(results,tmp)
+#  print(results)
+#  write.csv(results,file=results.file(
+#      dataset=dataset,
+#      problem=problem,
+#      prefix='h2o'),
+#    row.names=FALSE)
+#}
 
 results <- NULL
 for (suffix in c('0.01m','0.1m','1m','10m')) {

@@ -12,13 +12,16 @@ def get_dummies(d, col):
     dd.columns = [col + "_%s" % c for c in dd.columns]
     return(dd)
 
-vars_categ = ["Month","DayofMonth","DayOfWeek",\
+vars_categ = ["cMonth","cDayofMonth","cDayOfWeek",\
               "UniqueCarrier", "Origin", "Dest"]
-vars_num = ["CRSDepTime","CRSArrTime","CRSElapsedTime","Distance"]
+vars_num = ["Month","DayofMonth","DayOfWeek","DayOfYear",\
+            "DaysAfterMar1",\
+            "CRSDepTime","CRSArrTime","CRSElapsedTime","Distance"]
 
 results = []
 
-for suffix in ["0.01", "0.1", "1", "10"] :  
+#for suffix in ["0.01", "0.1", "1", "10"] :  
+for suffix in ["10"] :  
     start = time.clock()
     d_train = \
     pd.read_csv("data/classify/ontime/" + "train-" + suffix + "m.csv.gz")
@@ -38,9 +41,9 @@ for suffix in ["0.01", "0.1", "1", "10"] :
     datatime = time.clock() - start
     
     start = time.clock()
-    md = RandomForestClassifier(n_estimators = 500, \
-                                n_jobs = -1, \
-                                max_depth=1000000, \
+    md = RandomForestClassifier(n_estimators = 500,\
+                                n_jobs = -1,\
+                                max_depth=1000000,\
                                 min_samples_leaf=10)
     md.fit(X_train, y_train)
     traintime = time.clock() - start
