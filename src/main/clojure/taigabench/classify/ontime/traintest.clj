@@ -2,7 +2,7 @@
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
       :since "2016-11-15"
-      :date "2017-11-21"
+      :date "2017-11-27"
       :doc "Public airline ontime data for benchmarking:
             http://stat-computing.org/dataexpo/2009/" }
     
@@ -14,10 +14,11 @@
             [taiga.api :as taiga]
             [taigabench.pt :as pt]
             [taigabench.metrics :as metrics]
-            [taigabench.classify.ontime.data :as data]))
+            [taigabench.ontime.data :as data]
+            #_[taigabench.classify.ontime.data :as data]))
 ;;------------------------------------------------------------------------------
 (def prototype 
-  {:attributes data/attributes
+  {:attributes data/classify-attributes
    :csv-reader #(data/read-tsv-file % #"\,")
    :bin-reader data/read-binary-file
    :bin-writer data/write-binary-file
@@ -29,10 +30,8 @@
         model-name (str "taiga-" (z/name learner) "-" mincount)
         label  (str model-name "-" suffix)
         start (System/nanoTime)
-        train ((:csv-reader options) 
-                (data/data-file (str "train-" suffix) "csv.gz"))
-        test ((:csv-reader options) 
-               (data/data-file "test" "csv.gz"))
+        train (data/read-data-file (str "train-" suffix))
+        test (data/read-data-file "test")
         _(System/gc)
         datatime (/ (double (- (System/nanoTime) start)) 
                     1000000000.0)
@@ -71,7 +70,7 @@
         auctime (/ (double (- (System/nanoTime) start)) 
                    1000000000.0)]
     (pt/write-predictions 
-      truth score test (data/output-file label "pred.tsv.gz"))
+      truth score test (data/output-file "classify" label "pred.tsv.gz"))
     #_(println "Train AUC:" model-name suffix 
                (metrics/roc-auc truth score train))
     #_(data/write-tsv-file 

@@ -192,6 +192,8 @@ models <- c(
   'randomForestSRC',
   'scikit-learn',
   'taiga',
+  'taiga-pfp',
+  'taiga-mvp',
   'xgboost')
 model.colors <- c(
   '#386cb050',
@@ -199,6 +201,8 @@ model.colors <- c(
   '#66a61e50',
   '#a6761d50',
   '#e41a1cFF',
+  '#e41a1cFF',
+  '#1a1ce4FF',
   '#75707050')
 #-----------------------------------------------------------------
 classify.h2o.randomForest <- function (

@@ -1,6 +1,7 @@
 package taigabench.java.ontime;
 
 public enum DayOfMonth {
+  
   TSUITACHI,
   FUTSUKA,
   MIKKA,  
@@ -31,5 +32,15 @@ public enum DayOfMonth {
   NIJUUHACHINICHI, 
   NIJUUKUNICHI,  
   SANJUUNICHI,   
-  SANJUUICHINICHI
+  SANJUUICHINICHI;
+
+  // values() creates a new array on each call
+  private static final DayOfMonth[] _vals = values();
+  
+  /** One-based lookup. */
+  public static final DayOfMonth of (final int i) { 
+    return _vals[i-1]; }
+
+  /** One-based lookup. */
+  public final int getValue () { return 1 + ordinal(); }
 }

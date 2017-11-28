@@ -2,9 +2,8 @@
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
       :since "2016-11-10"
-      :date "2017-11-22"
-      :doc "Public airline ontime data for benchmarking:
-            http://stat-computing.org/dataexpo/2009/
+      :date "2017-11-27"
+      :doc "[Public airline ontime data for benchmarking](http://stat-computing.org/dataexpo/2009/).
             <p>
             <b>Note:</b>Using attributes mostly as defined as in 
             [BENCHMARKING RANDOM FOREST IMPLEMENTATIONS](http://datascience.la/benchmarking-random-forest-implementations/):
@@ -31,93 +30,81 @@
   (:require [clojure.string :as s]
             [clojure.java.io :as io]
             [zana.api :as z]
-            [taiga.api :as taiga]
-            [taigabench.metrics :as metrics])
+            [taiga.api :as taiga])
   (:import [java.time DayOfWeek Month]
            [taigabench.java.ontime Airline Airport DayOfMonth]))
 ;;----------------------------------------------------------------
-(defn- strip-quotes ^String [^String s] 
-  (.replaceAll s "[\"]+" ""))
-
-(defn- parse-int ^double [^String s] 
-  (let [^String s (strip-quotes s)]
-    (if (= "NA" s)
-      Double/NaN
-      (double (Integer/parseInt s)))))
+(defn- parse-double ^double [^String s] 
+  (if (= "NA" s)
+    Double/NaN
+    (Double/parseDouble s)))
 
 (defn- parse-month ^Month [tuple _]
-  (Month/of 
-    (Integer/parseInt 
-      (.substring (strip-quotes (:cmonth tuple)) 1))))
+  (Month/of (Integer/parseInt (:month tuple))))
 
 (defn- parse-dow ^DayOfWeek [tuple _]
-  (DayOfWeek/of 
-    (Integer/parseInt 
-      (.substring (strip-quotes (:cdayofweek tuple)) 1))))
+  (DayOfWeek/of (Integer/parseInt(:dayofweek tuple))))
 
-(let [days [DayOfMonth/TSUITACHI DayOfMonth/FUTSUKA 
-            DayOfMonth/MIKKA DayOfMonth/YOKKA DayOfMonth/ITSUKA 
-            DayOfMonth/MUIKA DayOfMonth/NANOKA DayOfMonth/YOUKA 
-            DayOfMonth/KOKONOKA DayOfMonth/DOOKA 
-            DayOfMonth/JUUICHINICHI DayOfMonth/JUUNINICHI  
-            DayOfMonth/JUUSANNICHI DayOfMonth/JUUYONNICHI 
-            DayOfMonth/JUUGONICHI DayOfMonth/JUUROKUNICHI 
-            DayOfMonth/JUUSHICHINICHI DayOfMonth/JUUHACHINICHI 
-            DayOfMonth/JUUKUNICHI DayOfMonth/HATSUKA 
-            DayOfMonth/NIJUUICHINICHI DayOfMonth/NIJUUNINICHI  
-            DayOfMonth/NIJUUSANNICHI DayOfMonth/NIJUUYONNICHI 
-            DayOfMonth/NIJUUGONICHI DayOfMonth/NIJUUROKUNICHI
-            DayOfMonth/NIJUUSHICHINICHI DayOfMonth/NIJUUHACHINICHI
-            DayOfMonth/NIJUUKUNICHI DayOfMonth/SANJUUNICHI
-            DayOfMonth/SANJUUICHINICHI]]
-  (defn- parse-dayofmonth ^DayOfMonth [tuple _]
-    (let [^String s (strip-quotes (:cdayofmonth tuple))
-          i (- (Integer/parseInt (.substring s (int 1))) (int 1))]
-      (.get ^java.util.List days i))))
+(defn- parse-dayofmonth ^DayOfMonth [tuple _]
+  (DayOfMonth/of (Integer/parseInt (:dayofmonth tuple))))
 
 (defn- parse-carrier ^Airline [tuple _]
-  (let [^String name (strip-quotes (:uniquecarrier tuple))
-        ^String name (if (.startsWith name "9") (str "_" name) name)]
+  (let [^String name (:uniquecarrier tuple)
+        ^String name (if (.startsWith name "9") 
+                       (str "_" name) 
+                       name)]
     (Airline/valueOf Airline name)))
 
 (defn- parse-airport ^Airport [^String airport]
-  (Airport/valueOf Airport (strip-quotes airport)))
+  (Airport/valueOf Airport airport))
 ;;----------------------------------------------------------------
 (z/define-datum Ontime
   [^float [month (fn ^double [tuple _] 
-                   (parse-int (:month tuple)))]
+                   (parse-double (:month tuple)))]
    ^float [dayofmonth (fn ^double [tuple _] 
-                        (parse-int (:dayofmonth tuple)))]
-   ^float [dayofweek (fn ^double [tuple _] 
-                       (parse-int (:dayofweek tuple)))]
+                        (parse-double (:dayofmonth tuple)))]
+   ^float [dayofweek  (fn ^double [tuple _] 
+                        (parse-double (:dayofweek tuple)))]
    ^float [dayofyear (fn ^double [tuple _] 
-                       (parse-int (:dayofyear tuple)))]
+                       (parse-double (:dayofyear tuple)))]
    ^float [daysaftermar1 (fn ^double [tuple _] 
-                           (parse-int (:daysaftermar1 tuple)))]
+                           (parse-double (:daysaftermar1 tuple)))]
+   ;; TODO: rotate as periodicity hack?
    ^float [crsdeptime (fn ^double [tuple _] 
-                        (parse-int (:crsdeptime tuple)))]
+                        (parse-double (:crsdeptime tuple)))]
    ^float [crsarrtime (fn ^double [tuple _] 
-                        (parse-int (:crsarrtime tuple)))]
+                        (parse-double (:crsarrtime tuple)))]
    ^float [crselapsedtime (fn ^double [tuple _] 
-                            (parse-int (:crselapsedtime tuple)))]
+                            (let [elapsed 
+                                  (parse-double 
+                                    (:crselapsedtime tuple))]
+                              (if (Double/isNaN elapsed)
+                                (- (parse-double 
+                                     (:crsarrtime tuple))
+                                   (parse-double 
+                                     (:crsdeptime tuple)))
+                                elapsed)))]
    ^float [distance (fn ^double [tuple _] 
-                      (parse-int (:distance tuple)))]
+                      (parse-double (:distance tuple)))]
    ^java.time.Month [cmonth parse-month]
    ^taigabench.java.ontime.DayOfMonth [cdayofmonth parse-dayofmonth]
    ^java.time.DayOfWeek [cdayofweek parse-dow]
    ^taigabench.java.ontime.Airline [uniquecarrier parse-carrier]
-   ^taigabench.java.ontime.Airport [origin (fn [tuple _] 
-                                             (parse-airport 
-                                               (:origin tuple)))]
-   ^taigabench.java.ontime.Airport [dest (fn [tuple _] 
-                                           (parse-airport 
-                                             (:dest tuple)))]
+   ^taigabench.java.ontime.Airport [origin 
+                                    (fn [tuple _] 
+                                      (parse-airport 
+                                        (:origin tuple)))]
+   ^taigabench.java.ontime.Airport [dest 
+                                    (fn [tuple _] 
+                                      (parse-airport 
+                                        (:dest tuple)))]
    ^float [arr-delayed-15min 
            (fn ^double [tuple _] 
-             (let [yn (strip-quotes (:arr-delayed-15min tuple))]
+             (let [yn (:arr-delayed-15min tuple)]
                (case yn
                  "Y" (double 1.0)
-                 "N" (double 0.0))))]
+                 "N" (double 0.0)
+                 Double/NaN)))]
    ^float score])
 ;;----------------------------------------------------------------
 (def attributes 
@@ -125,8 +112,10 @@
    <code>:ground-truth</code> and <code>:prediction</code>."
   (assoc
     (into {} (map #(vector (keyword (z/name %)) %)
-                  [month dayofmonth dayofweek crsdeptime 
-                   uniquecarrier origin dest distance]))
+                  [month dayofmonth dayofweek dayofyear daysaftermar1
+                   crsdeptime crsarrtime crselapsedtime distance
+                   cmonth cdayofmonth cdayofweek
+                   uniquecarrier origin dest]))
     :ground-truth arr-delayed-15min
     :prediction score))
 ;;----------------------------------------------------------------
