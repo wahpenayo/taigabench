@@ -32,16 +32,16 @@
      (data/write-data-file test "test")))
 
 ;; TODO: sample so that smaller sets are subsets of larger?
-#_(let [data (z/seconds 
-              "read train"
-              (z/mapcat data/read-raw-data 
-                        ["2003" "2004" "2005" "2006" "2007"]))]
-   (doseq [^long n (take 5 (iterate (partial * 8) (* 8 8 8 8 2)))]
-     (let [train
-           (z/seconds 
-             (print-str "sample" n "from" (z/count data))
-             (z/sample prng n data))]
-       (z/seconds
-         (print-str "write" n (z/count train))
-         (data/write-data-file train (str "train-" n))))))
+(let [data (z/seconds 
+             "read train"
+             (z/mapcat data/read-raw-data 
+                       ["2003" "2004" "2005" "2006" "2007"]))]
+  (doseq [^long n (take 5 (iterate (partial * 8) (* 8 8 8 8 2)))]
+    (let [train
+          (z/seconds 
+            (print-str "sample" n "from" (z/count data))
+            (z/sample prng n data))]
+      (z/seconds
+        (print-str "write" n (z/count train))
+        (data/write-data-file train (str "train-" n))))))
 ;;----------------------------------------------------------------

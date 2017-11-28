@@ -1,6 +1,7 @@
 # wahpenayo at gmail dot com
 # since 2016-11-11
-# 2017-11-24
+# 2017-11-27
+
 import time
 import numpy as np
 import pandas as pd
@@ -12,20 +13,21 @@ def get_dummies(d, col):
     dd.columns = [col + "_%s" % c for c in dd.columns]
     return(dd)
 
-vars_categ = ["cMonth","cDayofMonth","cDayOfWeek",\
-              "UniqueCarrier", "Origin", "Dest"]
-vars_num = ["Month","DayofMonth","DayOfWeek","DayOfYear",\
-            "DaysAfterMar1",\
-            "CRSDepTime","CRSArrTime","CRSElapsedTime","Distance"]
+vars_categ = ["cmonth","cdayofmonth","cdayofweek",\
+              "uniquecarrier", "origin", "dest"]
+vars_num = ["month","dayofmonth","dayofweek","dayofyear",\
+            "daysaftermar1",\
+            "crsdeptime","crsarrtime","crselapsedtime","distance"]
 
 results = []
 
 #for suffix in ["0.01", "0.1", "1", "10"] :  
-for suffix in ["10"] :  
+#for suffix in ["10"] :  
+for suffix in ["8192","65536","524288","4194304","33554432"] :  
     start = time.clock()
     d_train = \
-    pd.read_csv("data/classify/ontime/" + "train-" + suffix + "m.csv.gz")
-    d_test = pd.read_csv("data/classify/ontime/test.csv.gz")
+    pd.read_csv("data/ontime/" + "train-" + suffix + ".csv.gz")
+    d_test = pd.read_csv("data/ontime/test.csv.gz")
     d_train_test = d_train.append(d_test)
     X_train_test_categ = \
     pd.concat([get_dummies(d_train_test, col) for col in vars_categ], \
@@ -33,7 +35,7 @@ for suffix in ["10"] :
     X_train_test = \
     pd.concat([X_train_test_categ, d_train_test.ix[:,vars_num]], \
               axis = 1)
-    y_train_test = np.where(d_train_test["arr_delayed_15min"]=="Y", 1, 0)
+    y_train_test = np.where(d_train_test["arrdelay"]>=15, 1, 0)
     X_train = X_train_test[0:d_train.shape[0]]
     y_train = y_train_test[0:d_train.shape[0]]
     X_test = X_train_test[d_train.shape[0]:]

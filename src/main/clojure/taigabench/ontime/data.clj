@@ -106,14 +106,17 @@
               diverted (:diverted tuple)]
           (if (or (not= "0" cancelled) (not= "0" diverted))
             (* 24.0 60.0)
-            (throw (IllegalArgumentException.
-                     (str "can't parse:\n"
-                          (z/pprint-map-str tuple)))))))))
+            Double/NaN ;; missing
+            #_(throw (IllegalArgumentException.
+                      (str "can't parse:\n"
+                           (z/pprint-map-str tuple)))))))))
   (^double [tuple _] (parse-arrdelay tuple)))
 
 (defn- parse-arr-delayed-15min ^double [tuple _] 
   (let [delay (parse-arrdelay tuple)]
-    (if (< delay 15.0) 0.0 1.0)))
+    (if (< delay 15.0) 
+      0.0 
+      1.0)))
 ;;----------------------------------------------------------------
 (z/define-datum Ontime
   [^float [month (fn mon ^double [tuple _] 

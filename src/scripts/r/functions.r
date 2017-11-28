@@ -36,8 +36,8 @@ load.packages <- function () {
 load.packages()
 # latest version of H2O directly from H2O
 # first remove old version if necessary
-# if ("package:h2o" %in% search()) { detach("package:h2o", unload=TRUE) }
-# if ("h2o" %in% rownames(installed.packages())) { remove.packages("h2o") }
+# if ('package:h2o' %in% search()) { detach('package:h2o', unload=TRUE) }
+# if ('h2o' %in% rownames(installed.packages())) { remove.packages('h2o') }
 if (! eval(call('require','h2o',quietly=TRUE))) {
   install.packages(
     'h2o', 
@@ -52,23 +52,23 @@ my.theme <- function () {
   dark <- brewer.pal(n,'Dark2')
   pastel <- brewer.pal(n,'Pastel2')
   list(
-    background = list(col="transparent"),
+    background = list(col='transparent'),
     #fontsize='16',
     axis.line=list(col='gray'),
     axis.text=list(col=text.color,cex=4),
-    box.rectangle = list(col="darkgreen"),
-    box.umbrella = list(col="darkgreen"),
-    dot.line = list(col="#e8e8e8"),
-    dot.symbol = list(col="darkgreen"),
+    box.rectangle = list(col='darkgreen'),
+    box.umbrella = list(col='darkgreen'),
+    dot.line = list(col='#e8e8e8'),
+    dot.symbol = list(col='darkgreen'),
     par.xlab.text=list(col=text.color,cex=4),
     par.xlab.text=list(col=text.color,cex=4),
     par.ylab.text=list(col=text.color,cex=1.5),
     par.main.text=list(col=text.color,cex=2),
     par.sub.text=list(col=text.color,cex=1.5),
-    plot.line = list(col="darkgreen"),
-    plot.symbol = list(col="darkgreen"),
-    plot.polygon = list(col="darkgreen"),
-    reference.line = list(col="#e8e8e8"),
+    plot.line = list(col='darkgreen'),
+    plot.symbol = list(col='darkgreen'),
+    plot.polygon = list(col='darkgreen'),
+    reference.line = list(col='#e8e8e8'),
     regions = list(col = colorRampPalette(rev(brewer.pal(11,'RdYlGn')))(100)),
     shade.colors = list(palette=colorRampPalette(rev(brewer.pal(11,'RdYlGn')))),
     strip.border = list(col='gray'),
@@ -134,7 +134,11 @@ read.tsv <- function (file) {
 data.folder <- function (
   dataset=NULL, 
   problem=NULL) {
-  file.path('data',problem,dataset)
+  if (is.null(problem)) {
+    file.path('data',dataset)
+  } else {
+    file.path('data',problem,dataset)
+  }
 }
 
 train.file <- function (
@@ -143,14 +147,14 @@ train.file <- function (
   suffix=NULL) {
   file.path(
     data.folder(problem=problem,dataset=dataset),
-    paste("train-",suffix,".csv.gz",sep='')) }
+    paste('train-',suffix,'.csv.gz',sep='')) }
 
 test.file <- function (
   dataset=NULL, 
   problem=NULL) {
   file.path(
     data.folder(problem=problem,dataset=dataset),
-    paste("test.csv.gz",sep='')) }
+    paste('test.csv.gz',sep='')) }
 
 output.folder <- function (
   dataset=NULL, 
@@ -170,7 +174,7 @@ predicted.file <- function (
   gzfile(
     file.path(
       output.folder(problem=problem,dataset=dataset), 
-      paste(prefix,"pred.tsv.gz",sep='.'))) }
+      paste(prefix,'pred.tsv.gz',sep='.'))) }
 
 results.file <- function (
   dataset=NULL, 
@@ -178,7 +182,7 @@ results.file <- function (
   prefix='all') {
   file.path(
     output.folder(problem=problem,dataset=dataset),
-    paste(paste(prefix,"results.csv",sep='.'))) }
+    paste(paste(prefix,'results.csv',sep='.'))) }
 
 plot.file <- function (
   dataset=NULL, 
@@ -202,21 +206,36 @@ model.colors <- c(
   '#a6761d50',
   '#e41a1cFF',
   '#e41a1cFF',
-  '#1a1ce4FF',
+  '#1c1ae4FF',
   '#75707050')
+#-----------------------------------------------------------------
+ontime.classify.data <- function (file=NULL) {
+  data <- read_csv(file)
+  data$cdayofweek <- as.factor(data$cdayofweek)
+  data$cdayofmonth <- as.factor(data$cdayofmonth)
+  data$cmonth <- as.factor(data$cmonth)
+  data$uniquecarrier <- as.factor(data$uniquecarrier)
+  data$dest <- as.factor(data$dest)
+  data$origin <- as.factor(data$origin)
+  data$arr_delayed_15min <- as.factor(
+    ifelse((data$arrdelay>=15),'Y','N'))
+  #data[,!(names(data) %in% c('arrdelay'))]
+  data[,which(names(data) != 'arrdelay')]
+}
 #-----------------------------------------------------------------
 classify.h2o.randomForest <- function (
   dataset=NULL,
-  trainfile=NULL,
+  dtrain=NULL,
   suffix=NULL,
-  testfile=NULL,
-  response=NULL) {
+  dtest=NULL,
+  response=NULL,
+  maxmem='32g') {
   
   stopifnot(
     !is.null(dataset),
-    !is.null(trainfile),
+    !is.null(dtrain),
     !is.null(suffix),
-    !is.null(testfile),
+    !is.null(dtest),
     !is.null(response))
   
   # H2O requires Java 8 as of 2017-11-17, version 3.15.0.4103
@@ -224,11 +243,11 @@ classify.h2o.randomForest <- function (
   Sys.setenv(JAVA_HOME=Sys.getenv('JAVA8'))
   
   set.seed(740189)
-  h2o.init(max_mem_size="32g", nthreads=-1)
+  h2o.init(max_mem_size=maxmem, nthreads=-1)
   
   start <- proc.time()
-  dx_train <- h2o.importFile(path=trainfile)
-  dx_test <- h2o.importFile(path=testfile)
+  dx_train <- as.h2o(x=dtrain)
+  dx_test <- as.h2o(x=dtest)
   Xnames <- 
     names(dx_train)[which(names(dx_train)!=response)]
   datatime <- proc.time() - start
@@ -284,7 +303,7 @@ classify.h2o.randomForest <- function (
 # save mode callback that does nothing
 cb.save.model <- function(
   save_period = 0, 
-  save_name = "xgboost.model") {
+  save_name = 'xgboost.model') {
   
   if (save_period < 0)
     stop("'save_period' cannot be negative")
@@ -304,38 +323,28 @@ cb.save.model <- function(
 
 classify.xgboost.randomForest <- function (
   dataset=NULL,
-  trainfile=NULL,
+  dtrain=NULL,
   suffix=NULL,
-  testfile=NULL,
+  dtest=NULL,
   response=NULL) {
   
   stopifnot(
     !is.null(dataset),
-    !is.null(trainfile),
+    !is.null(dtrain),
     !is.null(suffix),
-    !is.null(testfile),
+    !is.null(dtest),
     !is.null(response))
   
   set.seed(169544)
   
   start <- proc.time()
   
-  d_train <- read_csv(
-    file=train.file(
-      dataset=dataset,
-      problem='classify',
-      suffix=suffix))
-  d_test <- read_csv(
-    file=test.file(
-      dataset=dataset,
-      problem='classify'))
-  
   X_train_test <- sparse.model.matrix(
     as.formula(paste(response, '~ .-1')), 
-    data = rbind(d_train, d_test))
-  X_train <- X_train_test[1:nrow(d_train),]
+    data = rbind(dtrain, dtest))
+  X_train <- X_train_test[1:nrow(dtrain),]
   X_test <- 
-    X_train_test[(nrow(d_train)+1):(nrow(d_train)+nrow(d_test)),]
+    X_train_test[(nrow(dtrain)+1):(nrow(dtrain)+nrow(dtest)),]
   #dim(X_train)
   
   datatime <- proc.time() - start
@@ -348,7 +357,7 @@ classify.xgboost.randomForest <- function (
   n_proc <- detectCores()
   md <- xgboost(
     data = X_train, 
-    label = ifelse(d_train[,response]=='Y',1,0),
+    label = ifelse(dtrain[,response]=='Y',1,0),
     nthread = n_proc, 
     nround = 1, 
     max_depth = 20,
@@ -368,7 +377,7 @@ classify.xgboost.randomForest <- function (
   
   start <- proc.time()
   phat <- predict(md, newdata = X_test)
-  truth <- d_test[,response]
+  truth <- dtest[,response]
   truth <- as.numeric(ifelse(truth[,response]=='Y',1,0))
   prtr <- data.frame(prediction=phat,truth=as.numeric(truth))
   predicttime <- proc.time() - start
@@ -381,14 +390,14 @@ classify.xgboost.randomForest <- function (
       problem='classify'))
   
   start <- proc.time()
-  rocr_pred <- prediction(phat, d_test[,response])
-  auc <- performance(rocr_pred, "auc")
+  rocr_pred <- prediction(phat, dtest[,response])
+  auc <- performance(rocr_pred, 'auc')
   auctime <- proc.time() - start
   
   list(
     model='xgboost',
-    ntrain=nrow(d_train),
-    ntest=nrow(d_test),
+    ntrain=nrow(dtrain),
+    ntest=nrow(dtest),
     datatime=datatime['elapsed'],
     traintime=traintime['elapsed'],
     predicttime=predicttime['elapsed'],
@@ -398,47 +407,36 @@ classify.xgboost.randomForest <- function (
 #-----------------------------------------------------------------
 classify.parallel.randomForest <- function (
   dataset=NULL,
-  trainfile=NULL,
+  dtrain=NULL,
   suffix=NULL,
-  testfile=NULL,
+  dtest=NULL,
   response=NULL) {
   
   stopifnot(
     !is.null(dataset),
-    !is.null(trainfile),
+    !is.null(dtrain),
     !is.null(suffix),
-    !is.null(testfile),
+    !is.null(dtest),
     !is.null(response))
   
   set.seed(1244985)
   
   start <- proc.time()
-  d_train <- as.data.frame(
-    read_csv(
-      file=train.file(
-        dataset=dataset,
-        problem='classify',
-        suffix=suffix)))
-  d_test <- as.data.frame(
-    read_csv(
-      file=test.file(
-        dataset=dataset,
-        problem='classify')))
   datatime <- proc.time() - start
   
-  print(summary(d_train))
-  print(summary(d_test))
-  ## "Can not handle categorical predictors with more than 53 
-  ## categories."
+  print(summary(dtrain))
+  print(summary(dtest))
+  ## 'Can not handle categorical predictors with more than 53 
+  ## categories.'
   ## so need dummy variables/1-hot encoding
   ## - but then RF does not treat them as 1 variable
   
   X_train_test <-  model.matrix(
     as.formula(paste(response,' ~ .')), 
-    data = rbind(d_train, d_test))
-  X_train <- X_train_test[1:nrow(d_train),]
-  i0 <- (nrow(d_train)+1)
-  i1 <- (nrow(d_train)+nrow(d_test))
+    data = rbind(dtrain, dtest))
+  X_train <- X_train_test[1:nrow(dtrain),]
+  i0 <- (nrow(dtrain)+1)
+  i1 <- (nrow(dtrain)+nrow(dtest))
   X_test <- X_train_test[i0:i1,]
   
   
@@ -452,29 +450,29 @@ classify.parallel.randomForest <- function (
     function(x) { 
       randomForest(
         X_train, 
-        as.factor(d_train[,response]), 
+        as.factor(dtrain[,response]), 
         ntree = floor(500/n_proc))}, 
     mc.cores = n_proc)
   
-  md <- do.call("combine", mds)
+  md <- do.call('combine', mds)
   traintime <- proc.time() - start   
   
   start <- proc.time()
-  phat <- predict(md, newdata = d_test, type = "prob")[,"Y"]
+  phat <- predict(md, newdata = dtest, type = 'prob')[,'Y']
   predicttime <- proc.time() - start   
   
   write.tsv(
     data=data.frame(
       prediction=phat,
-      truth=ifelse(d_train[,response]=='Y',1,0)),
+      truth=ifelse(dtrain[,response]=='Y',1,0)),
     file=predicted.file(
       prefix=paste('parallel.randomForest',suffix,sep='-'),
       dataset=dataset,
       problem='classify'))
   
   start <- proc.time()
-  rocr_pred <- prediction(phat, d_test[,response])
-  auc <- performance(rocr_pred, "auc")
+  rocr_pred <- prediction(phat, dtest[,response])
+  auc <- performance(rocr_pred, 'auc')
   print(auc)
   auctime <- proc.time() - start
   
@@ -482,8 +480,8 @@ classify.parallel.randomForest <- function (
   #sapply(ls(),function(x) object.size(get(x))/1e6)
   list(
     model='parallel_randomForest',
-    ntrain=nrow(d_train),
-    ntest=nrow(d_test),
+    ntrain=nrow(dtrain),
+    ntest=nrow(dtest),
     datatime=datatime['elapsed'],
     traintime=traintime['elapsed'],
     predicttime=predicttime['elapsed'],
@@ -493,74 +491,63 @@ classify.parallel.randomForest <- function (
 #-----------------------------------------------------------------
 classify.randomForest <- function (
   dataset=NULL,
-  trainfile=NULL,
+  dtrain=NULL,
   suffix=NULL,
-  testfile=NULL,
+  dtest=NULL,
   response=NULL) {
   
   stopifnot(
     !is.null(dataset),
-    !is.null(trainfile),
+    !is.null(dtrain),
     !is.null(suffix),
-    !is.null(testfile),
+    !is.null(dtest),
     !is.null(response))
   
   set.seed(1244985)
   
   start <- proc.time()
   
-  d_train <- as.data.frame(
-    read_csv(
-      file=train.file(
-        dataset=dataset,
-        problem='classify',
-        suffix=suffix)))
-  d_test <- as.data.frame(
-    read_csv(
-      file=test.file(
-        dataset=dataset,
-        problem='classify')))
-  d <- rbind(d_train, d_test)
-  X <- model.matrix(as.formula(paste(response,' ~ .')), data = d)
-  X_train <- X[1:nrow(d_train),]
-  i0 <- (nrow(d_train)+1)
-  i1 <- (nrow(d_train)+nrow(d_test))
-  print(c(i0,i1,nrow(X),nrow(d)))
+  X <- model.matrix(
+    as.formula(paste(response,' ~ .')), 
+    data=rbind(dtrain, dtest))
+  X_train <- X[1:nrow(dtrain),]
+  i0 <- (nrow(dtrain)+1)
+  i1 <- (nrow(dtrain)+nrow(dtest))
   X_test <- X[i0:i1,]
   
   datatime <- proc.time() - start
   
   start <- proc.time()
-  forest <- randomForest(x=X_train,
-    y=as.factor(d_train[,response]), 
-    ntree = 500, nodesize=10)
+  forest <- randomForest(
+    x=X_train,
+    y=dtrain[[response]], 
+    ntree = 500, 
+    nodesize=10)
   traintime <- proc.time() - start   
   
   start <- proc.time()
-  phat <- predict(forest, newdata = X_test, type = "prob")[,"Y"]
+  phat <- predict(forest, newdata = X_test, type = 'prob')[,'Y']
   predicttime <- proc.time() - start   
   
   write.tsv(
     data=data.frame(
       prediction=phat,
-      truth=ifelse(d_test[,response]=='Y',1,0)),
+      truth=ifelse(dtest[[response]]=='Y',1,0)),
     file=predicted.file(
       prefix=paste('randomForest',suffix,sep='-'),
       dataset=dataset,
       problem='classify'))
   
   start <- proc.time()
-  rocr_pred <- prediction(phat, d_test[,response])
-  auc <- performance(rocr_pred, "auc")
+  rocr_pred <- prediction(phat, dtest[[response]])
+  auc <- performance(rocr_pred, 'auc')
   print(auc)
   auctime <- proc.time() - start
   
-  #gc()
-  #sapply(ls(),function(x) object.size(get(x))/1e6)
   list(
     model='randomForest',
-    ntrain=nrow(d_train),
-    ntest=nrow(d_test),
+    ntrain=nrow(dtrain),
+    ntest=nrow(dtest),
     datatime=datatime['elapsed'],
     traintime=traintime['elapsed'],
     predicttime=predicttime['elapsed'],

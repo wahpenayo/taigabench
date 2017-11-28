@@ -24,7 +24,7 @@
   (.println w 
     "model,ntrain,ntest,datatime,traintime,predicttime,auctime,auc")
   ;;(doseq [suffix ["0.01m"]];; "0.1m" "1m" "10m"]]
-  (doseq [suffix ["8192"]];; "65536" "524288" "419304" "33334432"]]
+  (doseq [suffix ["8192" "65536" "524288" "419304" "33334432"]]
     (doseq [[learner xxx] 
             [[taiga/majority-vote-probability "mvp"]
              [taiga/positive-fraction-probability "pfp"]]]
