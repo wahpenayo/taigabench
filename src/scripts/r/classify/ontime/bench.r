@@ -1,6 +1,6 @@
 # wahpenayo at gmail dot com
 # since 2016-11-11
-# 2017-11-27
+# 2017-11-28
 #-----------------------------------------------------------------
 if (file.exists('e:/porta/projects/taigabench')) {
   setwd('e:/porta/projects/taigabench')
@@ -21,6 +21,50 @@ print(length(dtest[,response]))
 #suffixes <- c('0.01m','0.1m','1m','10m')
 suffixes <- c('8192','65536','524288','4194304','33554432')
 #-----------------------------------------------------------------
+
+#results <- NULL
+#for (suffix in suffixes) {
+#  gc()
+#  trainfile <-train.file(dataset=dataset,suffix=suffix)
+#  dtrain <- ontime.classify.data(trainfile)
+#  tmp <- classify.h2o.randomForest(
+#    dataset=dataset,
+#    dtrain=dtrain,
+#    suffix=suffix,
+#    dtest=dtest,
+#    response='arr_delayed_15min',
+#    maxmem='48g') 
+#  results <- rbind(results,tmp)
+#  print(results)
+#  write.csv(results,file=results.file(
+#      dataset=dataset,
+#      problem=problem,
+#      prefix='h2o'),
+#    row.names=FALSE)
+#}
+#
+#results <- NULL
+#for (suffix in suffixes) {
+# gc()
+# trainfile <-train.file(dataset=dataset,suffix=suffix)
+# dtrain <- ontime.classify.data(trainfile)
+# results <- rbind(
+#   results,
+#   classify.xgboost.randomForest(
+#     dataset=dataset,
+#     dtrain=dtrain,
+#     suffix=suffix,
+#     dtest=dtest,
+#     response='arr_delayed_15min')); 
+# print(results)
+# write.csv(
+#   results,
+#   file=results.file(
+#     dataset=dataset,
+#     problem=problem,
+#     prefix='xgboost'),
+#   row.names=FALSE)
+#}
 
 results <- NULL
 # crashes in 64gb at 1m
@@ -46,48 +90,5 @@ for (suffix in suffixes[1:min(3,length(suffixes))]) {
       problem=problem,
       prefix='randomForest'),
     row.names=FALSE)
-}
-
-results <- NULL
-for (suffix in suffixes) {
-  gc()
-  trainfile <-train.file(dataset=dataset,suffix=suffix)
-  dtrain <- ontime.classify.data(trainfile)
-  tmp <- classify.h2o.randomForest(
-    dataset=dataset,
-    dtrain=dtrain,
-    suffix=suffix,
-    dtest=dtest,
-    response='arr_delayed_15min') 
-  results <- rbind(results,tmp)
-  print(results)
-  write.csv(results,file=results.file(
-      dataset=dataset,
-      problem=problem,
-      prefix='h2o'),
-    row.names=FALSE)
-}
-
-results <- NULL
-for (suffix in suffixes) {
- gc()
- trainfile <-train.file(dataset=dataset,suffix=suffix)
- dtrain <- ontime.classify.data(trainfile)
- results <- rbind(
-   results,
-   classify.xgboost.randomForest(
-     dataset=dataset,
-     dtrain=dtrain,
-     suffix=suffix,
-     dtest=dtest,
-     response='arr_delayed_15min')); 
- print(results)
- write.csv(
-   results,
-   file=results.file(
-     dataset=dataset,
-     problem=problem,
-     prefix='xgboost'),
-   row.names=FALSE)
 }
 #-----------------------------------------------------------------

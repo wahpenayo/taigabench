@@ -23,7 +23,9 @@ results = []
 
 #for suffix in ["0.01", "0.1", "1", "10"] :  
 #for suffix in ["10"] :  
-for suffix in ["8192","65536","524288","4194304","33554432"] :  
+# fails with 33554432 records in 64gb host
+#for suffix in ["8192","65536","524288","4194304","33554432"] :  
+for suffix in ["8192","65536","524288","4194304"] :
     start = time.clock()
     d_train = \
     pd.read_csv("data/ontime/" + "train-" + suffix + ".csv.gz")

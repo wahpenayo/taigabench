@@ -1,2 +1,0 @@
-model,ntrain,ntest,datatime,traintime,predicttime,auctime,auc
-taiga,10000,100000,3.508355372,5.019437399,16.537208244,0.272957215,0.6191255865555914
