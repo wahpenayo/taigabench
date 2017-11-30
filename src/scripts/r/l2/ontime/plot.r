@@ -12,7 +12,7 @@ source('src/scripts/r/functions.r')
 
 results <- NULL
 for (prefix in 
-  c('h2o','randomForest','scikit-learn','taiga-pfp','taiga-mvp','xgboost')) {
+  c('h2o','randomForest','scikit-learn','taiga','xgboost')) {
   f <- results.file(
     dataset='ontime',
     problem='classify',

@@ -4,7 +4,7 @@
                "John Alan McDonald"
                "Kristina Lisa Klinkner" ]
       :since "2016-11-15"
-      :date "2017-11-20"
+      :date "2017-11-29"
       :doc "Accuracy metrics designed for permutation importance 
             measures." }
     
@@ -13,9 +13,35 @@
   (:require [clojure.string :as s]
             [clojure.java.io :as io]
             [zana.api :as z]))
-;;------------------------------------------------------------------------------
+;;----------------------------------------------------------------
 (def ^{:private true :tag java.util.Random} auc-prng
   (z/mersenne-twister-generator "C589FB216CD402EC0A711C04E40801BE"))
+;;----------------------------------------------------------------
+(defn rmse
+  
+  "A [metric function](1metrics.html).
+   Returns RMSE (root mean squared error):
+   ```
+   (sqrt (/ (l2-distance2 y yhat) (count y)))
+   ```
+   <dl>
+   <dt><code>model</code></dt>
+   <dd>a <code>clojure.lang.IFn$OOD</code> that takes an attribute map and a
+   datum, one of the elements of <code>data</code>.
+   </dd>
+   <dt><code>attributes</code></dt><dd>a <code>java.util.Map</code> from
+   keywords to functions that can be applied to the elements of 
+   <code>data</code>. Must contain <code>:ground-truth</code> and 
+   <code>:prediction</code> as a keys.
+   </dd>
+   <dt><code>data</code></dt><dd>an <code>Iterable</code></dd>
+   </dl>"
+  
+  ^double [^clojure.lang.IFn$OD truth
+           ^clojure.lang.IFn$OD prediction 
+           ^Iterable data]
+  
+  (z/rms-difference truth prediction data))
 ;;------------------------------------------------------------------------------
 (defn roc-auc
   

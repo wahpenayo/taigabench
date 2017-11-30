@@ -176,7 +176,7 @@
                  crsdeptime crsarrtime crselapsedtime distance
                  cmonth cdayofmonth cdayofweek
                  uniquecarrier origin dest])))
-(def regression-attributes 
+(def l2-attributes 
   "An attribute map for Taiga training/prediction, including
    <code>:ground-truth</code> and <code>:prediction</code>."
   (assoc

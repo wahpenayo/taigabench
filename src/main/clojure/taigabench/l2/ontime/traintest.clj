@@ -1,8 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :since "2016-11-15"
-      :date "2017-11-21"
+      :date "2017-11-29"
       :doc "Public airline ontime data for benchmarking:
             http://stat-computing.org/dataexpo/2009/" }
     
@@ -14,25 +13,24 @@
             [taiga.api :as taiga]
             [taigabench.pt :as pt]
             [taigabench.metrics :as metrics]
-            [taigabench.classify.ontime.data :as data]))
-;;------------------------------------------------------------------------------
+            [taigabench.ontime.data :as data]))
+;;----------------------------------------------------------------
 (def prototype 
-  {:attributes data/attributes
+  {:attributes data/l2-attributes
    :csv-reader #(data/read-tsv-file % #"\,")
    :bin-reader data/read-binary-file
    :bin-writer data/write-binary-file
-   ;;:mincount 1
-   :nterms 500})
-;;------------------------------------------------------------------------------
+   :mincount 17
+   :nterms 255
+   :maxdepth 1024})
+;;----------------------------------------------------------------
 (defn traintest [suffix learner options]
   (let [mincount (:mincount options)
         model-name (str "taiga-" (z/name learner) "-" mincount)
         label  (str model-name "-" suffix)
         start (System/nanoTime)
-        train ((:csv-reader options) 
-                (data/data-file (str "train-" suffix) "csv.gz"))
-        test ((:csv-reader options) 
-               (data/data-file "test" "csv.gz"))
+        train (data/read-data-file (str "train-" suffix))
+        test (data/read-data-file "test")
         _(System/gc)
         datatime (/ (double (- (System/nanoTime) start)) 
                     1000000000.0)
@@ -60,18 +58,20 @@
                        1000000000.0)
         #_train #_(z/seconds
                 (print-str "predict train" label) 
-                (z/pmap #(assoc 
-                           % 
-                           :score (.invokePrim model attributes %)) 
-                       train))
+                (z/pmap 
+                  #(assoc 
+                     % 
+                     :score (.invokePrim model attributes %)) 
+                  train))
         start (System/nanoTime)
         ^clojure.lang.IFn$OD truth (:ground-truth attributes)
         ^clojure.lang.IFn$OD score (:prediction attributes)
-        auc (metrics/roc-auc truth score test)
-        auctime (/ (double (- (System/nanoTime) start)) 
-                   1000000000.0)]
+        rmse (z/rms-difference truth score test)
+        rmsetime (/ (double (- (System/nanoTime) start)) 
+                    1000000000.0)]
     (pt/write-predictions 
-      truth score test (data/output-file label "pred.tsv.gz"))
+      truth score test 
+      (data/output-file "l2" label "pred.tsv.gz"))
     #_(println "Train AUC:" model-name suffix 
                (metrics/roc-auc truth score train))
     #_(data/write-tsv-file 
@@ -88,6 +88,6 @@
    :datatime datatime
    :traintime traintime 
    :predicttime predicttime
-   :auctime auctime
-   :auc auc}))
-;;------------------------------------------------------------------------------
+   :rmsetime rmsetime
+   :rmse rmse}))
+;;----------------------------------------------------------------

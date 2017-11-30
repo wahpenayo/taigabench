@@ -1,6 +1,6 @@
 # wahpenayo at gmail dot com
 # since 2016-11-11
-# 2017-11-28
+# 2017-11-29
 #-----------------------------------------------------------------
 if (file.exists('e:/porta/projects/taigabench')) {
   setwd('e:/porta/projects/taigabench')
@@ -8,11 +8,12 @@ if (file.exists('e:/porta/projects/taigabench')) {
   setwd('c:/porta/projects/taigabench')
 }
 source('src/scripts/r/functions.r')
+readr.show_progress <- FALSE
 #-----------------------------------------------------------------
 dataset <- 'ontime'
-problem <- 'classify'
-response <- 'arr_delayed_15min'
-dataf <- ontime.classify.data
+problem <- 'l2'
+response <- 'arrdelay'
+dataf <- ontime.data
 dtest <- dataf(test.file(dataset=dataset))
 #suffixes <- c('8192','65536','524288','4194304','33554432')
 suffixes <- c('8192')
@@ -21,21 +22,21 @@ bench(
   dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
   response=response, 
   suffixes=suffixes,
-  trainf=classify.h2o.randomForest,
+  trainf=l2.h2o.randomForest,
   prefix='h20')
-
+  
 bench(
   dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
   response=response, 
   suffixes=suffixes,
-  trainf=classify.xgboost.randomForest,
+  trainf=l2.xgboost.randomForest,
   prefix='xgboost')
 
 bench(
   dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
   response=response, 
   suffixes=suffixes,
-  trainf=classify.xgboost.exact.randomForest,
+  trainf=l2.xgboost.exact.randomForest,
   prefix='xgboost.exact')
 
 bench(
@@ -43,6 +44,6 @@ bench(
   response=response, 
   # crashes in 64gb at 1m
   suffixes=suffixes[1:min(3,length(suffixes))],
-  trainf=classify.randomForest,
+  trainf=l2.randomForest,
   prefix='randomForest')
 #-----------------------------------------------------------------
