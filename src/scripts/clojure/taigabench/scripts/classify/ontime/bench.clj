@@ -21,7 +21,7 @@
                 (data/output-file "classify" "taiga.results" "csv"))]
   (.println w 
     "model,ntrain,ntest,datatime,traintime,predicttime,auctime,auc")
-  (doseq [suffix ["8192" "65536" "524288" "419304" "33334432"]]
+  (doseq [suffix ["8192" "65536" "524288" "4194304" "33334432"]]
     (doseq [[learner xxx] 
             [[taiga/majority-vote-probability "mvp"]
              [taiga/positive-fraction-probability "pfp"]]]

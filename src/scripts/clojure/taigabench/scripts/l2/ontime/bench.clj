@@ -20,7 +20,7 @@
                 (data/output-file "l2" "taiga.results" "csv"))]
   (.println w 
     "model,ntrain,ntest,datatime,traintime,predicttime,rmsetime,rmse")
-  (doseq [suffix ["8192" "65536" "524288" "419304" "33334432"]]
+  (doseq [suffix ["8192" "65536" "524288" "4194304" "33334432"]]
     (System/gc)
     (println "taiga" suffix)
     (let [results (tt/traintest 
