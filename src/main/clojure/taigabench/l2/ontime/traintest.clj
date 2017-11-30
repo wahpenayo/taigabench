@@ -52,7 +52,7 @@
         attributes (:attributes options)
         test (z/pmap #(assoc 
                         % 
-                        :score (.invokePrim model attributes %)) 
+                        :prediction (.invokePrim model attributes %)) 
                      test)
         predicttime (/ (double (- (System/nanoTime) start)) 
                        1000000000.0)
@@ -61,19 +61,19 @@
                 (z/pmap 
                   #(assoc 
                      % 
-                     :score (.invokePrim model attributes %)) 
+                     :prediction (.invokePrim model attributes %)) 
                   train))
         start (System/nanoTime)
         ^clojure.lang.IFn$OD truth (:ground-truth attributes)
-        ^clojure.lang.IFn$OD score (:prediction attributes)
-        rmse (z/rms-difference truth score test)
+        ^clojure.lang.IFn$OD prediction (:prediction attributes)
+        rmse (z/rms-difference truth prediction test)
         rmsetime (/ (double (- (System/nanoTime) start)) 
                     1000000000.0)]
     (pt/write-predictions 
-      truth score test 
+      truth prediction test 
       (data/output-file "l2" label "pred.tsv.gz"))
     #_(println "Train AUC:" model-name suffix 
-               (metrics/roc-auc truth score train))
+               (metrics/roc-auc truth prediction train))
     #_(data/write-tsv-file 
       test (data/output-file (str "test-" label) "tsv.gz"))
     #_(data/write-binary-file 

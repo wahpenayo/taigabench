@@ -245,7 +245,7 @@ classify.h2o.randomForest <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  maxmem=paste0(free.ram()-3,'g'),
+  maxmem=paste0(floor(0.9*free.ram()),'g'),
   ntrees=255,
   mincount=17,
   maxdepth=1024) {
@@ -327,7 +327,7 @@ l2.h2o.randomForest <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  maxmem=paste0(free.ram()-3,'g'),
+  maxmem=paste0(floor(0.9*free.ram()),'g'),
   ntrees=255,
   mincount=17,
   maxdepth=1024) {
@@ -384,7 +384,7 @@ l2.h2o.randomForest <- function (
       prefix=paste('h2o',suffix,sep='-')))
   
   start <- proc.time()
-  rmse <- sqrt(mean(prtr$truth-prtr$prediction))
+  rmse <- sqrt(mean((prtr$truth-prtr$prediction)^2))
   rmsetime <- proc.time() - start
   
   results <- list(
@@ -654,7 +654,7 @@ l2.xgboost.randomForest <- function (
     prediction=phat,
     truth=dtest[[response]])
   start <- proc.time()
-  rmse <- sqrt(mean(prtr$truth-prtr$prediction))
+  rmse <- sqrt(mean((prtr$truth-prtr$prediction)^2))
   rmsetime <- proc.time() - start
   
   write.tsv(
@@ -738,7 +738,7 @@ l2.xgboost.exact.randomForest <- function (
     prediction=phat,
     truth=dtest[[response]])
   start <- proc.time()
-  rmse <- sqrt(mean(prtr$truth-prtr$prediction))
+  rmse <- sqrt(mean((prtr$truth-prtr$prediction)^2))
   rmsetime <- proc.time() - start
   
   write.tsv(
@@ -799,7 +799,7 @@ classify.randomForest <- function (
   forest <- randomForest(
     x=X_train,
     y=dtrain[[response]], 
-    ntree=ntree, 
+    ntree=ntrees, 
     nodesize=mincount)
   traintime <- proc.time() - start   
   
@@ -883,7 +883,7 @@ l2.randomForest <- function (
     prediction=phat,
     truth=dtest[[response]])
   start <- proc.time()
-  rmse <- sqrt(mean(prtr$truth-prtr$prediction))
+  rmse <- sqrt(mean((prtr$truth-prtr$prediction)^2))
   rmsetime <- proc.time() - start
   
   write.tsv(
@@ -900,7 +900,7 @@ l2.randomForest <- function (
     datatime=datatime['elapsed'],
     traintime=traintime['elapsed'],
     predicttime=predicttime['elapsed'],
-    rmsetime=auctime['elapsed'],
+    rmsetime=rmsetime['elapsed'],
     rmse=rmse)
 }
 #-----------------------------------------------------------------
@@ -959,7 +959,7 @@ classify.parallel.randomForest <- function (
         X_train, 
         as.factor(dtrain[,response]), 
         nodesize=mincount, 
-        ntree=floor(ntree/n_proc))}, 
+        ntree=floor(ntrees/n_proc))}, 
     mc.cores=n_proc)
   
   md <- do.call('combine', mds)

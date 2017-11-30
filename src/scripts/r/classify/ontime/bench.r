@@ -1,6 +1,5 @@
 # wahpenayo at gmail dot com
-# since 2016-11-11
-# 2017-11-28
+# 2017-11-29
 #-----------------------------------------------------------------
 if (file.exists('e:/porta/projects/taigabench')) {
   setwd('e:/porta/projects/taigabench')
@@ -14,15 +13,14 @@ problem <- 'classify'
 response <- 'arr_delayed_15min'
 dataf <- ontime.classify.data
 dtest <- dataf(test.file(dataset=dataset))
-#suffixes <- c('8192','65536','524288','4194304','33554432')
-suffixes <- c('8192')
+suffixes <- c('8192','65536','524288','4194304','33554432')
 #-----------------------------------------------------------------
 bench(
   dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
   response=response, 
   suffixes=suffixes,
   trainf=classify.h2o.randomForest,
-  prefix='h20')
+  prefix='h2o')
 
 bench(
   dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,

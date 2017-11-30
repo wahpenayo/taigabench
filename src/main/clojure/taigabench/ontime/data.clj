@@ -165,9 +165,8 @@
                                       (parse-airport 
                                         (:dest tuple)))]
    ^float [arrdelay parse-arrdelay]
-   ^float arrdelayhat
    ^float [arr-delayed-15min parse-arr-delayed-15min]
-   ^float score])
+   ^float prediction])
 ;;----------------------------------------------------------------
 (def predictors 
   "An attribute map for Taiga training/prediction."
@@ -182,14 +181,14 @@
   (assoc
     predictors
     :ground-truth arrdelay
-    :prediction arrdelayhat))
+    :prediction prediction))
 (def classify-attributes 
   "An attribute map for Taiga training/prediction, including
    <code>:ground-truth</code> and <code>:prediction</code>."
   (assoc
     predictors
     :ground-truth arr-delayed-15min
-    :prediction score))
+    :prediction prediction))
 (def csv-attributes 
   "A list of attributes to write to sampled data files."
   (sort-by 

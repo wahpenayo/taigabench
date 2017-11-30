@@ -50,9 +50,10 @@
         #_(taiga/write-edn model model-file)
         start (System/nanoTime)
         attributes (:attributes options)
-        test (z/pmap #(assoc 
-                        % 
-                        :score (.invokePrim model attributes %)) 
+        test (z/pmap 
+               #(assoc 
+                  % 
+                  :prediction (.invokePrim model attributes %)) 
                      test)
         predicttime (/ (double (- (System/nanoTime) start)) 
                        1000000000.0)
@@ -61,16 +62,16 @@
                     (z/pmap 
                       #(assoc 
                          % 
-                         :score (.invokePrim model attributes %)) 
+                         :prediction (.invokePrim model attributes %)) 
                       train))
         start (System/nanoTime)
         ^clojure.lang.IFn$OD truth (:ground-truth attributes)
-        ^clojure.lang.IFn$OD score (:prediction attributes)
-        auc (metrics/roc-auc truth score test)
+        ^clojure.lang.IFn$OD prediction (:prediction attributes)
+        auc (metrics/roc-auc truth prediction test)
         auctime (/ (double (- (System/nanoTime) start)) 
                    1000000000.0)]
     (pt/write-predictions 
-      truth score test 
+      truth prediction test 
       (data/output-file "classify" label "pred.tsv.gz"))
     #_(println "Train AUC:" model-name suffix 
                (metrics/roc-auc truth score train))
