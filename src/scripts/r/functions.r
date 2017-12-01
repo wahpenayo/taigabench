@@ -1,5 +1,5 @@
 # wahpenayo at gmail dot com
-# 2017-11-30
+# 2017-12-01
 #-----------------------------------------------------------------
 # Load the necessary add-on packages, downloading and installing
 # (in the user's R_LIBS_USER folder) if necessary.
@@ -248,7 +248,7 @@ classify.h2o.randomForest <- function (
   response=NULL,
   maxmem=paste0(floor(0.9*free.ram()),'g'),
   ntrees=127,
-  mincount=17,
+  mincount=57,
   maxdepth=1024) {
   
   stopifnot(
@@ -332,7 +332,7 @@ l2.h2o.randomForest <- function (
   response=NULL,
   maxmem=paste0(floor(0.9*free.ram()),'g'),
   ntrees=127,
-  mincount=17,
+  mincount=57,
   maxdepth=1024) {
   
   stopifnot(
@@ -436,7 +436,7 @@ classify.xgboost.randomForest <- function (
   dtest=NULL,
   response=NULL,
   ntrees=127,
-  mincount=17,
+  mincount=57,
   maxdepth=1024) {
   
   stopifnot(
@@ -521,7 +521,7 @@ classify.xgboost.exact.randomForest <- function (
   dtest=NULL,
   response=NULL,
   ntrees=127,
-  mincount=17,
+  mincount=57,
   maxdepth=1024) {
   
   stopifnot(
@@ -607,7 +607,7 @@ l2.xgboost.randomForest <- function (
   dtest=NULL,
   response=NULL,
   ntrees=127,
-  mincount=17,
+  mincount=57,
   maxdepth=1024) {
   
   stopifnot(
@@ -691,7 +691,7 @@ l2.xgboost.exact.randomForest <- function (
   dtest=NULL,
   response=NULL,
   ntrees=127,
-  mincount=17,
+  mincount=57,
   maxdepth=1024) {
   
   stopifnot(
@@ -778,7 +778,7 @@ classify.randomForest <- function (
   dtest=NULL,
   response=NULL,
   ntrees=127,
-  mincount=17,
+  mincount=57,
   maxdepth=1024) {
   
   stopifnot(
@@ -851,7 +851,7 @@ l2.randomForest <- function (
   dtest=NULL,
   response=NULL,
   ntrees=127,
-  mincount=17,
+  mincount=57,
   maxdepth=1024) {
   
   stopifnot(
@@ -927,7 +927,7 @@ classify.parallel.randomForest <- function (
   dtest=NULL,
   response=NULL,
   ntrees=127,
-  mincount=17,
+  mincount=57,
   maxdepth=1024) {
   
   stopifnot(
@@ -1019,7 +1019,7 @@ classify.randomForestSRC <- function (
   dtest=NULL,
   response=NULL,
   ntrees=127,
-  mincount=17,
+  mincount=57,
   maxdepth=1024) {
   
   stopifnot(
@@ -1097,7 +1097,7 @@ l2.randomForestSRC <- function (
   dtest=NULL,
   response=NULL,
   ntrees=127,
-  mincount=17,
+  mincount=57,
   maxdepth=1024) {
   
   stopifnot(
@@ -1110,7 +1110,7 @@ l2.randomForestSRC <- function (
     is.numeric(dtest[,response]))
   
   seed <- 1244985
-  set.seed(1244985)
+  set.seed(seed)
   
   start <- proc.time()
   d <- rbind(dtrain,dtest)

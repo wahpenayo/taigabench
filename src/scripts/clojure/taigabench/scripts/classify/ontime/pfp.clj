@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :date "2017-11-29"
+      :date "2017-12-01"
       :doc "Public airline ontime data benchmark:
             https://www.r-bloggers.com/benchmarking-random-forest-implementations/
             http://stat-computing.org/dataexpo/2009/" }
@@ -16,13 +16,12 @@
 ;; clj12g src\scripts\clojure\taigabench\scripts\classify\ontime\pfp.clj > ontime.pfp.txt
 ;; clj48g src\scripts\clojure\taigabench\scripts\classify\ontime\pfp.clj > ontime.pfp.txt
 ;;----------------------------------------------------------------
-(doseq [[mincount suffixes] [[17 ["0.01m"]]]];; "0.1m" "1m" "10m"]]]]
-  
   (with-open [w (z/print-writer 
                   (data/output-file "taiga-pfp.results" "csv"))]
     (.println w 
       "model,ntrain,ntest,datatime,traintime,predicttime,auctime,auc")
-      (System/gc)
+   (doseq [suffix ["8192" "65536" "524288" "4194304" "33554432"]]
+     (System/gc)
       (println "taiga" mincount suffix)
       (let [learner  taiga/positive-fraction-probability
             results (traintest/traintest 

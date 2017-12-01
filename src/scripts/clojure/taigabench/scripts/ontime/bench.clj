@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :date "2017-11-30"
+      :date "2017-12-01"
       :doc "Public airline ontime data benchmark:
             https://www.r-bloggers.com/benchmarking-random-forest-implementations/
             http://stat-computing.org/dataexpo/2009/" }
@@ -15,7 +15,7 @@
             [taigabench.classify.ontime.traintest :as cl]
             [taigabench.l2.ontime.traintest :as l2]))
 ;; clj12g src\scripts\clojure\taigabench\scripts\ontime\bench.clj > ontime.bench.txt
-;; clj48g src\scripts\clojure\taigabench\scripts\ontime\bench.clj > ontime.bench.txt
+;; clj56g src\scripts\clojure\taigabench\scripts\ontime\bench.clj > ontime.bench.txt
 ;;----------------------------------------------------------------
 (with-open [w (z/print-writer 
                 (data/output-file "l2" "taiga.results" "csv"))]
@@ -23,9 +23,10 @@
     "model,ntrain,ntest,datatime,traintime,predicttime,rmsetime,rmse")
   (doseq [suffix ["8192" "65536" "524288" "4194304" "33554432"]]
     (System/gc)
-    (println "taiga" suffix)
-    (let [results (l2/traintest 
-                    suffix taiga/mean-regression l2/prototype)
+    (let [results (z/seconds
+                    (print-str "taiga" suffix)
+                    (l2/traintest 
+                      suffix taiga/mean-regression l2/prototype))
           ^String line (s/join "," ["taiga"
                                     (:ntrain results)
                                     (:ntest results)
@@ -46,9 +47,10 @@
             [[taiga/majority-vote-probability "mvp"]
              [taiga/positive-fraction-probability "pfp"]]]
       (System/gc)
-      (println "taiga" xxx suffix)
-      (let [results (cl/traintest 
-                      suffix learner cl/prototype)
+      (let [results (z/seconds
+                      (print-str "taiga" xxx suffix)
+                      (cl/traintest 
+                        suffix learner cl/prototype))
             ^String line (s/join "," [(str "taiga-" xxx)
                                       (:ntrain results)
                                       (:ntest results)

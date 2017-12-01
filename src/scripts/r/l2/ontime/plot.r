@@ -1,6 +1,5 @@
 # wahpenayo at gmail dot com
-# since 2016-01-31
-# 2017-11-29
+# 2017-12-01
 #-----------------------------------------------------------------
 if (file.exists('e:/porta/projects/taigabench')) {
   setwd('e:/porta/projects/taigabench')
@@ -12,7 +11,8 @@ source('src/scripts/r/functions.r')
 
 results <- NULL
 for (prefix in 
-  c('h2o','randomForest','scikit-learn','taiga','xgboost')) {
+  c('h2o','randomForest','randomForestSRC','scikit-learn',
+    'taiga','xgboost')) {
   f <- results.file(
     dataset='ontime',
     problem='classify',

@@ -1,5 +1,5 @@
 # wahpenayo at gmail dot com
-# 2017-11-29
+# 2017-12-01
 
 import time
 import math as math
@@ -46,7 +46,7 @@ for suffix in ["8192","65536","524288","4194304","33554432"] :
     md = RandomForestRegressor(n_estimators=127, \
                                n_jobs=-1, \
                                max_depth=1024, \
-                               min_samples_leaf=17)
+                               min_samples_leaf=57)
     md.fit(X_train, y_train)
     traintime = time.clock() - start
     
