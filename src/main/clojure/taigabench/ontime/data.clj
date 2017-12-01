@@ -1,8 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :since "2016-11-10"
-      :date "2017-11-27"
+      :date "2017-12-01"
       :doc "[Public airline ontime data for benchmarking](http://stat-computing.org/dataexpo/2009/).
             <p>
             <b>Note:</b>Using attributes mostly as defined as in 
@@ -32,6 +31,8 @@
             [zana.api :as z]
             [taiga.api :as taiga])
   (:import [java.time DayOfWeek LocalDate Month]
+           [org.apache.commons.math3.distribution
+            RealDistribution]
            [clojure.lang IFn$OD]
            [taigabench.java.ontime Airline Airport DayOfMonth]))
 ;;----------------------------------------------------------------
@@ -166,7 +167,9 @@
                                         (:dest tuple)))]
    ^float [arrdelay parse-arrdelay]
    ^float [arr-delayed-15min parse-arr-delayed-15min]
-   ^float prediction])
+   ^float prediction
+   ^org.apache.commons.math3.distribution.RealDistribution 
+   predictedDistribution])
 ;;----------------------------------------------------------------
 (def predictors 
   "An attribute map for Taiga training/prediction."
@@ -182,6 +185,13 @@
     predictors
     :ground-truth arrdelay
     :prediction prediction))
+(def qcost-attributes 
+  "An attribute map for Taiga training/prediction, including
+   <code>:ground-truth</code> and <code>:prediction</code>."
+  (assoc
+    predictors
+    :ground-truth arrdelay
+    :prediction predictedDistribution))
 (def classify-attributes 
   "An attribute map for Taiga training/prediction, including
    <code>:ground-truth</code> and <code>:prediction</code>."
