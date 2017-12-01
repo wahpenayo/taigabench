@@ -1,5 +1,5 @@
 # wahpenayo at gmail dot com
-# 2017-11-29
+# 2017-11-30
 #-----------------------------------------------------------------
 # Load the necessary add-on packages, downloading and installing
 # (in the user's R_LIBS_USER folder) if necessary.
@@ -14,6 +14,7 @@ load.packages <- function () {
       'readr',
       'ROCR', 
       'randomForest',
+      'quantregForest',
       'randomForestSRC',
       'xgboost',
       'parallel',
@@ -256,14 +257,16 @@ classify.h2o.randomForest <- function (
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
-    is.factor(dtrain[[response]]),
-    is.factor(dtest[[response]]))
+    is.factor(dtrain[,response]),
+    is.factor(dtest[,response]))
   
   # H2O requires Java 8 as of 2017-11-17, version 3.15.0.4103
   old.java.home <- Sys.getenv('JAVA_HOME')
   Sys.setenv(JAVA_HOME=Sys.getenv('JAVA8'))
   
-  set.seed(740189)
+  seed <- 740189
+  set.seed(seed)
+
   h2o.init(max_mem_size=maxmem, nthreads=-1)
   
   start <- proc.time()
@@ -289,7 +292,7 @@ classify.h2o.randomForest <- function (
   pred <- as.data.frame(predict(md,dx_test))
   prtr <- data.frame(
     prediction=pred$Y,
-    truth=ifelse(dtest[[response]]=='Y',1,0))
+    truth=ifelse(dtest[,response]=='Y',1,0))
   predicttime <- proc.time() - start
   #summary(prtr)
   
@@ -338,15 +341,17 @@ l2.h2o.randomForest <- function (
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
-    is.numeric(dtrain[[response]]),
-    is.numeric(dtest[[response]]))
+    is.numeric(dtrain[,response]),
+    is.numeric(dtest[,response]))
   
   
   # H2O requires Java 8 as of 2017-11-17, version 3.15.0.4103
   old.java.home <- Sys.getenv('JAVA_HOME')
   Sys.setenv(JAVA_HOME=Sys.getenv('JAVA8'))
   
-  set.seed(740189)
+  seed <- 740189
+  set.seed(seed)
+  
   h2o.init(max_mem_size=maxmem, nthreads=-1)
   
   start <- proc.time()
@@ -372,7 +377,7 @@ l2.h2o.randomForest <- function (
   pred <- as.data.frame(predict(md,dx_test))
   prtr <- data.frame(
     prediction=pred$predict,
-    truth=dtest[[response]])
+    truth=dtest[,response])
   predicttime <- proc.time() - start
   #summary(prtr)
   
@@ -440,10 +445,11 @@ classify.xgboost.randomForest <- function (
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
-    is.factor(dtrain[[response]]),
-    is.factor(dtest[[response]]))
+    is.factor(dtrain[,response]),
+    is.factor(dtest[,response]))
   
-  set.seed(169544)
+  seed <- 169544
+  set.seed(seed)
   
   start <- proc.time()
   
@@ -478,10 +484,10 @@ classify.xgboost.randomForest <- function (
   traintime <- proc.time() - start
   
   start <- proc.time()
-  phat <- predict(md, newdata=X_test)
+  yhat <- predict(md, newdata=X_test)
   truth <- dtest[,response]
   truth <- as.numeric(ifelse(truth[,response]=='Y',1,0))
-  prtr <- data.frame(prediction=phat,truth=as.numeric(truth))
+  prtr <- data.frame(prediction=yhat,truth=as.numeric(truth))
   predicttime <- proc.time() - start
   
   write.tsv(
@@ -492,7 +498,7 @@ classify.xgboost.randomForest <- function (
       problem='classify'))
   
   start <- proc.time()
-  rocr_pred <- prediction(phat, dtest[,response])
+  rocr_pred <- prediction(yhat, dtest[,response])
   auc <- performance(rocr_pred, 'auc')
   auctime <- proc.time() - start
   
@@ -524,10 +530,11 @@ classify.xgboost.exact.randomForest <- function (
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
-    is.factor(dtrain[[response]]),
-    is.factor(dtest[[response]]))
+    is.factor(dtrain[,response]),
+    is.factor(dtest[,response]))
   
-  set.seed(169544)
+  seed <- 169544
+  set.seed(seed)
   
   start <- proc.time()
   
@@ -563,10 +570,10 @@ classify.xgboost.exact.randomForest <- function (
   traintime <- proc.time() - start
   
   start <- proc.time()
-  phat <- predict(md, newdata=X_test)
+  yhat <- predict(md, newdata=X_test)
   truth <- dtest[,response]
   truth <- as.numeric(ifelse(truth[,response]=='Y',1,0))
-  prtr <- data.frame(prediction=phat,truth=as.numeric(truth))
+  prtr <- data.frame(prediction=yhat,truth=as.numeric(truth))
   predicttime <- proc.time() - start
   
   write.tsv(
@@ -577,7 +584,7 @@ classify.xgboost.exact.randomForest <- function (
       problem='classify'))
   
   start <- proc.time()
-  rocr_pred <- prediction(phat, dtest[,response])
+  rocr_pred <- prediction(yhat, dtest[,response])
   auc <- performance(rocr_pred, 'auc')
   auctime <- proc.time() - start
   
@@ -609,10 +616,11 @@ l2.xgboost.randomForest <- function (
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
-    is.numeric(dtrain[[response]]),
-    is.numeric(dtest[[response]]))
+    is.numeric(dtrain[,response]),
+    is.numeric(dtest[,response]))
   
-  set.seed(169544)
+  seed <- 169544
+  set.seed(seed)
   
   start <- proc.time()
   
@@ -647,12 +655,12 @@ l2.xgboost.randomForest <- function (
   traintime <- proc.time() - start
   
   start <- proc.time()
-  phat <- predict(md, newdata=X_test)
+  yhat <- predict(md, newdata=X_test)
   predicttime <- proc.time() - start
   
   prtr <- data.frame(
-    prediction=phat,
-    truth=dtest[[response]])
+    prediction=yhat,
+    truth=dtest[,response])
   start <- proc.time()
   rmse <- sqrt(mean((prtr$truth-prtr$prediction)^2))
   rmsetime <- proc.time() - start
@@ -692,10 +700,11 @@ l2.xgboost.exact.randomForest <- function (
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
-    is.numeric(dtrain[[response]]),
-    is.numeric(dtest[[response]]))
+    is.numeric(dtrain[,response]),
+    is.numeric(dtest[,response]))
   
-  set.seed(169544)
+  seed <- 169544
+  set.seed(seed)
   
   start <- proc.time()
   
@@ -731,12 +740,12 @@ l2.xgboost.exact.randomForest <- function (
   traintime <- proc.time() - start
   
   start <- proc.time()
-  phat <- predict(md, newdata=X_test)
+  yhat <- predict(md, newdata=X_test)
   predicttime <- proc.time() - start
   
   prtr <- data.frame(
-    prediction=phat,
-    truth=dtest[[response]])
+    prediction=yhat,
+    truth=dtest[,response])
   start <- proc.time()
   rmse <- sqrt(mean((prtr$truth-prtr$prediction)^2))
   rmsetime <- proc.time() - start
@@ -778,10 +787,11 @@ classify.randomForest <- function (
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
-    is.factor(dtrain[[response]]),
-    is.factor(dtest[[response]]))
+    is.factor(dtrain[,response]),
+    is.factor(dtest[,response]))
   
-  set.seed(1244985)
+  seed <- 1244985
+  set.seed(seed)
   
   start <- proc.time()
   
@@ -798,26 +808,26 @@ classify.randomForest <- function (
   start <- proc.time()
   forest <- randomForest(
     x=X_train,
-    y=dtrain[[response]], 
+    y=dtrain[,response], 
     ntree=ntrees, 
     nodesize=mincount)
   traintime <- proc.time() - start   
   
   start <- proc.time()
-  phat <- predict(forest, newdata=X_test, type='prob')[,'Y']
+  yhat <- predict(forest, newdata=X_test, type='prob')[,'Y']
   predicttime <- proc.time() - start   
   
   write.tsv(
     data=data.frame(
-      prediction=phat,
-      truth=ifelse(dtest[[response]]=='Y',1,0)),
+      prediction=yhat,
+      truth=ifelse(dtest[,response]=='Y',1,0)),
     file=predicted.file(
       prefix=paste('randomForest',suffix,sep='-'),
       dataset=dataset,
       problem='classify'))
   
   start <- proc.time()
-  rocr_pred <- prediction(phat, dtest[[response]])
+  rocr_pred <- prediction(yhat, dtest[,response])
   auc <- performance(rocr_pred, 'auc')
   print(auc)
   auctime <- proc.time() - start
@@ -850,10 +860,11 @@ l2.randomForest <- function (
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
-    is.numeric(dtrain[[response]]),
-    is.numeric(dtest[[response]]))
+    is.numeric(dtrain[,response]),
+    is.numeric(dtest[,response]))
   
-  set.seed(1244985)
+  seed <- 1244985
+  set.seed(seed)
   
   start <- proc.time()
   
@@ -870,18 +881,18 @@ l2.randomForest <- function (
   start <- proc.time()
   forest <- randomForest(
     x=X_train,
-    y=dtrain[[response]], 
+    y=dtrain[,response], 
     ntree=ntrees, 
     nodesize=mincount)
   traintime <- proc.time() - start   
   
   start <- proc.time()
-  phat <- predict(forest, newdata=X_test)
+  yhat <- predict(forest, newdata=X_test)
   predicttime <- proc.time() - start
   
   prtr <- data.frame(
-    prediction=phat,
-    truth=dtest[[response]])
+    prediction=yhat,
+    truth=dtest[,response])
   start <- proc.time()
   rmse <- sqrt(mean((prtr$truth-prtr$prediction)^2))
   rmsetime <- proc.time() - start
@@ -925,10 +936,11 @@ classify.parallel.randomForest <- function (
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
-    is.factor(dtrain[[response]]),
-    is.factor(dtest[[response]]))
+    is.factor(dtrain[,response]),
+    is.factor(dtest[,response]))
   
-  set.seed(1244985)
+  seed <- 1244985
+  set.seed(seed)
   
   start <- proc.time()
   datatime <- proc.time() - start
@@ -966,12 +978,12 @@ classify.parallel.randomForest <- function (
   traintime <- proc.time() - start   
   
   start <- proc.time()
-  phat <- predict(md, newdata=dtest, type='prob')[,'Y']
+  yhat <- predict(md, newdata=dtest, type='prob')[,'Y']
   predicttime <- proc.time() - start   
   
   write.tsv(
     data=data.frame(
-      prediction=phat,
+      prediction=yhat,
       truth=ifelse(dtrain[,response]=='Y',1,0)),
     file=predicted.file(
       prefix=paste('parallel.randomForest',suffix,sep='-'),
@@ -979,7 +991,7 @@ classify.parallel.randomForest <- function (
       problem='classify'))
   
   start <- proc.time()
-  rocr_pred <- prediction(phat, dtest[,response])
+  rocr_pred <- prediction(yhat, dtest[,response])
   auc <- performance(rocr_pred, 'auc')
   print(auc)
   auctime <- proc.time() - start
@@ -997,11 +1009,168 @@ classify.parallel.randomForest <- function (
     auc=auc@y.values[[1]])
 }
 #-----------------------------------------------------------------
+# randomForestSRC
+#-----------------------------------------------------------------
+# binary classification
+classify.randomForestSRC <- function (
+  dataset=NULL,
+  dtrain=NULL,
+  suffix=NULL,
+  dtest=NULL,
+  response=NULL,
+  ntrees=255,
+  mincount=17,
+  maxdepth=1024) {
+  
+  stopifnot(
+    !is.null(dataset),
+    !is.null(dtrain),
+    !is.null(suffix),
+    !is.null(dtest),
+    !is.null(response),
+    is.factor(dtrain[,response]),
+    is.factor(dtest[,response]))
+  
+  seed <- 1244985
+  set.seed(seed)
+  
+  # ensure factors have same levels for train/test
+  start <- proc.time()
+  d <- rbind(dtrain,dtest)
+  for (col in names(d)) {
+    if (is.factor(d[,col])) {
+      levels <- sort(unique(d[,col]))
+      dtrain[,col] <- factor(dtrain[,col],level=levels)
+      dtest[,col] <- factor(dtest[,col],level=levels)
+    }
+  }
+  datatime <- proc.time() - start
+
+  start <- proc.time()
+  forest <- rfsrc(
+    formula=as.formula(paste(response, '~ .')),
+    data=dtrain,
+    ntree=ntrees, 
+    nodesize=mincount,
+    nodedepth=maxdepth,
+    seed=seed)
+  traintime <- proc.time() - start   
+  
+  start <- proc.time()
+  predicted <- predict(
+    forest, 
+    newdata=dtest[,which(names(dtest) != response)],
+    outcome='train')
+  yhat <- predicted$predicted[,'Y']
+  predicttime <- proc.time() - start   
+  
+  write.tsv(
+    data=data.frame(
+      prediction=yhat,
+      truth=ifelse(dtest[,response]=='Y',1,0)),
+    file=predicted.file(
+      prefix=paste('randomForestSRC',suffix,sep='-'),
+      dataset=dataset,
+      problem='classify'))
+  
+  start <- proc.time()
+  rocr_pred <- prediction(yhat, dtest[,response])
+  auc <- performance(rocr_pred, 'auc')
+  auctime <- proc.time() - start
+  
+  list(
+    model='randomForestSRC',
+    ntrain=nrow(dtrain),
+    ntest=nrow(dtest),
+    datatime=datatime['elapsed'],
+    traintime=traintime['elapsed'],
+    predicttime=predicttime['elapsed'],
+    auctime=auctime['elapsed'],
+    auc=auc@y.values[[1]])
+}
+#-----------------------------------------------------------------
+# l2 scalar regression
+l2.randomForestSRC <- function (
+  dataset=NULL,
+  dtrain=NULL,
+  suffix=NULL,
+  dtest=NULL,
+  response=NULL,
+  ntrees=255,
+  mincount=17,
+  maxdepth=1024) {
+  
+  stopifnot(
+    !is.null(dataset),
+    !is.null(dtrain),
+    !is.null(suffix),
+    !is.null(dtest),
+    !is.null(response),
+    is.numeric(dtrain[,response]),
+    is.numeric(dtest[,response]))
+  
+  seed <- 1244985
+  set.seed(1244985)
+  
+  start <- proc.time()
+  d <- rbind(dtrain,dtest)
+  for (col in names(d)) {
+    if (is.factor(d[,col])) {
+      levels <- sort(unique(d[,col]))
+      dtrain[,col] <- factor(dtrain[,col],level=levels)
+      dtest[,col] <- factor(dtest[,col],level=levels)
+    } 
+  }
+  datatime <- proc.time() - start
+  
+  start <- proc.time()
+  forest <- rfsrc(
+    formula=as.formula(paste(response, '~ .')),
+    data=dtrain,
+    ntree=ntrees, 
+    nodesize=mincount,
+    nodedepth=maxdepth,
+    seed=seed)
+  traintime <- proc.time() - start   
+  
+  start <- proc.time()
+  predicted <- predict(
+    forest, 
+    newdata=dtest[,which(names(dtest) != response)], 
+    type='prob')
+  yhat <- predicted$predicted
+  predicttime <- proc.time() - start   
+  
+  prtr <- data.frame(
+    prediction=yhat,
+    truth=dtest[,response])
+  start <- proc.time()
+  rmse <- sqrt(mean((prtr$truth-prtr$prediction)^2))
+  rmsetime <- proc.time() - start
+  
+  write.tsv(
+    data=prtr,
+    file=predicted.file(
+      prefix=paste('randomForestSRC',suffix,sep='-'),
+      dataset=dataset,
+      problem='l2'))
+  
+  list(
+    model='randomForestSRC',
+    ntrain=nrow(dtrain),
+    ntest=nrow(dtest),
+    datatime=datatime['elapsed'],
+    traintime=traintime['elapsed'],
+    predicttime=predicttime['elapsed'],
+    rmsetime=rmsetime['elapsed'],
+    rmse=rmse)
+}
+#-----------------------------------------------------------------
 # datasets
 #-----------------------------------------------------------------
 # just ensure factors 
 ontime.data <- function (file=NULL) {
-  data <- read_csv(file)
+  data <- as.data.frame(read_csv(file))
   data$cdayofweek <- as.factor(data$cdayofweek)
   data$cdayofmonth <- as.factor(data$cdayofmonth)
   data$cmonth <- as.factor(data$cmonth)

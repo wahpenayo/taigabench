@@ -14,8 +14,16 @@ problem <- 'l2'
 response <- 'arrdelay'
 dataf <- ontime.data
 dtest <- dataf(test.file(dataset=dataset))
-suffixes <- c('8192','65536','524288','4194304','33554432')
+#suffixes <- c('8192','65536','524288','4194304','33554432')
+suffixes <- c('8192')
 #-----------------------------------------------------------------
+bench(
+  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
+  response=response, 
+  suffixes=suffixes[1:min(3,length(suffixes))],
+  trainf=l2.randomForestSRC,
+  prefix='randomForestSRC')
+
 bench(
   dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
   response=response, 
