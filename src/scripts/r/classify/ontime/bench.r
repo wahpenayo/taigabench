@@ -13,8 +13,7 @@ problem <- 'classify'
 response <- 'arr_delayed_15min'
 dataf <- ontime.classify.data
 dtest <- dataf(test.file(dataset=dataset))
-#suffixes <- c('8192','65536','524288','4194304','33554432')
-suffixes <- c('8192')
+suffixes <- c('8192','65536','524288','4194304','33554432')
 #-----------------------------------------------------------------
 bench(
   dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
