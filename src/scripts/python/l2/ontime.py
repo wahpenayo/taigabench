@@ -43,7 +43,7 @@ for suffix in ["8192","65536","524288","4194304","33554432"] :
     datatime = time.clock() - start
     
     start = time.clock()
-    md = RandomForestRegressor(n_estimators=255, \
+    md = RandomForestRegressor(n_estimators=127, \
                                n_jobs=-1, \
                                max_depth=1024, \
                                min_samples_leaf=17)

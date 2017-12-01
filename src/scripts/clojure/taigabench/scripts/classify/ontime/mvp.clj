@@ -20,7 +20,7 @@
                 (data/output-file "taiga-mvp.results" "csv"))]
   (.println w 
     "model,ntrain,ntest,datatime,traintime,predicttime,auctime,auc")
-  (doseq [suffix ["8192" "65536" "524288" "4194304" "33334432"]]
+  (doseq [suffix ["8192" "65536" "524288" "4194304" "33554432"]]
     (System/gc)
     (println "taiga" mincount suffix)
     (let [learner  taiga/majority-vote-probability

@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :date "2017-11-29"
+      :date "2017-11-30"
       :doc "Public airline ontime data benchmark:
             https://www.r-bloggers.com/benchmarking-random-forest-implementations/
             http://stat-computing.org/dataexpo/2009/" }
@@ -21,7 +21,7 @@
                 (data/output-file "l2" "taiga.results" "csv"))]
   (.println w 
     "model,ntrain,ntest,datatime,traintime,predicttime,rmsetime,rmse")
-  (doseq [suffix ["8192" "65536" "524288" "4194304" "33334432"]]
+  (doseq [suffix ["8192" "65536" "524288" "4194304" "33554432"]]
     (System/gc)
     (println "taiga" suffix)
     (let [results (l2/traintest 
@@ -41,7 +41,7 @@
                 (data/output-file "classify" "taiga.results" "csv"))]
   (.println w 
     "model,ntrain,ntest,datatime,traintime,predicttime,auctime,auc")
-  (doseq [suffix ["8192" "65536" "524288" "4194304" "33334432"]]
+  (doseq [suffix ["8192" "65536" "524288" "4194304" "33554432"]]
     (doseq [[learner xxx] 
             [[taiga/majority-vote-probability "mvp"]
              [taiga/positive-fraction-probability "pfp"]]]

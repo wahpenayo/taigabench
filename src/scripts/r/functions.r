@@ -247,7 +247,7 @@ classify.h2o.randomForest <- function (
   dtest=NULL,
   response=NULL,
   maxmem=paste0(floor(0.9*free.ram()),'g'),
-  ntrees=255,
+  ntrees=127,
   mincount=17,
   maxdepth=1024) {
   
@@ -331,7 +331,7 @@ l2.h2o.randomForest <- function (
   dtest=NULL,
   response=NULL,
   maxmem=paste0(floor(0.9*free.ram()),'g'),
-  ntrees=255,
+  ntrees=127,
   mincount=17,
   maxdepth=1024) {
   
@@ -435,7 +435,7 @@ classify.xgboost.randomForest <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  ntrees=255,
+  ntrees=127,
   mincount=17,
   maxdepth=1024) {
   
@@ -520,7 +520,7 @@ classify.xgboost.exact.randomForest <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  ntrees=255,
+  ntrees=127,
   mincount=17,
   maxdepth=1024) {
   
@@ -606,7 +606,7 @@ l2.xgboost.randomForest <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  ntrees=255,
+  ntrees=127,
   mincount=17,
   maxdepth=1024) {
   
@@ -690,7 +690,7 @@ l2.xgboost.exact.randomForest <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  ntrees=255,
+  ntrees=127,
   mincount=17,
   maxdepth=1024) {
   
@@ -777,7 +777,7 @@ classify.randomForest <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  ntrees=255,
+  ntrees=127,
   mincount=17,
   maxdepth=1024) {
   
@@ -850,7 +850,7 @@ l2.randomForest <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  ntrees=255,
+  ntrees=127,
   mincount=17,
   maxdepth=1024) {
   
@@ -926,7 +926,7 @@ classify.parallel.randomForest <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  ntrees=255,
+  ntrees=127,
   mincount=17,
   maxdepth=1024) {
   
@@ -1018,7 +1018,7 @@ classify.randomForestSRC <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  ntrees=255,
+  ntrees=127,
   mincount=17,
   maxdepth=1024) {
   
@@ -1096,7 +1096,7 @@ l2.randomForestSRC <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  ntrees=255,
+  ntrees=127,
   mincount=17,
   maxdepth=1024) {
   

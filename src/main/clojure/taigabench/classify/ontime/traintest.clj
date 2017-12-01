@@ -21,7 +21,7 @@
    :bin-reader data/read-binary-file
    :bin-writer data/write-binary-file
    :mincount 17
-   :nterms 255
+   :nterms 127
    :maxdepth 1024})
 ;;----------------------------------------------------------------
 (defn traintest [suffix learner options]
