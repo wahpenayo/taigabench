@@ -58,9 +58,11 @@
         start (System/nanoTime)
         qcost (z/mean deciles/cost deciles)
         qcosttime (/ (double (- (System/nanoTime) start)) 
-                     1000000000.0)]
+                     1000000000.0)
+        prfile (data/output-file "qcost" label "pred.tsv.gz")]
+    
     (deciles/write-csv
-      deciles (data/output-file "qcost" label "pred.tsv.gz"))
+      deciles )
     {:model model-name 
      :ntrain (z/count train)
      :ntest (z/count test) 
@@ -68,5 +70,6 @@
      :traintime traintime 
      :predicttime predicttime
      :qcosttime qcosttime
-     :qcost qcost}))
+     :qcost qcost
+     :predictfile (.getPath prfile)}))
 ;;----------------------------------------------------------------

@@ -10,45 +10,23 @@ source('src/scripts/r/functions.r')
 readr.show_progress <- FALSE
 #-----------------------------------------------------------------
 dataset <- 'ontime'
-problem <- 'l2'
+problem <- 'qcost'
 response <- 'arrdelay'
 dataf <- ontime.data
 dtest <- dataf(test.file(dataset=dataset))
-suffixes <- c('8192','65536','524288','4194304','33554432')
+suffixes <- c('8192')#,'65536','524288','4194304','33554432')
 #-----------------------------------------------------------------
 bench(
   dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
   response=response, 
   suffixes=suffixes,
-  trainf=l2.randomForestSRC,
+  trainf=qcost.quantregForest,
+  prefix='quantregForest')
+
+bench(
+  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
+  response=response, 
+  suffixes=suffixes,
+  trainf=qcost.randomForestSRC,
   prefix='randomForestSRC')
-
-bench(
-  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-  response=response, 
-  suffixes=suffixes,
-  trainf=l2.h2o.randomForest,
-  prefix='h2o')
-  
-bench(
-  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-  response=response, 
-  suffixes=suffixes,
-  trainf=l2.xgboost.randomForest,
-  prefix='xgboost')
-
-bench(
-  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-  response=response, 
-  suffixes=suffixes,
-  trainf=l2.xgboost.exact.randomForest,
-  prefix='xgboost.exact')
-
-bench(
-  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-  response=response, 
-  # crashes in 64gb at 1m
-  suffixes=suffixes[1:min(3,length(suffixes))],
-  trainf=l2.randomForest,
-  prefix='randomForest')
 #-----------------------------------------------------------------

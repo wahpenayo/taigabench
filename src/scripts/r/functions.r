@@ -1,5 +1,5 @@
 # wahpenayo at gmail dot com
-# 2017-12-01
+# 2017-12-03
 #-----------------------------------------------------------------
 # Load the necessary add-on packages, downloading and installing
 # (in the user's R_LIBS_USER folder) if necessary.
@@ -145,7 +145,8 @@ models <- c(
   'taiga-pfp',
   'taiga-mvp',
   'xgboost',
-  'xgboost.exact')
+  'xgboost.exact',
+  'quantregForest')
 model.colors <- c(
   '#386cb050',
   '#1b9e7750',
@@ -155,7 +156,8 @@ model.colors <- c(
   '#e41a1cFF',
   '#1c1ae4FF',
   '#75707050',
-  '#75707050')
+  '#75707050',
+  '#6a3d9a50')
 #-----------------------------------------------------------------
 #IO
 #-----------------------------------------------------------------
@@ -266,7 +268,7 @@ classify.h2o.randomForest <- function (
   
   seed <- 740189
   set.seed(seed)
-
+  
   h2o.init(max_mem_size=maxmem, nthreads=-1)
   
   start <- proc.time()
@@ -958,9 +960,6 @@ classify.parallel.randomForest <- function (
   i1 <- (nrow(dtrain)+nrow(dtest))
   X_test <- X_train_test[i0:i1,]
   
-  
-  dim(X_train)
-  
   # 'mc.cores' > 1 is not supported on Windows
   start <- proc.time()
   n_proc <- detectCores()
@@ -1045,7 +1044,7 @@ classify.randomForestSRC <- function (
     }
   }
   datatime <- proc.time() - start
-
+  
   start <- proc.time()
   forest <- rfsrc(
     formula=as.formula(paste(response, '~ .')),
@@ -1136,8 +1135,8 @@ l2.randomForestSRC <- function (
   start <- proc.time()
   predicted <- predict(
     forest, 
-    newdata=dtest[,which(names(dtest) != response)], 
-    type='prob')
+    newdata=dtest[,which(names(dtest) != response)],
+    outcome='train')
   yhat <- predicted$predicted
   predicttime <- proc.time() - start   
   
@@ -1166,11 +1165,192 @@ l2.randomForestSRC <- function (
     rmse=rmse)
 }
 #-----------------------------------------------------------------
+# quantile regression
+qcost.randomForestSRC <- function (
+  dataset=NULL,
+  dtrain=NULL,
+  suffix=NULL,
+  dtest=NULL,
+  response=NULL,
+  ntrees=127,
+  mincount=57,
+  maxdepth=1024,
+  p=(0.1*(1:9))) {
+  
+  stopifnot(
+    !is.null(dataset),
+    !is.null(dtrain),
+    !is.null(suffix),
+    !is.null(dtest),
+    !is.null(response),
+    is.numeric(dtrain[,response]),
+    is.numeric(dtest[,response]))
+  
+  seed <- 1244985
+  set.seed(seed)
+  
+  start <- proc.time()
+  d <- rbind(dtrain,dtest)
+  for (col in names(d)) {
+    if (is.factor(d[,col])) {
+      levels <- sort(unique(d[,col]))
+      dtrain[,col] <- factor(dtrain[,col],level=levels)
+      dtest[,col] <- factor(dtest[,col],level=levels)
+    } 
+  }
+  ytest <- dtest[,response]
+  xtest <- dtest[,which(names(dtest) != response)]
+  dtest <- NULL
+  gc()
+  datatime <- proc.time() - start
+  
+  start <- proc.time()
+  forest <- rfsrc(
+    formula=as.formula(paste(response, '~ .')),
+    data=dtrain,
+    ntree=ntrees, 
+    nodesize=mincount,
+    nodedepth=maxdepth,
+    seed=seed)
+  traintime <- proc.time() - start   
+  
+  start <- proc.time()
+  qhat <- NULL
+  ntest <- nrow(xtest)
+  n <- 64 * 1024
+  for (i in seq(from=1,to=(ntest-n),by=n)) {
+    gc()
+    print(c(i,min(i+n-1,ntest),ntest))
+    xtesti <- xtest[i:min(i+n-1,ntest),]
+    predicted <- quantileReg(
+      obj=forest, 
+      newdata=xtesti,
+      # default is TRUE
+      oob=FALSE,
+      prob=p)
+    print('done')
+    qhat <- rbind(qhat,predicted$quantile) 
+  }
+  colnames(qhat) <- paste("q", 100 * predicted$prob, sep = "")
+  qhat$truth <- ytest
+  predicttime <- proc.time() - start   
+  
+  prfile <- predicted.file(
+    prefix=paste('randomForestSRC',suffix,sep='-'),
+    dataset=dataset,
+    problem='qcost') 
+  write.csv(x=qhat,file=prfile,row.names=FALSE)
+  
+  list(
+    model='randomForestSRC',
+    ntrain=nrow(dtrain),
+    ntest=nrow(dtest),
+    datatime=datatime['elapsed'],
+    traintime=traintime['elapsed'],
+    predicttime=predicttime['elapsed'],
+    predictfile=prfile)
+}
+#-----------------------------------------------------------------
+# quantregForest
+#-----------------------------------------------------------------
+# quantile regression
+qcost.quantregForest <- function (
+  dataset=NULL,
+  dtrain=NULL,
+  suffix=NULL,
+  dtest=NULL,
+  response=NULL,
+  ntrees=127,
+  mincount=57,
+  maxdepth=1024,
+  p=(0.1*(1:9))) {
+  
+  stopifnot(
+    !is.null(dataset),
+    !is.null(dtrain),
+    !is.null(suffix),
+    !is.null(dtest),
+    !is.null(response),
+    is.numeric(dtrain[[response]]),
+    is.numeric(dtest[[response]]))
+  
+  seed <- 1244985
+  set.seed(seed)
+  
+  start <- proc.time()
+  d <- rbind(dtrain,dtest)
+  for (col in names(d)) {
+    if (is.factor(d[,col])) {
+      levels <- sort(unique(d[,col]))
+      dtrain[,col] <- factor(dtrain[,col],level=levels)
+      dtest[,col] <- factor(dtest[,col],level=levels)
+    } 
+  }
+  d <- NULL
+  ## 'Can not handle categorical predictors with more than 32 
+  ## categories.'
+  ## so need dummy variables/1-hot encoding
+  x <-  model.matrix(
+    as.formula(paste(response,' ~ .')), 
+    data=rbind(dtrain, dtest))
+  xtrain <- x[1:nrow(dtrain),]
+  i0 <- (nrow(dtrain)+1)
+  i1 <- (nrow(dtrain)+nrow(dtest))
+  xtest <- x[i0:i1,]
+  x <- NULL
+  
+  ytrain <- dtrain[[response]]
+  dtrain <- NULL
+  ytest <- dtest[[response]]
+  dtest <- NULL
+  gc()
+  datatime <- proc.time() - start
+  
+  start <- proc.time()
+  forest <- quantregForest(x=xtrain,y=ytrain, nthreads=4)
+  traintime <- proc.time() - start   
+  
+  start <- proc.time()
+  qhat <- NULL
+  ntest <- nrow(xtest)
+  n <- 64 * 1024
+  for (i in seq(from=1,to=ntest,by=n)) {
+    gc()
+    print(c(i,min(i+n-1,ntest),ntest))
+    xtesti <- xtest[i:min(i+n-1,ntest),]
+    qhati <- predict(
+      object=forest, 
+      newdata=xtesti,
+      what=p)
+    print('done')
+    qhat <- rbind(qhat,qhati) 
+  }
+  colnames(qhat) <- paste("q", 100 * p, sep = "")
+  qhat$truth <- ytest
+  predicttime <- proc.time() - start   
+  
+  prfile <- predicted.file(
+    prefix=paste('quantregForest',suffix,sep='-'),
+    dataset=dataset,
+    problem='qcost') 
+  write.csv(x=qhat,file=prfile,row.names=FALSE)
+  
+  list(
+    model='quantregForest',
+    ntrain=nrow(dtrain),
+    ntest=nrow(dtest),
+    datatime=datatime['elapsed'],
+    traintime=traintime['elapsed'],
+    predicttime=predicttime['elapsed'],
+    predictfile=prfile)
+}
+#-----------------------------------------------------------------
 # datasets
 #-----------------------------------------------------------------
 # just ensure factors 
 ontime.data <- function (file=NULL) {
-  data <- as.data.frame(read_csv(file))
+  #data <- as.data.frame(read_csv(file))
+  data <- read_csv(file)
   data$cdayofweek <- as.factor(data$cdayofweek)
   data$cdayofmonth <- as.factor(data$cdayofmonth)
   data$cmonth <- as.factor(data$cmonth)
