@@ -1,2 +1,0 @@
-"model","ntrain","ntest","datatime","traintime","predicttime","auctime","auc"
-randomForest,8192,1048576,23.33,220.39,131.89,0.310000000000059,0.624156827625228

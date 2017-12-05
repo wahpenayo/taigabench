@@ -121,15 +121,16 @@
   
   ^double [^Deciles d]
   (let [y (.truth d)]
-    (+ (qcost y (.q10 d) 0.10)
-       (qcost y (.q20 d) 0.20)
-       (qcost y (.q30 d) 0.30)
-       (qcost y (.q40 d) 0.40)
-       (qcost y (.q50 d) 0.50)
-       (qcost y (.q60 d) 0.60)
-       (qcost y (.q70 d) 0.70)
-       (qcost y (.q80 d) 0.80)
-       (qcost y (.q90 d) 0.90))))
+    (/ (+ (qcost y (.q10 d) 0.10)
+          (qcost y (.q20 d) 0.20)
+          (qcost y (.q30 d) 0.30)
+          (qcost y (.q40 d) 0.40)
+          (qcost y (.q50 d) 0.50)
+          (qcost y (.q60 d) 0.60)
+          (qcost y (.q70 d) 0.70)
+          (qcost y (.q80 d) 0.80)
+          (qcost y (.q90 d) 0.90))
+       9.0)))
 ;;----------------------------------------------------------------
 (defn mean-cost 
   "Quantile regression cost averaged over the deciles.
@@ -163,28 +164,33 @@
               (.print w (.q80 d))
               (.print w ",")
               (.print w (.q90 d))
-              (.print w "\n")
+              (.print w "\n"))
             deciles)))
 ;;----------------------------------------------------------------
 (defn- split [^String s] (s/split s #"\,"))
 
 (defn- head [^String line]
-  (mapv #(keyword (s/lower-case %)) (split line)))
+  (mapv #(keyword (s/lower-case (s/replace % "\"" ""))) 
+        (split line)))
 
 (defn- readline ^Deciles [header ^String line]
   (let [tokens (split line)
         r (zipmap header tokens)]
-    (Deciles.
-      (Double/parseDouble (:truth r))
-      (Double/parseDouble (:q10 r))
-      (Double/parseDouble (:q20 r))
-      (Double/parseDouble (:q30 r))
-      (Double/parseDouble (:q40 r))
-      (Double/parseDouble (:q50 r))
-      (Double/parseDouble (:q60 r))
-      (Double/parseDouble (:q70 r))
-      (Double/parseDouble (:q80 r))
-      (Double/parseDouble (:q90 r)))))
+    (try
+      (Deciles.
+        (Double/parseDouble (:truth r))
+        (Double/parseDouble (:q10 r))
+        (Double/parseDouble (:q20 r))
+        (Double/parseDouble (:q30 r))
+        (Double/parseDouble (:q40 r))
+        (Double/parseDouble (:q50 r))
+        (Double/parseDouble (:q60 r))
+        (Double/parseDouble (:q70 r))
+        (Double/parseDouble (:q80 r))
+        (Double/parseDouble (:q90 r)))
+      (catch Throwable t
+        (println r)
+        (throw t)))))
 
 (defn read-csv ^Iterable [^java.io.File file]
   (with-open [r (z/reader file)]

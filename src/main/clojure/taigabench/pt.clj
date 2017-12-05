@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :date "2017-12-01"
+      :date "2017-12-04"
       :doc "simple prediction/truth datum" }
     
     taigabench.pt
@@ -20,7 +20,7 @@
     (.println w "truth\tprediction")
     (z/mapc #(do 
                (.print w (.invokePrim truth %))
-               (.print w "\t")
+               (.print w ",")
                (.println w (.invokePrim predict %)))
             trpr)))
 ;;----------------------------------------------------------------

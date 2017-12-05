@@ -26,12 +26,12 @@
 ;;----------------------------------------------------------------
 (defn traintest [suffix learner options]
   (let [mincount (:mincount options)
-        model-name (str "taiga-" (z/name learner) "-" mincount)
+        model-name "taiga"
         label  (str model-name "-" suffix)
         start (System/nanoTime)
         train (data/read-data-file (str "train-" suffix))
         test (data/read-data-file "test")
-        test (z/take 1024 test)
+        ;;test (z/take 1024 test)
         _(System/gc)
         datatime (/ (double (- (System/nanoTime) start)) 
                     1000000000.0)
@@ -59,10 +59,9 @@
         qcost (z/mean deciles/cost deciles)
         qcosttime (/ (double (- (System/nanoTime) start)) 
                      1000000000.0)
-        prfile (data/output-file "qcost" label "pred.tsv.gz")]
+        prfile (data/output-file "qcost" label "pred.csv.gz")]
     
-    (deciles/write-csv
-      deciles )
+    (deciles/write-csv deciles prfile)
     {:model model-name 
      :ntrain (z/count train)
      :ntest (z/count test) 

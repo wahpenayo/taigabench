@@ -26,7 +26,7 @@
            ["xgboost" ["0.01m" "0.1m" "1m" "10m"]]]]
     (doseq [suffix suffixes]
       (let [fname (str prefix "-" suffix)
-            pt (pt/read-tsv-file (data/output-file fname "pred.tsv.gz"))
+            pt (pt/read-tsv-file (data/output-file fname "pred.csv.gz") #",")
             pt (z/drop-missing pt/truth pt/prediction pt)
             ntrain (int (* 1000000 (Double/parseDouble (s/replace suffix "m" ""))))
             ntest (z/count pt)]

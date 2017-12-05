@@ -1,8 +1,8 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :date "2017-11-29"
-      :doc "Public airline ontime data benchmark:
+      :date "2017-12-04
+      :doc "Public airline "ontime data benchmark:
             https://www.r-bloggers.com/benchmarking-random-forest-implementations/
             http://stat-computing.org/dataexpo/2009/" }
     
@@ -22,14 +22,13 @@
   (.println w 
     "model,ntrain,ntest,datatime,traintime,predicttime,auctime,auc")
   (doseq [suffix ["8192" "65536" "524288" "4194304" "33554432"]]
-    (doseq [[learner xxx] 
-            [[taiga/majority-vote-probability "mvp"]
-             [taiga/positive-fraction-probability "pfp"]]]
+    (doseq [learner [taiga/majority-vote-probability
+                     taiga/positive-fraction-probability]]
       (System/gc)
-      (println "taiga" xxx suffix)
+      (println "taiga" (cl/model-string learner) suffix)
       (let [results (cl/traintest 
                       suffix learner cl/prototype)
-            ^String line (s/join "," [(str "taiga-" xxx)
+            ^String line (s/join "," [(cl/model-string learner)
                                       (:ntrain results)
                                       (:ntest results)
                                       (:datatime results)

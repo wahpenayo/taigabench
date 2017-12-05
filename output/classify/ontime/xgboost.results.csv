@@ -1,2 +1,0 @@
-"model","ntrain","ntest","datatime","traintime","predicttime","auctime","auc"
-xgboost,8192,1048576,4.80999999999999,7.15000000000001,6.81999999999999,2.27999999999999,0.638282566709776

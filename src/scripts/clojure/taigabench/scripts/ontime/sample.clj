@@ -2,7 +2,7 @@
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
       :since "2017-11-21"
-      :date "2017-11-21"
+      :date "2017-12-04"
       :doc "Generate train/test datasets to be used in benchmarking from
             [Public airline ontime data for benchmarking](http://stat-computing.org/dataexpo/2009/).
             <p>
@@ -23,7 +23,7 @@
 (def ^Random prng (z/mersenne-twister-generator 
                      "8444A935C2629BA47DF20FD62F69CF8E"))
 (let [data (z/seconds "read test" (data/read-raw-data "2008"))
-      n (* 1024 1024)
+      n (* 128 1024)
       test (z/seconds 
             (print-str "sample" n "from" (z/count data))
             (z/sample prng n data))]
