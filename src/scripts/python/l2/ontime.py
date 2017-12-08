@@ -1,5 +1,5 @@
 # wahpenayo at gmail dot com
-# 2017-12-01
+# 2017-12-07
 
 import time
 import math as math
@@ -23,7 +23,9 @@ vars_num = ["month", "dayofmonth", "dayofweek", "dayofyear", \
 
 results = []
 
-for suffix in ["8192","65536","524288","4194304","33554432"] :  
+# "Memory error" with 33554432 records
+#for suffix in ["8192","65536","524288","4194304","33554432"] :  
+for suffix in ["8192","65536","524288","4194304"] :  
     start = time.clock()
     d_train = \
     pd.read_csv("data/ontime/" + "train-" + suffix + ".csv.gz")
