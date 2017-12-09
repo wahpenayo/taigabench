@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :date "2017-12-04"
+      :date "2017-12-08"
       :doc "Public airline ontime data for benchmarking:
             http://stat-computing.org/dataexpo/2009/" }
     
@@ -26,8 +26,8 @@
 ;;----------------------------------------------------------------
 (defn traintest [suffix learner options]
   (let [mincount (:mincount options)
-        model-name (str "taiga-" (z/name learner) "-" mincount)
-        label  (str model-name "-" suffix)
+        model-name (str "taiga-" (z/name learner))
+        label  (str "taiga-" suffix)
         start (System/nanoTime)
         train (data/read-data-file (str "train-" suffix))
         test (data/read-data-file "test")
