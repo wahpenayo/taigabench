@@ -23,9 +23,9 @@ vars_num = ["month", "dayofmonth", "dayofweek", "dayofyear", \
 
 results = []
 
-# "Memory error" with 33554432 records
-#for suffix in ["8192","65536","524288","4194304","33554432"] :  
-for suffix in ["8192","65536","524288","4194304"] :  
+# "Memory error" with 33554432 records in 64gb host
+#for suffix in ["32768","131072","524288","2097152","8388608","33554432"] :  
+for suffix in ["32768","131072","524288","2097152","8388608"] :  
     start = time.clock()
     d_train = \
     pd.read_csv("data/ontime/" + "train-" + suffix + ".csv.gz")

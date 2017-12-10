@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :date "2017-12-07"
+      :date "2017-12-10"
       :doc "Public airline ontime data benchmark:
             https://www.r-bloggers.com/benchmarking-random-forest-implementations/
             http://stat-computing.org/dataexpo/2009/" }
@@ -32,7 +32,7 @@
         (flush)))))
 ;;----------------------------------------------------------------
 (def suffixes 
-  ["8192" "65536" "524288" "4194304" "33554432"])
+  ["32768" "131072" "524288" "2097152" "8388608" "33554432"])
 ;;----------------------------------------------------------------
 (loop  [records []
        suffixes suffixes]

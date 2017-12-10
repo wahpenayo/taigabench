@@ -1,5 +1,5 @@
 # wahpenayo at gmail dot com
-# 2017-12-04
+# 2017-12-10
 #-----------------------------------------------------------------
 if (file.exists('e:/porta/projects/taigabench')) {
   setwd('e:/porta/projects/taigabench')
@@ -14,7 +14,7 @@ problem <- 'classify'
 response <- 'arr_delayed_15min'
 dataf <- ontime.classify.data
 dtest <- dataf(test.file(dataset=dataset))
-suffixes <- c('8192','65536','524288','4194304','33554432')
+suffixes <- c('32768','131072','524288','2097152','8388608','33554432')
 #-----------------------------------------------------------------
 bench(
   dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
