@@ -1,5 +1,5 @@
 # wahpenayo at gmail dot com
-# 2017-12-04
+# 2017-12-10
 #-----------------------------------------------------------------
 # Load the necessary add-on packages, downloading and installing
 # (in the user's R_LIBS_USER folder) if necessary.
@@ -1077,7 +1077,7 @@ classify.randomForestSRC <- function (
   write.csv(
     data=data.frame(
       prediction=yhat,
-      truth=ifelse(dtest=='Y',1,0)),
+      truth=ifelse(dtest[,response]=='Y',1,0)),
     file=predicted.file(
       prefix=paste('randomForestSRC',suffix,sep='-'),
       dataset=dataset,
@@ -1233,6 +1233,7 @@ qcost.randomForestSRC <- function (
   
   start <- proc.time()
   qhat <- NULL
+  # OOM in 64G if we try to predict more than 128K at once.
   ntest <- nrow(xtest)
   n <- min(ntest, 64 * 1024)
   print(c(n,ntest))
@@ -1419,7 +1420,11 @@ bench <- function (
     print(results)
     resultsf <- 
       results.file(dataset=dataset,problem=problem,prefix=prefix)
-    write.csv(results,file=resultsf,row.names=FALSE,quote=FALSE)
+    write.csv(
+      x=results,
+      file=resultsf,
+      row.names=FALSE,
+      quote=FALSE)
   } }
 #-----------------------------------------------------------------
 
