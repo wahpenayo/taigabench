@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :date "2017-12-04"
+      :date "2017-12-10"
       :doc "Public airline ontime data for benchmarking:
             http://stat-computing.org/dataexpo/2009/" }
     
@@ -20,7 +20,7 @@
    :csv-reader #(data/read-tsv-file % #"\,")
    :bin-reader data/read-binary-file
    :bin-writer data/write-binary-file
-   :mincount 57
+   :mincount 131
    :nterms 127
    :maxdepth 1024})
 

@@ -36,7 +36,7 @@
              "read train"
              (z/mapcat data/read-raw-data 
                        ["2003" "2004" "2005" "2006" "2007"]))]
-  (doseq [^long n (take 5 (iterate (partial * 8) (* 8 8 8 8 2)))]
+  (doseq [^long n (take 6 (iterate (partial * 4) (* 8 8 8 8 8)))]
     (let [train
           (z/seconds 
             (print-str "sample" n "from" (z/count data))

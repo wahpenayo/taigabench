@@ -250,7 +250,7 @@ classify.h2o.randomForest <- function (
   response=NULL,
   maxmem=paste0(floor(0.9*free.ram()),'g'),
   ntrees=127,
-  mincount=57,
+  mincount=131,
   maxdepth=1024) {
   
   stopifnot(
@@ -335,7 +335,7 @@ l2.h2o.randomForest <- function (
   response=NULL,
   maxmem=paste0(floor(0.9*free.ram()),'g'),
   ntrees=127,
-  mincount=57,
+  mincount=131,
   maxdepth=1024) {
   
   stopifnot(
@@ -440,7 +440,7 @@ classify.xgboost.randomForest <- function (
   dtest=NULL,
   response=NULL,
   ntrees=127,
-  mincount=57,
+  mincount=131,
   maxdepth=1024) {
   
   stopifnot(
@@ -526,7 +526,7 @@ classify.xgboost.exact.randomForest <- function (
   dtest=NULL,
   response=NULL,
   ntrees=127,
-  mincount=57,
+  mincount=131,
   maxdepth=1024) {
   
   stopifnot(
@@ -613,7 +613,7 @@ l2.xgboost.randomForest <- function (
   dtest=NULL,
   response=NULL,
   ntrees=127,
-  mincount=57,
+  mincount=131,
   maxdepth=1024) {
   
   stopifnot(
@@ -698,7 +698,7 @@ l2.xgboost.exact.randomForest <- function (
   dtest=NULL,
   response=NULL,
   ntrees=127,
-  mincount=57,
+  mincount=131,
   maxdepth=1024) {
   
   stopifnot(
@@ -786,7 +786,7 @@ classify.randomForest <- function (
   dtest=NULL,
   response=NULL,
   ntrees=127,
-  mincount=57,
+  mincount=131,
   maxdepth=1024) {
   
   stopifnot(
@@ -860,7 +860,7 @@ l2.randomForest <- function (
   dtest=NULL,
   response=NULL,
   ntrees=127,
-  mincount=57,
+  mincount=131,
   maxdepth=1024) {
   
   stopifnot(
@@ -937,7 +937,7 @@ classify.parallel.randomForest <- function (
   dtest=NULL,
   response=NULL,
   ntrees=127,
-  mincount=57,
+  mincount=131,
   maxdepth=1024) {
   
   stopifnot(
@@ -1027,7 +1027,7 @@ classify.randomForestSRC <- function (
   dtest=NULL,
   response=NULL,
   ntrees=127,
-  mincount=57,
+  mincount=131,
   maxdepth=1024) {
   
   stopifnot(
@@ -1108,7 +1108,7 @@ l2.randomForestSRC <- function (
   dtest=NULL,
   response=NULL,
   ntrees=127,
-  mincount=57,
+  mincount=131,
   maxdepth=1024) {
   
   stopifnot(
@@ -1188,7 +1188,7 @@ qcost.randomForestSRC <- function (
   dtest=NULL,
   response=NULL,
   ntrees=127,
-  mincount=57,
+  mincount=131,
   maxdepth=1024,
   p=(0.1*(1:9))) {
   
@@ -1284,7 +1284,7 @@ qcost.quantregForest <- function (
   dtest=NULL,
   response=NULL,
   ntrees=127,
-  mincount=57,
+  mincount=131,
   maxdepth=1024,
   p=(0.1*(1:9))) {
   

@@ -1,5 +1,5 @@
 # wahpenayo at gmail dot com
-# 2017-12-07
+# 2017-12-10
 
 import time
 import numpy as np
@@ -45,7 +45,7 @@ for suffix in ["8192","65536","524288","4194304"] :
     md = RandomForestClassifier(n_estimators = 127,\
                                 n_jobs = -1,\
                                 max_depth=1024,\
-                                min_samples_leaf=57)
+                                min_samples_leaf=131)
     md.fit(X_train, y_train)
     traintime = time.clock() - start
     
