@@ -991,7 +991,7 @@ classify.parallel.randomForest <- function (
   write.csv(
     x=data.frame(
       prediction=yhat,
-      truth=ifelse(dtrain[[response]]=='Y',1,0)),
+      truth=ifelse(dtest[[response]]=='Y',1,0)),
     file=predicted.file(
       prefix=paste('parallel.randomForest',suffix,sep='-'),
       dataset=dataset,
