@@ -299,7 +299,7 @@ classify.h2o.randomForest <- function (
   #summary(prtr)
   
   write.csv(
-    data=prtr,
+    x=prtr,
     file=predicted.file(
       dataset=dataset,
       problem='classify',
@@ -385,7 +385,7 @@ l2.h2o.randomForest <- function (
   #summary(prtr)
   
   write.csv(
-    data=prtr,
+    x=prtr,
     file=predicted.file(
       dataset=dataset,
       problem='l2',
@@ -495,7 +495,7 @@ classify.xgboost.randomForest <- function (
   predicttime <- proc.time() - start
   
   write.csv(
-    data=prtr, 
+    x=prtr, 
     file=predicted.file(
       prefix=paste('xgboost.exact',suffix,sep='-'),
       dataset=dataset,
@@ -582,7 +582,7 @@ classify.xgboost.exact.randomForest <- function (
   predicttime <- proc.time() - start
   
   write.csv(
-    data=prtr, 
+    x=prtr, 
     file=predicted.file(
       prefix=paste('xgboost.exact',suffix,sep='-'),
       dataset=dataset,
@@ -672,7 +672,7 @@ l2.xgboost.randomForest <- function (
   rmsetime <- proc.time() - start
   
   write.csv(
-    data=prtr, 
+    x=prtr, 
     file=predicted.file(
       prefix=paste('xgboost.exact',suffix,sep='-'),
       dataset=dataset,
@@ -758,7 +758,7 @@ l2.xgboost.exact.randomForest <- function (
   rmsetime <- proc.time() - start
   
   write.csv(
-    data=prtr, 
+    x=prtr, 
     file=predicted.file(
       prefix=paste('xgboost.exact',suffix,sep='-'),
       dataset=dataset,
@@ -826,7 +826,7 @@ classify.randomForest <- function (
   predicttime <- proc.time() - start   
   
   write.csv(
-    data=data.frame(
+    x=data.frame(
       prediction=yhat,
       truth=ifelse(dtest[[response]]=='Y',1,0)),
     file=predicted.file(
@@ -907,7 +907,7 @@ l2.randomForest <- function (
   rmsetime <- proc.time() - start
   
   write.csv(
-    data=prtr,
+    x=prtr,
     file=predicted.file(
       prefix=paste('randomForest',suffix,sep='-'),
       dataset=dataset,
@@ -989,7 +989,7 @@ classify.parallel.randomForest <- function (
   predicttime <- proc.time() - start   
   
   write.csv(
-    data=data.frame(
+    x=data.frame(
       prediction=yhat,
       truth=ifelse(dtrain[[response]]=='Y',1,0)),
     file=predicted.file(
@@ -1075,7 +1075,7 @@ classify.randomForestSRC <- function (
   predicttime <- proc.time() - start   
   
   write.csv(
-    data=data.frame(
+    x=data.frame(
       prediction=yhat,
       truth=ifelse(dtest[,response]=='Y',1,0)),
     file=predicted.file(
@@ -1162,7 +1162,7 @@ l2.randomForestSRC <- function (
   rmsetime <- proc.time() - start
   
   write.csv(
-    data=prtr,
+    x=prtr,
     file=predicted.file(
       prefix=paste('randomForestSRC',suffix,sep='-'),
       dataset=dataset,
@@ -1259,7 +1259,11 @@ qcost.randomForestSRC <- function (
     prefix=paste('randomForestSRC',suffix,sep='-'),
     dataset=dataset,
     problem='qcost') 
-  write.csv(x=qhat,file=prfile,row.names=FALSE,quote=FALSE)
+  write.csv(
+    x=qhat,
+    file=prfile,
+    row.names=FALSE,
+    quote=FALSE)
   
   list(
     model='randomForestSRC',
@@ -1354,7 +1358,11 @@ qcost.quantregForest <- function (
     prefix=paste('quantregForest',suffix,sep='-'),
     dataset=dataset,
     problem='qcost') 
-  write.csv(x=qhat,file=prfile,row.names=FALSE,quote=FALSE)
+  write.csv(
+    x=qhat,
+    file=prfile,
+    row.names=FALSE,
+    quote=FALSE)
   
   list(
     model='quantregForest',
