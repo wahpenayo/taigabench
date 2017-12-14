@@ -35,63 +35,63 @@
   ["32768" "131072" "524288" "2097152" "8388608" "33554432"])
 ;;----------------------------------------------------------------
 (loop  [records []
-       suffixes suffixes]
- (when-not (empty? suffixes)
-   (System/gc)
-   (let [suffix (first suffixes)
-         record (z/seconds
-                  (print-str "taiga" suffix)
-                  (l2/traintest 
+      suffixes suffixes]
+(when-not (empty? suffixes)
+  (System/gc)
+  (let [suffix (first suffixes)
+        record (z/seconds
+                 (print-str "taiga" suffix)
+                 (l2/traintest 
+                   suffix 
+                    taiga/mean-regression 
+                    l2/prototype))
+        records (conj records (assoc record :model "taiga"))]
+    (write-csv 
+      records 
+       (data/output-file "l2" "taiga.results" "csv"))
+    (recur records (rest suffixes)))))
+;;----------------------------------------------------------------
+(loop  [records []
+        suffixes suffixes]
+  (when-not (empty? suffixes)
+    (System/gc)
+    (let [suffix (first suffixes)
+          mvp (assoc 
+                (z/seconds
+                  (print-str "taiga-mvp" suffix)
+                  (cl/traintest 
                     suffix 
-                     taiga/mean-regression 
-                     l2/prototype))
-         records (conj records (assoc record :model "taiga"))]
-     (write-csv 
-       records 
-        (data/output-file "l2" "taiga.results" "csv"))
-     (recur records (rest suffixes)))))
+                    taiga/majority-vote-probability 
+                    cl/prototype))
+                :model "taiga-mvp")
+          pfp (assoc 
+                (z/seconds
+                  (print-str "taiga-pfp" suffix)
+                  (cl/traintest 
+                    suffix 
+                    taiga/positive-fraction-probability 
+                    cl/prototype))
+                :model "taiga-pfp")
+          records (concat records [mvp pfp])]
+      (write-csv 
+        records 
+        (data/output-file "classify" "taiga.results" "csv"))
+      (recur records (rest suffixes)))))
 ;;----------------------------------------------------------------
-#_(loop  [records []
-         suffixes suffixes]
-   (when-not (empty? suffixes)
-     (System/gc)
-     (let [suffix (first suffixes)
-           mvp (assoc 
-                 (z/seconds
-                   (print-str "taiga-mvp" suffix)
-                   (cl/traintest 
+(loop  [records []
+        suffixes suffixes]
+  (when-not (empty? suffixes)
+    (System/gc)
+    (let [suffix (first suffixes)
+          record (z/seconds
+                   (print-str "taiga" suffix)
+                   (qcost/traintest 
                      suffix 
-                     taiga/majority-vote-probability 
-                     cl/prototype))
-                 :model "taiga-mvp")
-           pfp (assoc 
-                 (z/seconds
-                   (print-str "taiga-pfp" suffix)
-                   (cl/traintest 
-                     suffix 
-                     taiga/positive-fraction-probability 
-                     cl/prototype))
-                 :model "taiga-pfp")
-           records (concat records [mvp pfp])]
-       (write-csv 
-         records 
-         (data/output-file "classify" "taiga.results" "csv"))
-       (recur records (rest suffixes)))))
-;;----------------------------------------------------------------
-#_(loop  [records []
-          suffixes suffixes]
-    (when-not (empty? suffixes)
-      (System/gc)
-      (let [suffix (first suffixes)
-            record (z/seconds
-                     (print-str "taiga" suffix)
-                     (qcost/traintest 
-                       suffix 
-                       taiga/real-probability-measure
-                       qcost/prototype))
-            records (conj records (assoc record :model "taiga"))]
-        (write-csv 
-          records 
-          (data/output-file "qcost" "taiga.results" "csv"))
-        (recur records (rest suffixes)))))
+                     taiga/real-probability-measure
+                     qcost/prototype))
+          records (conj records (assoc record :model "taiga"))]
+      (write-csv 
+        records 
+        (data/output-file "qcost" "taiga.results" "csv"))
+      (recur records (rest suffixes)))))
 ;;----------------------------------------------------------------

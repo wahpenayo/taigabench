@@ -1,0 +1,192 @@
+taiga 32768 2017-12-11 10:13:46
+training records: 32768
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga 32768 2017-12-11 10:13:58 (12297ms) (0m) 12s
+taiga 131072 2017-12-11 10:14:00
+training records: 131072
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga 131072 2017-12-11 10:14:31 (30962ms) (1m) 31s
+taiga 524288 2017-12-11 10:14:35
+training records: 524288
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga 524288 2017-12-11 10:16:55 (139809ms) (2m) 140s
+taiga 2097152 2017-12-11 10:16:58
+training records: 2097152
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga 2097152 2017-12-11 10:30:10 (792594ms) (13m) 793s
+taiga 8388608 2017-12-11 10:30:13
+training records: 8388608
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga 8388608 2017-12-11 11:47:52 (4658222ms) (78m) 4658s
+taiga 33554432 2017-12-11 11:47:53
+training records: 33554432
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga 33554432 2017-12-11 20:36:48 (31734573ms) (529m) 31735s
+taiga-mvp 32768 2017-12-11 20:36:52
+training records: 32768
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga-mvp 32768 2017-12-11 20:37:00 (8051ms) (0m) 8s
+taiga-pfp 32768 2017-12-11 20:37:00
+training records: 32768
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga-pfp 32768 2017-12-11 20:37:08 (8321ms) (0m) 8s
+taiga-mvp 131072 2017-12-11 20:37:10
+training records: 131072
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga-mvp 131072 2017-12-11 20:37:29 (19173ms) (0m) 19s
+taiga-pfp 131072 2017-12-11 20:37:29
+training records: 131072
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga-pfp 131072 2017-12-11 20:37:49 (20408ms) (0m) 20s
+taiga-mvp 524288 2017-12-11 20:37:50
+training records: 524288
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga-mvp 524288 2017-12-11 20:39:22 (91841ms) (2m) 92s
+taiga-pfp 524288 2017-12-11 20:39:22
+training records: 524288
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga-pfp 524288 2017-12-11 20:40:54 (92024ms) (2m) 92s
+taiga-mvp 2097152 2017-12-11 20:40:58
+training records: 2097152
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga-mvp 2097152 2017-12-11 20:49:33 (514954ms) (9m) 515s
+taiga-pfp 2097152 2017-12-11 20:49:33
+training records: 2097152
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga-pfp 2097152 2017-12-11 20:58:07 (514932ms) (9m) 515s
+taiga-mvp 8388608 2017-12-11 20:58:09
+training records: 8388608
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga-mvp 8388608 2017-12-11 21:50:57 (3167950ms) (53m) 3168s
+taiga-pfp 8388608 2017-12-11 21:50:57
+training records: 8388608
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga-pfp 8388608 2017-12-11 22:44:45 (3228514ms) (54m) 3229s
+taiga-mvp 33554432 2017-12-11 22:44:50
+training records: 33554432
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga-mvp 33554432 2017-12-12 04:40:26 (21335846ms) (356m) 21336s
+taiga-pfp 33554432 2017-12-12 04:40:26
+training records: 33554432
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga-pfp 33554432 2017-12-12 10:42:14 (21708024ms) (362m) 21708s
+taiga 32768 2017-12-12 10:42:18
+training records: 32768
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga 32768 2017-12-12 10:42:39 (20656ms) (0m) 21s
+taiga 131072 2017-12-12 10:42:39
+training records: 131072
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga 131072 2017-12-12 10:43:28 (49610ms) (1m) 50s
+taiga 524288 2017-12-12 10:43:29
+training records: 524288
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga 524288 2017-12-12 10:46:55 (205604ms) (3m) 206s
+taiga 2097152 2017-12-12 10:46:55
+training records: 2097152
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga 2097152 2017-12-12 11:05:13 (1097901ms) (18m) 1098s
+taiga 8388608 2017-12-12 11:05:14
+training records: 8388608
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga 8388608 2017-12-12 12:50:58 (6344248ms) (106m) 6344s
+taiga 33554432 2017-12-12 12:50:59
+training records: 33554432
+nterms: 127
+nthreads: 8
+bags:   32
+bags:   64
+bags:   96
+taiga 33554432 2017-12-13 00:05:58 (40498953ms) (675m) 40499s
