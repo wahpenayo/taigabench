@@ -65,13 +65,6 @@ bench(
   dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
   response=response, 
   suffixes=suffixes,
-  trainf=l2.randomForestSRC,
-  prefix='randomForestSRC')
-
-bench(
-  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-  response=response, 
-  suffixes=suffixes,
   trainf=l2.h2o.randomForest,
   prefix='h2o')
 
@@ -96,6 +89,13 @@ bench(
   suffixes=suffixes[1:min(3,length(suffixes))],
   trainf=l2.randomForest,
   prefix='randomForest')
+
+bench(
+  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
+  response=response, 
+  suffixes=suffixes,
+  trainf=l2.randomForestSRC,
+  prefix='randomForestSRC')
 #-----------------------------------------------------------------
 problem <- 'qcost'
 #-----------------------------------------------------------------
