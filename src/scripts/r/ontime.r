@@ -18,41 +18,42 @@ dtest <- dataf(test.file(dataset=dataset))
 #-----------------------------------------------------------------
 problem <- 'classify'
 #-----------------------------------------------------------------
-bench(
-  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-  response=response, 
-  suffixes=suffixes,
-  trainf=classify.h2o.randomForest,
-  prefix='h2o')
-
-bench(
-  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-  response=response, 
-  suffixes=suffixes,
-  trainf=classify.xgboost.randomForest,
-  prefix='xgboost')
-
-bench(
-  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-  response=response, 
-  suffixes=suffixes,
-  trainf=classify.xgboost.exact.randomForest,
-    prefix='xgboost.exact')
-
-bench(
-  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-  response=response, 
-  # crashes in 64gb at 1m
-  suffixes=suffixes[1:min(3,length(suffixes))],
-  trainf=classify.randomForest,
-  prefix='randomForest')
-
-bench(
-  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-  response=response, 
-  suffixes=suffixes,
-  trainf=classify.randomForestSRC,
-  prefix='randomForestSRC')
+#bench(
+#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
+#  response=response, 
+#  suffixes=suffixes,
+#  trainf=classify.h2o.randomForest,
+#  prefix='h2o')
+#
+#bench(
+#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
+#  response=response, 
+#  suffixes=suffixes,
+#  trainf=classify.xgboost.randomForest,
+#  prefix='xgboost')
+#
+#bench(
+#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
+#  response=response, 
+#  suffixes=suffixes,
+#  trainf=classify.xgboost.exact.randomForest,
+#    prefix='xgboost.exact')
+#
+#bench(
+#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
+#  response=response, 
+#  # crashes in 64gb at 1m
+#  suffixes=suffixes[1:min(3,length(suffixes))],
+#  trainf=classify.randomForest,
+#  prefix='randomForest')
+#
+#bench(
+#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
+#  response=response, 
+#  # runs over 48hr with no results at 512K in 64G
+#  suffixes=suffixes[1:min(3,length(suffixes))],
+#  trainf=classify.randomForestSRC,
+#  prefix='randomForestSRC')
 #-----------------------------------------------------------------
 response <- 'arrdelay'
 dataf <- ontime.data
