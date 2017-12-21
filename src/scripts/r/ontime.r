@@ -1,57 +1,5 @@
 # wahpenayo at gmail dot com
-# 2017-12-10
-#-----------------------------------------------------------------
-if (file.exists('e:/porta/projects/taigabench')) {
-  setwd('e:/porta/projects/taigabench')
-} else {
-  setwd('c:/porta/projects/taigabench')
-}
-source('src/scripts/r/functions.r')
-readr.show_progress <- FALSE
-#-----------------------------------------------------------------
-dataset <- 'ontime'
-suffixes <- c('32768','131072','524288','2097152','8388608','33554432')
-#-----------------------------------------------------------------
-response <- 'arr_delayed_15min'
-dataf <- ontime.classify.data
-dtest <- dataf(test.file(dataset=dataset))
-#-----------------------------------------------------------------
-problem <- 'classify'
-#-----------------------------------------------------------------
-#bench(
-#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-#  response=response, 
-#  suffixes=suffixes,
-#  trainf=classify.h2o.randomForest,
-#  prefix='h2o')
-#
-#bench(
-#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-#  response=response, 
-#  suffixes=suffixes,
-#  trainf=classify.xgboost.randomForest,
-#  prefix='xgboost')
-#
-#bench(
-#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-#  response=response, 
-#  suffixes=suffixes,
-#  trainf=classify.xgboost.exact.randomForest,
-#    prefix='xgboost.exact')
-#
-#bench(
-#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-#  response=response, 
-#  # crashes in 64gb at 1m
-#  suffixes=suffixes[1:min(3,length(suffixes))],
-#  trainf=classify.randomForest,
-#  prefix='randomForest')
-#
-#bench(
-#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-#  response=response, 
-#  # wahpenayo at gmail dot com
-# 2017-12-10
+# 2017-12-20
 #-----------------------------------------------------------------
 if (file.exists('e:/porta/projects/taigabench')) {
   setwd('e:/porta/projects/taigabench')
@@ -218,21 +166,23 @@ problem <- 'l2'
 #  trainf=l2.randomForest,
 #  prefix='randomForest')
 
-bench(
-  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-  response=response, 
-  suffixes=suffixes,
-  trainf=l2.randomForestSRC,
-  prefix='randomForestSRC')
+#bench(
+#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
+#  response=response,
+#  # no progess on 512K records in 33 hours in 64G host
+#  suffixes=suffixes[1:min(2,length(suffixes))], 
+#  trainf=l2.randomForestSRC,
+#  prefix='randomForestSRC')
 #-----------------------------------------------------------------
 problem <- 'qcost'
 #-----------------------------------------------------------------
-bench(
-  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-  response=response, 
-  suffixes=suffixes,
-  trainf=qcost.randomForestSRC,
-  prefix='randomForestSRC')
+#bench(
+#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
+#  response=response, 
+#  # crashes R GUI at 128K records in 64G host
+#  suffixes=suffixes[1],
+#  trainf=qcost.randomForestSRC,
+#  prefix='randomForestSRC')
 
 bench(
   dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
