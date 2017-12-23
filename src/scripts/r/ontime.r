@@ -106,76 +106,6 @@ problem <- 'l2'
 #-----------------------------------------------------------------
 problem <- 'qcost'
 #-----------------------------------------------------------------
-bench(
-  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-  response=response, 
-  suffixes=suffixes,
-  trainf=qcost.randomForestSRC,
-  prefix='randomForestSRC')
-
-bench(
-  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-  response=response, 
-  suffixes=suffixes,
-  trainf=qcost.quantregForest,
-  prefix='quantregForest')
-#-----------------------------------------------------------------
-
-#  suffixes=suffixes[1:min(3,length(suffixes))],
-#  trainf=classify.randomForestSRC,
-#  prefix='randomForestSRC')
-#-----------------------------------------------------------------
-response <- 'arrdelay'
-dataf <- ontime.data
-dtest <- dataf(test.file(dataset=dataset))
-#-----------------------------------------------------------------
-problem <- 'l2'
-#-----------------------------------------------------------------
-## With 32M:
-## Error in read connection (con) : negative length vectors are not allowed
-#bench(
-#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-#  response=response, 
-#  suffixes=suffixes[1:5],
-#  trainf=l2.h2o.randomForest,
-#  prefix='h2o')
-#
-## With 32M:
-## Error in read connection (con) : negative length vectors are not allowed
-#bench(
-#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-#  response=response, 
-#  suffixes=suffixes[1:5],
-#  trainf=l2.xgboost.randomForest,
-#  prefix='xgboost')
-#
-## With 32M:
-## Error in read connection (con) : negative length vectors are not allowed
-#bench(
-#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-#  response=response, 
-#  suffixes=suffixes[1:5],
-#  trainf=l2.xgboost.exact.randomForest,
-#  prefix='xgboost.exact')
-
-#bench(
-#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-#  response=response, 
-#  # crashes in 64gb at 512k
-#  suffixes=suffixes[1:min(2,length(suffixes))],
-#  trainf=l2.randomForest,
-#  prefix='randomForest')
-
-#bench(
-#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-#  response=response,
-#  # no progess on 512K records in 33 hours in 64G host
-#  suffixes=suffixes[1:min(2,length(suffixes))], 
-#  trainf=l2.randomForestSRC,
-#  prefix='randomForestSRC')
-#-----------------------------------------------------------------
-problem <- 'qcost'
-#-----------------------------------------------------------------
 #bench(
 #  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
 #  response=response, 
@@ -187,7 +117,8 @@ problem <- 'qcost'
 bench(
   dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
   response=response, 
-  suffixes=suffixes,
+  # crashes R GUI at 512K records in 64G host
+  suffixes=suffixes[1:min(2,length(suffixes))],
   trainf=qcost.quantregForest,
   prefix='quantregForest')
 #-----------------------------------------------------------------
