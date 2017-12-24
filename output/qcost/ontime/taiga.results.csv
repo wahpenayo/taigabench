@@ -1,4 +1,4 @@
-datatime	model	ntest	ntrain	predictfile	predicttime	qcost	qcosttime	traintime
+datatime,model,ntest,ntrain,predictfile,predicttime,qcost,qcosttime,traintime
 1.212151237,taiga,131072,32768,output\qcost\ontime\taiga-32768.pred.csv.gz,11.483566784,72.42065816539369,0.100305596,7.222824822
 1.867435153,taiga,131072,131072,output\qcost\ontime\taiga-131072.pred.csv.gz,12.107577156,72.098110807847,0.032644346,34.993631368
 4.556964689,taiga,131072,524288,output\qcost\ontime\taiga-524288.pred.csv.gz,12.33763853,71.79880209826959,0.022501359,187.915673604

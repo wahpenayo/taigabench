@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :date "2017-12-10"
+      :date "2017-12-23"
       :doc "Public airline ontime data benchmark:
             https://www.r-bloggers.com/benchmarking-random-forest-implementations/
             http://stat-computing.org/dataexpo/2009/" }
@@ -25,7 +25,7 @@
   (let [ks (sort (into #{} (mapcat keys records)))]
     (with-open [w (z/print-writer f)]
       (binding [*out* w]
-        (println (s/join "\t" (map name ks)))
+        (println (s/join "," (map name ks)))
         (doseq [record records]
           (println 
             (s/join "," (map #(or (str (get record %)) "") ks))))

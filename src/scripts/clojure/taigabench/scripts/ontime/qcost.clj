@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :date "2017-12-04"
+      :date "2017-12-23"
       :doc "Compute decile costs for:<br>
             Public airline ontime data benchmark:
             https://www.r-bloggers.com/benchmarking-random-forest-implementations/
@@ -25,11 +25,13 @@
   (mapv #(keyword (s/lower-case (s/replace % "\"" ""))) 
                   (split line)))
 (defn- read-results ^Iterable [lib]
+  (println "reading" lib "results")
   (let [file (data/output-file 
                "qcost" (str lib ".results") "csv")]
     (with-open [r (z/reader file)]
       (let [lines (line-seq r)
             header (head (first lines))]
+        (prn header)
         (z/map #(zipmap header (split %))
                (rest lines))))))
 ;;----------------------------------------------------------------
@@ -50,7 +52,7 @@
                                (:predicttime result)
                                (:decilecost result)]))))))
 ;;----------------------------------------------------------------
-(defn decile-cost ^Map [^Map record]
+(defn- decile-cost ^Map [^Map record]
   (pp/pprint record)
   (let [model (:model record)
         suffix (:ntrain record)
