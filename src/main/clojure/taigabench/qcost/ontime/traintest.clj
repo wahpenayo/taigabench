@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :date "2017-12-10"
+      :date "2018-01-01"
       :doc "Public airline ontime data for benchmarking:
             http://stat-computing.org/dataexpo/2009/" }
     
@@ -13,7 +13,8 @@
             [taiga.api :as taiga]
             [taigabench.deciles :as deciles]
             [taigabench.metrics :as metrics]
-            [taigabench.ontime.data :as data]))
+            [taigabench.ontime.data :as data])
+  (:import [java.util ArrayList]))
 ;;----------------------------------------------------------------
 (def prototype 
   {:attributes data/qcost-attributes
@@ -24,18 +25,33 @@
    :nterms 127
    :maxdepth 1024})
 ;;----------------------------------------------------------------
+(defn- every-other [things]
+  (let [it (z/iterator things)
+        n (int (z/count things))
+        even (ArrayList. (inc (quot n 2)))
+        odd (ArrayList. (inc (quot n 2)))]
+    (loop [i (int 0)]
+      (if (.hasNext it)
+        (let [^ArrayList s (if (== (int 0) (rem i 2)) even odd)]
+          (.add s (.next it))
+          (recur (inc i)))
+        [even odd]))))
+;;----------------------------------------------------------------
 (defn traintest [suffix learner options]
   (let [mincount (:mincount options)
         model-name "taiga"
         label  (str model-name "-" suffix)
         start (System/nanoTime)
         train (data/read-data-file (str "train-" suffix))
+        [rtrain qtrain] (every-other train)
         test (data/read-data-file "test")
         ;;test (z/take 1024 test)
         _(System/gc)
         datatime (/ (double (- (System/nanoTime) start)) 
                     1000000000.0)
-        options (assoc options :data train)
+        options (assoc options 
+                       :data rtrain
+                       :empirical-distribution-data qtrain)
         start (System/nanoTime)
         ^clojure.lang.IFn model (learner options)
         traintime (/ (double (- (System/nanoTime) start)) 
