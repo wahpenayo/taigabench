@@ -1,0 +1,126 @@
+taiga 131072 2018-01-16 23:30:17
+train: 131072
+test: 130697
+training records: 131072
+nterms: 127
+nthreads: 4
+bags:   16
+bags:   32
+bags:   48
+bags:   64
+bags:   80
+bags:   96
+bags:  112
+taiga 131072 2018-01-16 23:32:46 (149393ms) (2m) 149s
+taiga 131072 2018-01-16 23:32:47
+train: 131072
+test: 130697
+training records: 131072
+nterms: 127
+nthreads: 4
+bags:   16
+bags:   32
+bags:   48
+bags:   64
+bags:   80
+bags:   96
+bags:  112
+taiga 131072 2018-01-16 23:34:36 (109576ms) (2m) 110s
+taiga 131072 2018-01-16 23:34:37
+train: 131072
+test: 130697
+training records: 131072
+nterms: 127
+nthreads: 4
+bags:   16
+bags:   32
+bags:   48
+bags:   64
+bags:   80
+bags:   96
+bags:  112
+taiga 131072 2018-01-16 23:36:09 (91849ms) (2m) 92s
+taiga 131072 2018-01-16 23:36:10
+train: 131072
+test: 130697
+training records: 131072
+nterms: 127
+nthreads: 4
+bags:   16
+bags:   32
+bags:   48
+bags:   64
+bags:   80
+bags:   96
+bags:  112
+taiga 131072 2018-01-16 23:37:31 (80572ms) (1m) 81s
+taiga 131072 2018-01-16 23:37:32
+train: 131072
+test: 130697
+training records: 131072
+nterms: 127
+nthreads: 4
+bags:   16
+bags:   32
+bags:   48
+bags:   64
+bags:   80
+bags:   96
+bags:  112
+taiga 131072 2018-01-16 23:38:45 (72936ms) (1m) 73s
+taiga 131072 2018-01-16 23:38:45
+train: 131072
+test: 130697
+training records: 131072
+nterms: 127
+nthreads: 4
+bags:   16
+bags:   32
+bags:   48
+bags:   64
+bags:   80
+bags:   96
+bags:  112
+taiga 131072 2018-01-16 23:39:50 (65116ms) (1m) 65s
+taiga 131072 2018-01-16 23:39:51
+train: 131072
+test: 130697
+training records: 131072
+nterms: 127
+nthreads: 4
+bags:   16
+bags:   32
+bags:   48
+bags:   64
+bags:   80
+bags:   96
+bags:  112
+taiga 131072 2018-01-16 23:40:50 (59196ms) (1m) 59s
+taiga 131072 2018-01-16 23:40:51
+train: 131072
+test: 130697
+training records: 131072
+nterms: 127
+nthreads: 4
+bags:   16
+bags:   32
+bags:   48
+bags:   64
+bags:   80
+bags:   96
+bags:  112
+taiga 131072 2018-01-16 23:41:44 (53219ms) (1m) 53s
+taiga 131072 2018-01-16 23:41:44
+train: 131072
+test: 130697
+training records: 131072
+nterms: 127
+nthreads: 4
+bags:   16
+bags:   32
+bags:   48
+bags:   64
+bags:   80
+bags:   96
+bags:  112
+taiga 131072 2018-01-16 23:42:31 (46522ms) (1m) 47s
