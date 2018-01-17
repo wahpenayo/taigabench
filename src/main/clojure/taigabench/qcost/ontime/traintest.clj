@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :date "2018-01-01"
+      :date "2018-01-16"
       :doc "Public airline ontime data for benchmarking:
             http://stat-computing.org/dataexpo/2009/" }
     
@@ -86,5 +86,8 @@
      :predicttime predicttime
      :qcosttime qcosttime
      :qcost qcost
-     :predictfile (.getPath prfile)}))
+     :predictfile (.getPath prfile)
+     :mincount (:mincount options)
+     :maxdepth (:maxdepth options)
+     :ntrees (:ntrees options)}))
 ;;----------------------------------------------------------------

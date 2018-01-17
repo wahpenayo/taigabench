@@ -178,6 +178,10 @@ model.colors <- c(
 #-----------------------------------------------------------------
 # files
 #-----------------------------------------------------------------
+DEFAULT.MINCOUNT <- 131
+DEFAULT.NTREES <- 127
+DEFAULT.MAXDEPTH <- 1024
+
 data.folder <- function (
   dataset=NULL, 
   problem=NULL) {
@@ -217,11 +221,12 @@ output.folder <- function (
 predicted.file <- function (
   dataset=NULL, 
   problem=NULL,
+  mincount=DEFAULT.MINCOUNT,
   prefix) {
   gzfile(
     file.path(
       output.folder(problem=problem,dataset=dataset), 
-      paste(prefix,'pred.csv.gz',sep='.'))) }
+      paste(prefix,mincount,'pred.csv.gz',sep='.'))) }
 
 results.file <- function (
   dataset=NULL, 
@@ -249,9 +254,9 @@ classify.h2o.randomForest <- function (
   dtest=NULL,
   response=NULL,
   maxmem=paste0(floor(0.9*free.ram()),'g'),
-  ntrees=127,
-  mincount=131,
-  maxdepth=1024) {
+  ntrees=DEFAULT.NTREES,
+  mincount=DEFAULT.MINCOUNT,
+  maxdepth=DEFAULT.MAXDEPTH) {
   
   stopifnot(
     !is.null(dataset),
@@ -320,7 +325,10 @@ classify.h2o.randomForest <- function (
     traintime=traintime['elapsed'],
     predicttime=predicttime['elapsed'],
     auctime=auctime['elapsed'],
-    auc=auc)
+    auc=auc,
+    mincount=mincount,
+    maxdepth=maxdepth,
+    ntrees=ntrees)
   Sys.setenv(JAVA_HOME=old.java.home)
   results
 }
@@ -334,9 +342,9 @@ l2.h2o.randomForest <- function (
   dtest=NULL,
   response=NULL,
   maxmem=paste0(floor(0.9*free.ram()),'g'),
-  ntrees=127,
-  mincount=131,
-  maxdepth=1024) {
+  ntrees=DEFAULT.NTREES,
+  mincount=DEFAULT.MINCOUNT,
+  maxdepth=DEFAULT.MAXDEPTH) {
   
   stopifnot(
     !is.null(dataset),
@@ -404,7 +412,10 @@ l2.h2o.randomForest <- function (
     traintime=traintime['elapsed'],
     predicttime=predicttime['elapsed'],
     rmsetime=rmsetime['elapsed'],
-    rmse=rmse)
+    rmse=rmse,
+    mincount=mincount,
+    maxdepth=maxdepth,
+    ntrees=ntrees)
   Sys.setenv(JAVA_HOME=old.java.home)
   results
 }
@@ -439,9 +450,9 @@ classify.xgboost.randomForest <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  ntrees=127,
-  mincount=131,
-  maxdepth=1024) {
+  ntrees=DEFAULT.NTREES,
+  mincount=DEFAULT.MINCOUNT,
+  maxdepth=DEFAULT.MAXDEPTH) {
   
   stopifnot(
     !is.null(dataset),
@@ -515,7 +526,10 @@ classify.xgboost.randomForest <- function (
     traintime=traintime['elapsed'],
     predicttime=predicttime['elapsed'],
     auctime=auctime['elapsed'],
-    auc=auc@y.values[[1]])
+    auc=auc@y.values[[1]],
+    mincount=mincount,
+    maxdepth=maxdepth,
+    ntrees=ntrees)
 }
 #-----------------------------------------------------------------
 # binary classification only?
@@ -525,9 +539,9 @@ classify.xgboost.exact.randomForest <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  ntrees=127,
-  mincount=131,
-  maxdepth=1024) {
+  ntrees=DEFAULT.NTREES,
+  mincount=DEFAULT.MINCOUNT,
+  maxdepth=DEFAULT.MAXDEPTH) {
   
   stopifnot(
     !is.null(dataset),
@@ -602,7 +616,10 @@ classify.xgboost.exact.randomForest <- function (
     traintime=traintime['elapsed'],
     predicttime=predicttime['elapsed'],
     auctime=auctime['elapsed'],
-    auc=auc@y.values[[1]])
+    auc=auc@y.values[[1]],
+    mincount=mincount,
+    maxdepth=maxdepth,
+    ntrees=ntrees)
 }
 #-----------------------------------------------------------------
 # l2 scalar regression
@@ -612,9 +629,9 @@ l2.xgboost.randomForest <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  ntrees=127,
-  mincount=131,
-  maxdepth=1024) {
+  ntrees=DEFAULT.NTREES,
+  mincount=DEFAULT.MINCOUNT,
+  maxdepth=DEFAULT.MAXDEPTH) {
   
   stopifnot(
     !is.null(dataset),
@@ -687,7 +704,10 @@ l2.xgboost.randomForest <- function (
     traintime=traintime['elapsed'],
     predicttime=predicttime['elapsed'],
     rmsetime=rmsetime['elapsed'],
-    rmse=rmse)
+    rmse=rmse,
+    mincount=mincount,
+    maxdepth=maxdepth,
+    ntrees=ntrees)
 }
 #-----------------------------------------------------------------
 # l2 scalar regression
@@ -697,9 +717,9 @@ l2.xgboost.exact.randomForest <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  ntrees=127,
-  mincount=131,
-  maxdepth=1024) {
+  ntrees=DEFAULT.NTREES,
+  mincount=DEFAULT.MINCOUNT,
+  maxdepth=DEFAULT.MAXDEPTH) {
   
   stopifnot(
     !is.null(dataset),
@@ -773,7 +793,10 @@ l2.xgboost.exact.randomForest <- function (
     traintime=traintime['elapsed'],
     predicttime=predicttime['elapsed'],
     rmsetime=rmsetime['elapsed'],
-    rmse=rmse)
+    rmse=rmse,
+    mincount=mincount,
+    maxdepth=maxdepth,
+    ntrees=ntrees)
 }
 #-----------------------------------------------------------------
 # R randomForest
@@ -785,9 +808,9 @@ classify.randomForest <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  ntrees=127,
-  mincount=131,
-  maxdepth=1024) {
+  ntrees=DEFAULT.NTREES,
+  mincount=DEFAULT.MINCOUNT,
+  maxdepth=DEFAULT.MAXDEPTH) {
   
   stopifnot(
     !is.null(dataset),
@@ -849,7 +872,10 @@ classify.randomForest <- function (
     traintime=traintime['elapsed'],
     predicttime=predicttime['elapsed'],
     auctime=auctime['elapsed'],
-    auc=auc@y.values[[1]])
+    auc=auc@y.values[[1]],
+    mincount=mincount,
+    maxdepth=maxdepth,
+    ntrees=ntrees)
 }
 #-----------------------------------------------------------------
 # l2 scalar regression
@@ -859,9 +885,9 @@ l2.randomForest <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  ntrees=127,
-  mincount=131,
-  maxdepth=1024) {
+  ntrees=DEFAULT.NTREES,
+  mincount=DEFAULT.MINCOUNT,
+  maxdepth=DEFAULT.MAXDEPTH) {
   
   stopifnot(
     !is.null(dataset),
@@ -922,7 +948,10 @@ l2.randomForest <- function (
     traintime=traintime['elapsed'],
     predicttime=predicttime['elapsed'],
     rmsetime=rmsetime['elapsed'],
-    rmse=rmse)
+    rmse=rmse,
+    mincount=mincount,
+    maxdepth=maxdepth,
+    ntrees=ntrees)
 }
 #-----------------------------------------------------------------
 # multicore training for R randomForest
@@ -936,9 +965,9 @@ classify.parallel.randomForest <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  ntrees=127,
-  mincount=131,
-  maxdepth=1024) {
+  ntrees=DEFAULT.NTREES,
+  mincount=DEFAULT.MINCOUNT,
+  maxdepth=DEFAULT.MAXDEPTH) {
   
   stopifnot(
     !is.null(dataset),
@@ -1014,7 +1043,10 @@ classify.parallel.randomForest <- function (
     traintime=traintime['elapsed'],
     predicttime=predicttime['elapsed'],
     auctime=auctime['elapsed'],
-    auc=auc@y.values[[1]])
+    auc=auc@y.values[[1]],
+    mincount=mincount,
+    maxdepth=maxdepth,
+    ntrees=ntrees)
 }
 #-----------------------------------------------------------------
 # randomForestSRC
@@ -1026,9 +1058,9 @@ classify.randomForestSRC <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  ntrees=127,
-  mincount=131,
-  maxdepth=1024) {
+  ntrees=DEFAULT.NTREES,
+  mincount=DEFAULT.MINCOUNT,
+  maxdepth=DEFAULT.MAXDEPTH) {
   
   stopifnot(
     !is.null(dataset),
@@ -1097,7 +1129,10 @@ classify.randomForestSRC <- function (
     traintime=traintime['elapsed'],
     predicttime=predicttime['elapsed'],
     auctime=auctime['elapsed'],
-    auc=auc@y.values[[1]])
+    auc=auc@y.values[[1]],
+    mincount=mincount,
+    maxdepth=maxdepth,
+    ntrees=ntrees)
 }
 #-----------------------------------------------------------------
 # l2 scalar regression
@@ -1107,9 +1142,9 @@ l2.randomForestSRC <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  ntrees=127,
-  mincount=131,
-  maxdepth=1024) {
+  ntrees=DEFAULT.NTREES,
+  mincount=DEFAULT.MINCOUNT,
+  maxdepth=DEFAULT.MAXDEPTH) {
   
   stopifnot(
     !is.null(dataset),
@@ -1177,7 +1212,10 @@ l2.randomForestSRC <- function (
     traintime=traintime['elapsed'],
     predicttime=predicttime['elapsed'],
     rmsetime=rmsetime['elapsed'],
-    rmse=rmse)
+    rmse=rmse,
+    mincount=mincount,
+    maxdepth=maxdepth,
+    ntrees=ntrees)
 }
 #-----------------------------------------------------------------
 # quantile regression
@@ -1187,9 +1225,9 @@ qcost.randomForestSRC <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  ntrees=127,
-  mincount=131,
-  maxdepth=1024,
+  ntrees=DEFAULT.NTREES,
+  mincount=DEFAULT.MINCOUNT,
+  maxdepth=DEFAULT.MAXDEPTH,
   p=(0.1*(1:9))) {
   
   stopifnot(
@@ -1271,7 +1309,10 @@ qcost.randomForestSRC <- function (
     ntest=length(ytest),
     datatime=datatime['elapsed'],
     traintime=traintime['elapsed'],
-    predicttime=predicttime['elapsed'])
+    predicttime=predicttime['elapsed'],
+    mincount=mincount,
+    maxdepth=maxdepth,
+    ntrees=ntrees)
 }
 #-----------------------------------------------------------------
 # quantregForest
@@ -1283,9 +1324,9 @@ qcost.quantregForest <- function (
   suffix=NULL,
   dtest=NULL,
   response=NULL,
-  ntrees=127,
-  mincount=131,
-  maxdepth=1024,
+  ntrees=DEFAULT.NTREES,
+  mincount=DEFAULT.MINCOUNT,
+  maxdepth=DEFAULT.MAXDEPTH,
   p=(0.1*(1:9))) {
   
   stopifnot(
@@ -1370,7 +1411,10 @@ qcost.quantregForest <- function (
     ntest=length(ytest),
     datatime=datatime['elapsed'],
     traintime=traintime['elapsed'],
-    predicttime=predicttime['elapsed'])
+    predicttime=predicttime['elapsed'],
+    mincount=mincount,
+    maxdepth=maxdepth,
+    ntrees=ntrees)
 }
 #-----------------------------------------------------------------
 # datasets
@@ -1425,6 +1469,41 @@ bench <- function (
         suffix=suffix,
         dtest=dtest,
         response=response))
+    print(results)
+    resultsf <- 
+      results.file(dataset=dataset,problem=problem,prefix=prefix)
+    write.csv(
+      x=results,
+      file=resultsf,
+      row.names=FALSE,
+      quote=FALSE)
+  } }
+#-----------------------------------------------------------------
+sweep.mincount <- function (
+  dataset=NULL,
+  suffix=NULL,
+  dataf=NULL,
+  trainf=NULL,
+  dtest=NULL,
+  response=NULL,
+  problem=NULL,
+  prefix=NULL,
+  mincounts=NULL) {
+  
+  results <- NULL
+  for (mincount in mincounts) {
+    gc()
+    trainfile <-train.file(dataset=dataset,suffix=suffix)
+    dtrain <- dataf(trainfile)
+    results <- rbind(
+      results,
+      trainf(
+        dataset=dataset,
+        dtrain=dtrain,
+        suffix=suffix,
+        dtest=dtest,
+        response=response,
+        mincount=mincount))
     print(results)
     resultsf <- 
       results.file(dataset=dataset,problem=problem,prefix=prefix)

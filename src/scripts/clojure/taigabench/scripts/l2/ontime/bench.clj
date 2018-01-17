@@ -23,7 +23,7 @@
   (doseq [suffix ["32768" "131072" "524288" "2097152" "8388608" "33554432"]]
     (System/gc)
     (println "taiga" suffix)
-    (let [results (tt/traintest 
+    (let [results (l2/traintest 
                     suffix taiga/mean-regression l2/prototype)
           ^String line (s/join "," ["taiga"
                                     (:ntrain results)

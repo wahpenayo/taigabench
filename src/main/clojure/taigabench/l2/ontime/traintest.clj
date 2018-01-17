@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :date "2017-12-10"
+      :date "2018-01-16"
       :doc "Public airline ontime data for benchmarking:
             http://stat-computing.org/dataexpo/2009/" }
     
@@ -30,9 +30,9 @@
         label  (str "taiga-" suffix)
         start (System/nanoTime)
         train (data/read-data-file (str "train-" suffix))
-        test (data/read-data-file "test")
+        test (data/read-data-file (:test options "test"))
         _(System/gc)
-        datatime (/ (double (- (System/nanoTime) start)) 
+        datatime (/ (double (- (System/nanoTime) start))
                     1000000000.0)
         options (assoc options :data train)
         start (System/nanoTime)
@@ -63,5 +63,8 @@
    :traintime traintime 
    :predicttime predicttime
    :rmsetime rmsetime
-   :rmse rmse}))
+   :rmse rmse
+   :mincount (:mincount options)
+   :maxdepth (:maxdepth options)
+   :ntrees (:ntrees options)}))
 ;;----------------------------------------------------------------

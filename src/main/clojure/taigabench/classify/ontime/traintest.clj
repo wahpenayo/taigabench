@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :date "2017-12-10"
+      :date "2018-01-16"
       :doc "Public airline ontime data for benchmarking:
             http://stat-computing.org/dataexpo/2009/" }
     
@@ -52,7 +52,7 @@
                #(assoc 
                   % 
                   :prediction (.invokePrim model attributes %)) 
-                     test)
+               test)
         predicttime (/ (double (- (System/nanoTime) start)) 
                        1000000000.0)
         start (System/nanoTime)
@@ -71,5 +71,8 @@
      :traintime traintime 
      :predicttime predicttime
      :auctime auctime
-     :auc auc}))
+     :auc auc
+     :mincount (:mincount options)
+     :maxdepth (:maxdepth options)
+     :ntrees (:ntrees options)}))
 ;;------------------------------------------------------------------------------
