@@ -16,7 +16,8 @@ dataf <- ontime.data
 dtest <- dataf(test.file(dataset=dataset))
 #suffixes <- c('32768','131072','524288','2097152','8388608','33554432')
 suffix <- '131072'
-mincounts <- c(15,31,63,127,255,511)
+#mincounts <- c(15,31,63,127,255,511)
+mincounts <- c(255,127,63)
 #-----------------------------------------------------------------
 sweep.mincount(
   dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
