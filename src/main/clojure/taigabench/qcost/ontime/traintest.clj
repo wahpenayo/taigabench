@@ -89,5 +89,5 @@
      :predictfile (.getPath prfile)
      :mincount (:mincount options)
      :maxdepth (:maxdepth options)
-     :ntrees (:ntrees options)}))
+     :nterms (:nterms options)}))
 ;;----------------------------------------------------------------

@@ -1,5 +1,7 @@
-taiga 131072 2018-01-16 14:42:15
-training records: 131072
+taiga 32768 2018-01-18 14:10:48
+train: 32768
+test: 131072
+training records: 32768
 nterms: 127
 nthreads: 4
 bags:   16
@@ -9,9 +11,11 @@ bags:   64
 bags:   80
 bags:   96
 bags:  112
-taiga 131072 2018-01-16 14:44:44 (148737ms) (2m) 149s
-taiga 131072 2018-01-16 14:44:45
-training records: 131072
+taiga 32768 2018-01-18 14:11:39 (51006ms) (1m) 51s
+taiga 32768 2018-01-18 14:11:40
+train: 32768
+test: 131072
+training records: 32768
 nterms: 127
 nthreads: 4
 bags:   16
@@ -21,9 +25,11 @@ bags:   64
 bags:   80
 bags:   96
 bags:  112
-taiga 131072 2018-01-16 14:46:37 (112589ms) (2m) 113s
-taiga 131072 2018-01-16 14:46:38
-training records: 131072
+taiga 32768 2018-01-18 14:12:14 (34502ms) (1m) 35s
+taiga 32768 2018-01-18 14:12:15
+train: 32768
+test: 131072
+training records: 32768
 nterms: 127
 nthreads: 4
 bags:   16
@@ -33,9 +39,11 @@ bags:   64
 bags:   80
 bags:   96
 bags:  112
-taiga 131072 2018-01-16 14:48:11 (93482ms) (2m) 93s
-taiga 131072 2018-01-16 14:48:13
-training records: 131072
+taiga 32768 2018-01-18 14:12:44 (28590ms) (0m) 29s
+taiga 32768 2018-01-18 14:12:45
+train: 32768
+test: 131072
+training records: 32768
 nterms: 127
 nthreads: 4
 bags:   16
@@ -45,9 +53,11 @@ bags:   64
 bags:   80
 bags:   96
 bags:  112
-taiga 131072 2018-01-16 14:49:34 (81050ms) (1m) 81s
-taiga 131072 2018-01-16 14:49:35
-training records: 131072
+taiga 32768 2018-01-18 14:13:11 (26007ms) (0m) 26s
+taiga 32768 2018-01-18 14:13:12
+train: 32768
+test: 131072
+training records: 32768
 nterms: 127
 nthreads: 4
 bags:   16
@@ -57,9 +67,11 @@ bags:   64
 bags:   80
 bags:   96
 bags:  112
-taiga 131072 2018-01-16 14:50:47 (72310ms) (1m) 72s
-taiga 131072 2018-01-16 14:50:47
-training records: 131072
+taiga 32768 2018-01-18 14:13:34 (21758ms) (0m) 22s
+taiga 32768 2018-01-18 14:13:35
+train: 32768
+test: 131072
+training records: 32768
 nterms: 127
 nthreads: 4
 bags:   16
@@ -69,9 +81,11 @@ bags:   64
 bags:   80
 bags:   96
 bags:  112
-taiga 131072 2018-01-16 14:51:53 (66231ms) (1m) 66s
-taiga 131072 2018-01-16 14:51:55
-training records: 131072
+taiga 32768 2018-01-18 14:13:53 (18038ms) (0m) 18s
+taiga 32768 2018-01-18 14:13:54
+train: 32768
+test: 131072
+training records: 32768
 nterms: 127
 nthreads: 4
 bags:   16
@@ -81,9 +95,11 @@ bags:   64
 bags:   80
 bags:   96
 bags:  112
-taiga 131072 2018-01-16 14:52:55 (59887ms) (1m) 60s
-taiga 131072 2018-01-16 14:52:55
-training records: 131072
+taiga 32768 2018-01-18 14:14:09 (15363ms) (0m) 15s
+taiga 32768 2018-01-18 14:14:09
+train: 32768
+test: 131072
+training records: 32768
 nterms: 127
 nthreads: 4
 bags:   16
@@ -93,9 +109,11 @@ bags:   64
 bags:   80
 bags:   96
 bags:  112
-taiga 131072 2018-01-16 14:53:49 (53968ms) (1m) 54s
-taiga 131072 2018-01-16 14:53:49
-training records: 131072
+taiga 32768 2018-01-18 14:14:23 (13860ms) (0m) 14s
+taiga 32768 2018-01-18 14:14:24
+train: 32768
+test: 131072
+training records: 32768
 nterms: 127
 nthreads: 4
 bags:   16
@@ -105,4 +123,4 @@ bags:   64
 bags:   80
 bags:   96
 bags:  112
-taiga 131072 2018-01-16 14:54:36 (47291ms) (1m) 47s
+taiga 32768 2018-01-18 14:14:36 (11101ms) (0m) 11s

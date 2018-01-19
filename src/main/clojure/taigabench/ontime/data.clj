@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :date "2017-12-01"
+      :date "2018-01-18"
       :doc "[Public airline ontime data for benchmarking](http://stat-computing.org/dataexpo/2009/).
             <p>
             <b>Note:</b>Using attributes mostly as defined as in 
@@ -97,20 +97,25 @@
 
 (defn- parse-arrdelay 
   (^double [tuple]
-    ;; Treating cancelled/diverted as 24 hour delay, 
-    ;; but should be until actual arrival of next 
-    ;; available flight.
+    ;; Treating cancelled/diverted as 3 hour delay, but should be
+    ;; until actual arrival of next available flight (with seats).
     (let [arrdelay (:arrdelay tuple)]
       (if (and arrdelay (not= "NA" arrdelay))
         (parse-double arrdelay)
+        ;; 152 min is 99% of non-canceled flights
+        ;; use 3 hours for cancelled/diverted/missing
+        #_(* 3.0 60.0)
+        ;; treat misssing differently from cancelled/diverted
         (let [cancelled (:cancelled tuple)
-              diverted (:diverted tuple)]
-          (if (or (not= "0" cancelled) (not= "0" diverted))
-            (* 24.0 60.0)
-            Double/NaN ;; missing
-            #_(throw (IllegalArgumentException.
-                      (str "can't parse:\n"
-                           (z/pprint-map-str tuple)))))))))
+               diverted (:diverted tuple)]
+           (if (or (not= "0" cancelled) (not= "0" diverted))
+             ;; 152 min is 99% of non-canceled flights
+             ;; use 3 hours for cancelled/diverted 
+             (* 3.0 60.0)
+             Double/NaN ;; missing
+             #_(throw (IllegalArgumentException.
+                        (str "can't parse:\n"
+                             (z/pprint-map-str tuple)))))))))
   (^double [tuple _] (parse-arrdelay tuple)))
 
 (defn- parse-arr-delayed-15min ^double [tuple _] 

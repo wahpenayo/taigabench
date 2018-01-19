@@ -178,7 +178,7 @@ model.colors <- c(
 #-----------------------------------------------------------------
 # files
 #-----------------------------------------------------------------
-DEFAULT.MINCOUNT <- 131
+DEFAULT.MINCOUNT <- 1023
 DEFAULT.NTREES <- 127
 DEFAULT.MAXDEPTH <- 1024
 
@@ -1155,7 +1155,7 @@ l2.randomForestSRC <- function (
     is.numeric(dtrain[[response]]),
     is.numeric(dtest[[response]]))
   
-  seed <- 1244985
+  seed <- -1244985
   set.seed(seed)
   
   start <- proc.time()
@@ -1176,9 +1176,17 @@ l2.randomForestSRC <- function (
     formula=as.formula(paste(response, '~ .')),
     data=dtrain,
     ntree=ntrees, 
-    nodesize=mincount,
+    nodesize=(mincount / 0.6321),
     nodedepth=maxdepth,
-    seed=seed)
+    seed=seed,
+    splitrule='mse',
+    nsplit=0,
+    importance='none',
+    na.action='na.omit',
+    bootstrap='by.root',
+    sampsize=NULL,
+    samptype='swr',
+    samp=NULL)
   traintime <- proc.time() - start   
   
   start <- proc.time()
@@ -1506,7 +1514,10 @@ sweep.mincount <- function (
         mincount=mincount))
     print(results)
     resultsf <- 
-      results.file(dataset=dataset,problem=problem,prefix=prefix)
+      results.file(
+        dataset=dataset,
+        problem=problem,
+        prefix=paste0(prefix,'-mincount'))
     write.csv(
       x=results,
       file=resultsf,
