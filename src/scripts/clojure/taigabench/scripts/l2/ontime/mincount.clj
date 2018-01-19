@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :date "2018-01-16"
+      :date "2018-01-18"
       :doc "sweep mincount values.
             Public airline ontime data benchmark:
             https://www.r-bloggers.com/benchmarking-random-forest-implementations/
@@ -29,8 +29,8 @@
             (s/join "," (map #(or (str (get record %)) "") ks))))
         (flush)))))
 ;;----------------------------------------------------------------
-(def mincounts [7 15 31 63 127 255 511 1023 2047])
-(def suffix "32768")
+(def mincounts [7 15 31 63 127 255 511 1023 2047 4095])
+(def suffix "2097152")
 ;;----------------------------------------------------------------
 (defn reducer [records ^long mincount]
   (System/gc)

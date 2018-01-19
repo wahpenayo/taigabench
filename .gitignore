@@ -19,6 +19,7 @@ pom.xml.asc
 /lib/
 /logs/
 /data/
+~*
 *.jar
 *.class
 /java.hprof.txt
