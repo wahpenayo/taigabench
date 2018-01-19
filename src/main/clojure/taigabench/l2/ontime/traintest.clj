@@ -15,14 +15,8 @@
             [taigabench.metrics :as metrics]
             [taigabench.ontime.data :as data]))
 ;;----------------------------------------------------------------
-(def prototype 
-  {:attributes data/l2-attributes
-   :csv-reader #(data/read-tsv-file % #"\,")
-   :bin-reader data/read-binary-file
-   :bin-writer data/write-binary-file
-   :mincount 131
-   :nterms 127
-   :maxdepth 1024})
+(def prototype (assoc data/prototype 
+                      :attributes data/l2-attributes))
 ;;----------------------------------------------------------------
 (defn traintest [suffix learner options]
   (let [mincount (:mincount options)

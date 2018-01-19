@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :date "2018-01-16"
+      :date "2018-01-19"
       :doc "Public airline ontime data for benchmarking:
             http://stat-computing.org/dataexpo/2009/" }
     
@@ -15,14 +15,8 @@
             [taigabench.metrics :as metrics]
             [taigabench.ontime.data :as data]))
 ;;----------------------------------------------------------------
-(def prototype 
-  {:attributes data/classify-attributes
-   :csv-reader #(data/read-tsv-file % #"\,")
-   :bin-reader data/read-binary-file
-   :bin-writer data/write-binary-file
-   :mincount 131
-   :nterms 127
-   :maxdepth 1024})
+(def prototype (assoc data/prototype 
+                      :attributes data/classify-attributes))
 
 (defn model-string ^String [learner]
   (str 

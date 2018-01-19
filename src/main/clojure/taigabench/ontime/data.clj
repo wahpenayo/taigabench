@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :date "2018-01-18"
+      :date "2018-01-19"
       :doc "[Public airline ontime data for benchmarking](http://stat-computing.org/dataexpo/2009/).
             <p>
             <b>Note:</b>Using attributes mostly as defined as in 
@@ -254,4 +254,13 @@
   (let [f (output-file fname "results.csv")]
     (io/make-parents f)
     f))
+;;----------------------------------------------------------------
+;; common settings for all models
+(def prototype 
+  {:csv-reader #(read-tsv-file % #"\,")
+   :bin-reader read-binary-file
+   :bin-writer write-binary-file
+   :mincount 511
+   :nterms 127
+   :maxdepth 1024})
 ;;----------------------------------------------------------------
