@@ -6,7 +6,7 @@
 
 #### mincount
 
-`131` goes to `511` (quasi optimal for taiga, need to check others).
+`131` goes to `255` (quasi optimal for taiga, need to check others).
 
 ## 4.1.0
 

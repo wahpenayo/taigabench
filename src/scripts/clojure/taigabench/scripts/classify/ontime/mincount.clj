@@ -1,8 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :since "2016-10-29"
-      :date "2017-11-20"
+      :date "2018-01-20"
       :doc "Public airline ontime data benchmark:
             https://www.r-bloggers.com/benchmarking-random-forest-implementations/
             http://stat-computing.org/dataexpo/2009/" }
@@ -18,7 +17,7 @@
 (doseq [learner [taiga/positive-fraction-probability
                  taiga/majority-vote-probability]]
   (doseq [suffix [#_"10m" "1m" "0.1m" "0.01m"]]
-    (doseq [mincount [2047 511 127 31 7]]
+    (doseq [mincount [2047 1023 511 255 127 63 31 51 7]]
       (traintest/traintest 
         suffix learner (assoc ontime/prototype :mincount mincount)))))
 ;;----------------------------------------------------------------

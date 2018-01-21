@@ -1,5 +1,5 @@
 # wahpenayo at gmail dot com
-# 2018-01-18
+# 2018-01-20
 #-----------------------------------------------------------------
 if (file.exists('e:/porta/projects/taigabench')) {
   setwd('e:/porta/projects/taigabench')
@@ -20,10 +20,14 @@ mincounts <- c(7,15,31,63,127,255,511,1023,2047,4095)
 #mincounts <- c(1023,511,255)
 #-----------------------------------------------------------------
 sweep.mincount(
-  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
+  dataset=dataset,
+  problem=problem,
+  dataf=dataf,
+  dtest=dtest,
   response=response, 
   suffix=suffix,
-  trainf=l2.randomForestSRC,
+  #trainf=l2.randomForestSRC,
+  trainf=l2.h2o.randomForest,
   prefix='randomForestSRC',
   mincounts=mincounts)
 #-----------------------------------------------------------------

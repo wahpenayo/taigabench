@@ -45,7 +45,7 @@ for suffix in ["32768","131072","524288","2097152","8388608"] :
     md = RandomForestClassifier(n_estimators = 127,\
                                 n_jobs = -1,\
                                 max_depth=1024,\
-                                min_samples_leaf=511)
+                                min_samples_leaf=255)
     md.fit(X_train, y_train)
     traintime = time.clock() - start
     

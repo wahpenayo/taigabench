@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :date "2018-01-19"
+      :date "2018-01-20"
       :doc "[Public airline ontime data for benchmarking](http://stat-computing.org/dataexpo/2009/).
             <p>
             <b>Note:</b>Using attributes mostly as defined as in 
@@ -21,7 +21,7 @@
             unknownable when a prediction would be useful)
             by `CRSDepTime`, the scheduled departure time.
             <p> 
-            I've added scheduled arrival and elasped times as
+            I've added scheduled arrival and elapsed times as
             predictors." }
     
     taigabench.ontime.data
@@ -95,23 +95,25 @@
 (defn- parse-airport ^Airport [^String airport]
   (Airport/valueOf airport))
 
+;; 152 min is 99% of non-canceled flights
+;; try 1 hour for cancelled/diverted/missing
+(def ^:private CANCELLED-DELAY (* 1 60))
+
 (defn- parse-arrdelay 
   (^double [tuple]
-    ;; Treating cancelled/diverted as 3 hour delay, but should be
-    ;; until actual arrival of next available flight (with seats).
+    ;; Treating cancelled/diverted as XXX hour delay, 
+    ;; but should be until actual arrival of next available flight 
+    ;; (with seats).
     (let [arrdelay (:arrdelay tuple)]
       (if (and arrdelay (not= "NA" arrdelay))
         (parse-double arrdelay)
-        ;; 152 min is 99% of non-canceled flights
-        ;; use 3 hours for cancelled/diverted/missing
-        #_(* 3.0 60.0)
+        
+        #_(double CANCELLED-DELAY)
         ;; treat misssing differently from cancelled/diverted
         (let [cancelled (:cancelled tuple)
                diverted (:diverted tuple)]
            (if (or (not= "0" cancelled) (not= "0" diverted))
-             ;; 152 min is 99% of non-canceled flights
-             ;; use 3 hours for cancelled/diverted 
-             (* 3.0 60.0)
+             (double CANCELLED-DELAY)
              Double/NaN ;; missing
              #_(throw (IllegalArgumentException.
                         (str "can't parse:\n"
@@ -260,7 +262,7 @@
   {:csv-reader #(read-tsv-file % #"\,")
    :bin-reader read-binary-file
    :bin-writer write-binary-file
-   :mincount 511
+   :mincount 255
    :nterms 127
    :maxdepth 1024})
 ;;----------------------------------------------------------------
