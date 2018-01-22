@@ -1,5 +1,5 @@
 # wahpenayo at gmail dot com
-# 2018-01-20
+# 2018-01-21
 #-----------------------------------------------------------------
 if (file.exists('e:/porta/projects/taigabench')) {
   setwd('e:/porta/projects/taigabench')
@@ -28,6 +28,6 @@ sweep.mincount(
   suffix=suffix,
   #trainf=l2.randomForestSRC,
   trainf=l2.h2o.randomForest,
-  prefix='randomForestSRC',
+  prefix='h2o',
   mincounts=mincounts)
 #-----------------------------------------------------------------

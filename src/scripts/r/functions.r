@@ -244,6 +244,46 @@ plot.file <- function (
     output.folder(problem=problem,dataset=dataset),
     prefix) }
 #-----------------------------------------------------------------
+# plots
+#-----------------------------------------------------------------
+hist.numeric <- function(
+  data=NULL,
+  col=NULL,
+  dataset=NULL,
+  problem=NULL) {
+  dev.on(
+    file=plot.file(
+      dataset=dataset,
+      problem=problem,
+      prefix=col),
+    aspect=0.5,
+    width=1280)
+  p <- ggplot(data=data, aes_string(col)) + 
+    geom_histogram(bins=1000) +
+    # scale_y_log10() +
+    scale_x_continuous(breaks = scales::pretty_breaks(n = 20))
+  print(p)
+  dev.off()
+}
+hist.factor <- function(
+  data=NULL,
+  col=NULL,
+  dataset=NULL,
+  problem=NULL) {
+  dev.on(
+    file=plot.file(
+      dataset=dataset,
+      problem=problem,
+      prefix=col),
+    aspect=0.5,
+    width=1280)
+  p <- ggplot(data=dtrain, aes_string(col)) + 
+    stat_count() #+
+  # scale_y_log10()
+  print(p)
+  dev.off()
+}
+#-----------------------------------------------------------------
 # h2o
 #-----------------------------------------------------------------
 # binary clasisfication only?

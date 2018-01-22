@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true) 
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com" 
-      :date "2018-01-20"
+      :date "2018-01-21"
       :doc "[Public airline ontime data for benchmarking](http://stat-computing.org/dataexpo/2009/).
             <p>
             <b>Note:</b>Using attributes mostly as defined as in 
@@ -40,6 +40,22 @@
   (if (= "NA" s)
     Double/NaN
     (Double/parseDouble s)))
+;;----------------------------------------------------------------
+(defn- parse-hhmm ^double [^String s] 
+  (if (= "NA" s)
+    Double/NaN
+    (let [nh (- (.length s) 2)
+          h (double (if (< 0 nh)
+                      (Integer/parseInt (subs s 0 nh))
+                      0.0))
+          m (double (Integer/parseInt 
+                      (if (< 0 nh)
+                        (subs s nh)
+                        s)))]
+      (assert (<= 0 h 24.0) (pr-str s))
+      ;; some bad data, eg "2096"
+      #_(assert (<= 0 m 59.0) (pr-str s))
+    (double (+ (* 60.0 h) m)))))
 
 (defn- parse-dayofyear 
   "Original data doesn't have `dayofyear`."
@@ -97,7 +113,7 @@
 
 ;; 152 min is 99% of non-canceled flights
 ;; try 1 hour for cancelled/diverted/missing
-(def ^:private CANCELLED-DELAY (* 1 60))
+(def ^{:private true :tag Double/TYPE} CANCELLED-DELAY (* 2.0 60))
 
 (defn- parse-arrdelay 
   (^double [tuple]
@@ -125,10 +141,15 @@
     (if (< delay 15.0) 
       0.0 
       1.0)))
+
+(defn- rot ^double [^double t]
+  (rem (+ t (* 21.0 60.0)) (* 24.0 60.0)))
 ;;----------------------------------------------------------------
 (z/define-datum Ontime
   [^float [month (fn mon ^double [tuple _] 
                    (parse-double (:month tuple)))]
+   ^float [rotmonth (fn mon ^double [tuple _] 
+                      (rem (+ (parse-double (:month tuple)) 6.0) 12.0))]
    ^float [dayofmonth (fn dom ^double [tuple _] 
                         (parse-double (:dayofmonth tuple)))]
    ^float [dayofweek  (fn dow ^double [tuple _] 
@@ -137,9 +158,13 @@
    ^float [daysaftermar1 parse-daysaftermar1]
    ;; TODO: rotate as periodicity hack?
    ^float [crsdeptime (fn dep ^double [tuple _] 
-                        (parse-double (:crsdeptime tuple)))]
+                        (parse-hhmm (:crsdeptime tuple)))]
+   ^float [rotdeptime (fn rotdep ^double [tuple _] 
+                        (rot (parse-hhmm (:crsdeptime tuple))))]
    ^float [crsarrtime (fn arr ^double [tuple _] 
-                        (parse-double (:crsarrtime tuple)))]
+                        (parse-hhmm (:crsarrtime tuple)))]
+   ^float [rotarrtime (fn rotarr ^double [tuple _] 
+                        (rot (parse-hhmm (:crsarrtime tuple))))]
    ^float [crselapsedtime (fn elapsed ^double [tuple _] 
                             (let [elapsed 
                                   (parse-double 
@@ -153,15 +178,15 @@
                                 ;; Should missing scheduled 
                                 ;; elapsed times be 
                                 ;; dropped meanwhile?
-                                (- (parse-double 
+                                (- (parse-hhmm 
                                      (:crsarrtime tuple))
-                                   (parse-double 
+                                   (parse-hhmm 
                                      (:crsdeptime tuple)))
                                 elapsed)))]
    ^float [distance (fn dist ^double [tuple _] 
                       (parse-double (:distance tuple)))]
    ^java.time.Month [cmonth parse-cmonth]
-   ^taigabench.java.ontime.DayOfMonth [cdayofmonth parse-cdayofmonth]
+   ;;^taigabench.java.ontime.DayOfMonth [cdayofmonth parse-cdayofmonth]
    ^java.time.DayOfWeek [cdayofweek parse-cdayofweek]
    ^taigabench.java.ontime.Airline [uniquecarrier parse-carrier]
    ^taigabench.java.ontime.Airport [origin 
@@ -181,9 +206,11 @@
 (def predictors 
   "An attribute map for Taiga training/prediction."
   (into {} (map #(vector (keyword (z/name %)) %)
-                [month dayofmonth dayofweek dayofyear daysaftermar1
-                 crsdeptime crsarrtime crselapsedtime distance
-                 cmonth cdayofmonth cdayofweek
+                [month rotmonth 
+                 dayofmonth dayofweek dayofyear daysaftermar1
+                 crsdeptime crsarrtime rotdeptime rotarrtime 
+                 crselapsedtime distance
+                 cmonth #_cdayofmonth cdayofweek
                  uniquecarrier origin dest])))
 (def l2-attributes 
   "An attribute map for Taiga training/prediction, including

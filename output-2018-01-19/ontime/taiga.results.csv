@@ -1,0 +1,2 @@
+datatime,maxdepth,mincount,model,nterms,ntest,ntrain,predicttime,rmse,rmsetime,traintime
+26.087791436,1024,7,taiga,127,131072,2097152,17.668593465,40.273362917019774,0.023542574,3384.172522575
