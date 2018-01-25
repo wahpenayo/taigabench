@@ -1540,9 +1540,11 @@ bench <- function (
       trainf(
         dataset=dataset,
         dtrain=dtrain,
+        prefix=prefix,
         suffix=suffix,
         dtest=dtest,
-        response=response))
+        response=response,
+        na.action=na.action))
     print(results)
     resultsf <- 
       results.file(dataset=dataset,problem=problem,prefix=prefix)
