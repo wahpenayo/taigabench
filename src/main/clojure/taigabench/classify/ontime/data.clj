@@ -87,7 +87,7 @@
    ^float [distance (fn ^double [tuple _] 
                       (parse-double (:distance tuple)))]
    ^java.time.Month [cmonth parse-month]
-   ^taigabench.java.ontime.DayOfMonth [cdayofmonth parse-dayofmonth]
+   ;;^taigabench.java.ontime.DayOfMonth [cdayofmonth parse-dayofmonth]
    ^java.time.DayOfWeek [cdayofweek parse-dow]
    ^taigabench.java.ontime.Airline [uniquecarrier parse-carrier]
    ^taigabench.java.ontime.Airport [origin 
@@ -114,7 +114,7 @@
     (into {} (map #(vector (keyword (z/name %)) %)
                   [month dayofmonth dayofweek dayofyear daysaftermar1
                    crsdeptime crsarrtime crselapsedtime distance
-                   cmonth cdayofmonth cdayofweek
+                   cmonth #_cdayofmonth cdayofweek
                    uniquecarrier origin dest]))
     :ground-truth arr-delayed-15min
     :prediction score))

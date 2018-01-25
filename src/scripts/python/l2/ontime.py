@@ -15,7 +15,9 @@ def get_dummies(d, col):
     return(dd)
 
 
-vars_categ = ["cmonth", "cdayofmonth", "cdayofweek", \
+vars_categ = ["cmonth",\
+              # "cdayofmonth",\
+               "cdayofweek", \
               "uniquecarrier", "origin", "dest"]
 vars_num = ["month", "dayofmonth", "dayofweek", "dayofyear", \
             "daysaftermar1", \

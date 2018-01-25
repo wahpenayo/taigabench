@@ -1497,7 +1497,7 @@ ontime.data <- function (file=NULL) {
   #data <- as.data.frame(read_csv(file))
   data <- read_csv(file)
   data$cdayofweek <- as.factor(data$cdayofweek)
-  data$cdayofmonth <- as.factor(data$cdayofmonth)
+  #data$cdayofmonth <- as.factor(data$cdayofmonth)
   data$cmonth <- as.factor(data$cmonth)
   data$uniquecarrier <- as.factor(data$uniquecarrier)
   data$dest <- as.factor(data$dest)
