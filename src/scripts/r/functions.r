@@ -1,5 +1,5 @@
 # wahpenayo at gmail dot com
-# 2017-12-10
+# 2018-01-25
 #-----------------------------------------------------------------
 # Load the necessary add-on packages, downloading and installing
 # (in the user's R_LIBS_USER folder) if necessary.
@@ -139,7 +139,8 @@ dev.on <- function (
 models <- c(
   'h2o',
   'randomForest',
-  'randomForestSRC',
+  'randomForestSRC-impute',
+  'randomForestSRC-omit',
   'scikit-learn',
   'taiga',
   'taiga-pfp',
@@ -150,6 +151,7 @@ models <- c(
 model.colors <- c(
   '#386cb050',
   '#1b9e7750',
+  '#66a61e50',
   '#66a61e50',
   '#a6761d50',
   '#e41a1cFF',
@@ -1095,16 +1097,19 @@ classify.parallel.randomForest <- function (
 classify.randomForestSRC <- function (
   dataset=NULL,
   dtrain=NULL,
+  prefix=NULL,
   suffix=NULL,
   dtest=NULL,
   response=NULL,
   ntrees=DEFAULT.NTREES,
   mincount=DEFAULT.MINCOUNT,
-  maxdepth=DEFAULT.MAXDEPTH) {
+  maxdepth=DEFAULT.MAXDEPTH,
+  na.action='na.omit') {
   
   stopifnot(
     !is.null(dataset),
     !is.null(dtrain),
+    !is.null(prefix),
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
@@ -1135,7 +1140,14 @@ classify.randomForestSRC <- function (
     ntree=ntrees, 
     nodesize=mincount,
     nodedepth=maxdepth,
-    seed=seed)
+    seed=seed,
+    nsplit=0,
+    importance='none',
+    na.action=na.action,
+    bootstrap='by.root',
+    sampsize=NULL,
+    samptype='swr',
+    samp=NULL)
   traintime <- proc.time() - start   
   
   start <- proc.time()
@@ -1151,7 +1163,7 @@ classify.randomForestSRC <- function (
       prediction=yhat,
       truth=ifelse(dtest[,response]=='Y',1,0)),
     file=predicted.file(
-      prefix=paste('randomForestSRC',suffix,sep='-'),
+      prefix=paste(prefix,suffix,sep='-'),
       dataset=dataset,
       problem='classify'),
     row.names=FALSE,quote=FALSE)
@@ -1162,7 +1174,7 @@ classify.randomForestSRC <- function (
   auctime <- proc.time() - start
   
   list(
-    model='randomForestSRC',
+    model=prefix,
     ntrain=nrow(dtrain),
     ntest=nrow(dtest),
     datatime=datatime['elapsed'],
@@ -1179,16 +1191,19 @@ classify.randomForestSRC <- function (
 l2.randomForestSRC <- function (
   dataset=NULL,
   dtrain=NULL,
+  prefix=NULL,
   suffix=NULL,
   dtest=NULL,
   response=NULL,
   ntrees=DEFAULT.NTREES,
   mincount=DEFAULT.MINCOUNT,
-  maxdepth=DEFAULT.MAXDEPTH) {
+  maxdepth=DEFAULT.MAXDEPTH,
+  na.action='na.omit') {
   
   stopifnot(
     !is.null(dataset),
     !is.null(dtrain),
+    !is.null(prefix),
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
@@ -1222,7 +1237,7 @@ l2.randomForestSRC <- function (
     splitrule='mse',
     nsplit=0,
     importance='none',
-    na.action='na.omit',
+    na.action=na.action,
     bootstrap='by.root',
     sampsize=NULL,
     samptype='swr',
@@ -1247,13 +1262,13 @@ l2.randomForestSRC <- function (
   write.csv(
     x=prtr,
     file=predicted.file(
-      prefix=paste('randomForestSRC',suffix,sep='-'),
+      prefix=paste(prefix,suffix,sep='-'),
       dataset=dataset,
       problem='l2'),
     row.names=FALSE,quote=FALSE)
   
   list(
-    model='randomForestSRC',
+    model=prefix,
     ntrain=nrow(dtrain),
     ntest=nrow(dtest),
     datatime=datatime['elapsed'],
@@ -1270,18 +1285,21 @@ l2.randomForestSRC <- function (
 qcost.randomForestSRC <- function (
   dataset=NULL,
   dtrain=NULL,
+  prefix=NULL,
   suffix=NULL,
   dtest=NULL,
   response=NULL,
   ntrees=DEFAULT.NTREES,
   mincount=DEFAULT.MINCOUNT,
   maxdepth=DEFAULT.MAXDEPTH,
+  na.action='na.omit',
   p=(0.1*(1:9))) {
   
   stopifnot(
     !is.null(dataset),
     !is.null(dtrain),
     !is.null(suffix),
+    !is.null(prefix),
     !is.null(dtest),
     !is.null(response),
     is.numeric(dtrain[[response]]),
@@ -1314,7 +1332,14 @@ qcost.randomForestSRC <- function (
     ntree=ntrees, 
     nodesize=mincount,
     nodedepth=maxdepth,
-    seed=seed)
+    seed=seed,
+    nsplit=0,
+    importance='none',
+    na.action=na.action,
+    bootstrap='by.root',
+    sampsize=NULL,
+    samptype='swr',
+    samp=NULL)
   traintime <- proc.time() - start   
   
   start <- proc.time()
@@ -1342,7 +1367,7 @@ qcost.randomForestSRC <- function (
   predicttime <- proc.time() - start   
   
   prfile <- predicted.file(
-    prefix=paste('randomForestSRC',suffix,sep='-'),
+    prefix=paste(prefix,suffix,sep='-'),
     dataset=dataset,
     problem='qcost') 
   write.csv(
@@ -1352,7 +1377,7 @@ qcost.randomForestSRC <- function (
     quote=FALSE)
   
   list(
-    model='randomForestSRC',
+    model=prefix,
     ntrain=nrow(dtrain),
     ntest=length(ytest),
     datatime=datatime['elapsed'],
@@ -1498,7 +1523,8 @@ bench <- function (
   dtest=NULL,
   response=NULL,
   problem=NULL,
-  prefix=NULL) {
+  prefix=NULL,
+  na.action=NULL) {
   
   results <- NULL
   for (suffix in suffixes) {
