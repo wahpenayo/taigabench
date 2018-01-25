@@ -139,8 +139,8 @@ dev.on <- function (
 models <- c(
   'h2o',
   'randomForest',
-  'randomForestSRC-impute',
-  'randomForestSRC-omit',
+  'randomForestSRCimpute',
+  'randomForestSRComit',
   'scikit-learn',
   'taiga',
   'taiga-pfp',

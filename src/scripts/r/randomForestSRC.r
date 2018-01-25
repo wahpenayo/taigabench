@@ -10,7 +10,7 @@ source('src/scripts/r/functions.r')
 readr.show_progress <- FALSE
 #-----------------------------------------------------------------
 dataset <- 'ontime'
-suffixes <- c('8192')#,'65536','524288','4194304','33554432')
+suffixes <- c('32768','131072')#,'524288','2097152','8388608','33554432')
 for (na.action in c('na.omit','na.impute')) {
   prefix <- paste0('randomForestSRC',substring(na.action,first=4))
 #-----------------------------------------------------------------
