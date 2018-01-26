@@ -63,38 +63,38 @@ problem <- 'l2'
 #-----------------------------------------------------------------
 ## With 32M:
 ## Error in read connection (con) : negative length vectors are not allowed
-#bench(
-#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-#  response=response, 
-#  suffixes=suffixes[1:5],
-#  trainf=l2.h2o.randomForest,
-#  prefix='h2o')
-#
-## With 32M:
-## Error in read connection (con) : negative length vectors are not allowed
-#bench(
-#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-#  response=response, 
-#  suffixes=suffixes[1:5],
-#  trainf=l2.xgboost.randomForest,
-#  prefix='xgboost')
-#
-## With 32M:
-## Error in read connection (con) : negative length vectors are not allowed
-#bench(
-#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-#  response=response, 
-#  suffixes=suffixes[1:5],
-#  trainf=l2.xgboost.exact.randomForest,
-#  prefix='xgboost.exact')
+bench(
+  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
+  response=response, 
+  suffixes=suffixes[1:5],
+  trainf=l2.h2o.randomForest,
+  prefix='h2o')
 
-#bench(
-#  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
-#  response=response, 
-#  # crashes in 64gb at 512k
-#  suffixes=suffixes[1:min(2,length(suffixes))],
-#  trainf=l2.randomForest,
-#  prefix='randomForest')
+## With 32M:
+## Error in read connection (con) : negative length vectors are not allowed
+bench(
+  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
+  response=response, 
+  suffixes=suffixes[1:5],
+  trainf=l2.xgboost.randomForest,
+  prefix='xgboost')
+
+## With 32M:
+## Error in read connection (con) : negative length vectors are not allowed
+bench(
+  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
+  response=response, 
+  suffixes=suffixes[1:5],
+  trainf=l2.xgboost.exact.randomForest,
+  prefix='xgboost.exact')
+
+bench(
+  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
+  response=response, 
+  # crashes in 64gb at 512k
+  suffixes=suffixes[1:min(2,length(suffixes))],
+  trainf=l2.randomForest,
+  prefix='randomForest')
 
 #bench(
 #  dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,

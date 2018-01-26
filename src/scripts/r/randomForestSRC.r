@@ -31,7 +31,10 @@ for (na.action in c('na.omit','na.impute')) {
   dtest <- dataf(test.file(dataset=dataset))
   problem <- 'l2'
   bench(
-    dataset=dataset,problem=problem,dataf=dataf,dtest=dtest,
+    dataset=dataset,
+    problem=problem,
+    dataf=dataf,
+    dtest=dtest,
     response=response, 
     suffixes=suffixes,
     trainf=l2.randomForestSRC,
