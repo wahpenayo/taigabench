@@ -298,11 +298,14 @@ classify.h2o.randomForest <- function (
   maxmem=paste0(floor(0.9*free.ram()),'g'),
   ntrees=DEFAULT.NTREES,
   mincount=DEFAULT.MINCOUNT,
-  maxdepth=DEFAULT.MAXDEPTH) {
+  maxdepth=DEFAULT.MAXDEPTH,
+  prefix='h2o',
+  na.action=NULL) {
   
   stopifnot(
     !is.null(dataset),
     !is.null(dtrain),
+    !is.null(prefix),
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
@@ -335,32 +338,28 @@ classify.h2o.randomForest <- function (
     max_depth=maxdepth)
   traintime <- proc.time() - start
   
-  #show(md)
-  
   start <- proc.time()
   pred <- as.data.frame(predict(md,dx_test))
   prtr <- data.frame(
     prediction=pred$Y,
     truth=ifelse(dtest[,response]=='Y',1,0))
   predicttime <- proc.time() - start
-  #summary(prtr)
   
   write.csv(
     x=prtr,
     file=predicted.file(
       dataset=dataset,
       problem='classify',
-      prefix=paste('h2o',suffix,sep='-')),
+      prefix=paste(prefix,suffix,sep='-')),
     row.names=FALSE,quote=FALSE)
   
   start <- proc.time()
   perf <- h2o.performance(md, dx_test)
-  #show(perf)
   auc <- h2o.auc(perf)
   auctime <- proc.time() - start
   
   results <- list(
-    model='h2o',
+    model=prefix,
     ntrain=nrow(dx_train),
     ntest=nrow(dx_test),
     datatime=datatime['elapsed'],
@@ -386,11 +385,14 @@ l2.h2o.randomForest <- function (
   maxmem=paste0(floor(0.9*free.ram()),'g'),
   ntrees=DEFAULT.NTREES,
   mincount=DEFAULT.MINCOUNT,
-  maxdepth=DEFAULT.MAXDEPTH) {
+  maxdepth=DEFAULT.MAXDEPTH,
+  prefix='h2o',
+  na.action=NULL) {
   
   stopifnot(
     !is.null(dataset),
     !is.null(dtrain),
+    !is.null(prefix),
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
@@ -439,7 +441,7 @@ l2.h2o.randomForest <- function (
     file=predicted.file(
       dataset=dataset,
       problem='l2',
-      prefix=paste('h2o',suffix,sep='-')),
+      prefix=paste(prefix,suffix,sep='-')),
     row.names=FALSE,quote=FALSE)
   
   start <- proc.time()
@@ -447,7 +449,7 @@ l2.h2o.randomForest <- function (
   rmsetime <- proc.time() - start
   
   results <- list(
-    model='h2o',
+    model=prefix,
     ntrain=nrow(dx_train),
     ntest=nrow(dx_test),
     datatime=datatime['elapsed'],
@@ -494,11 +496,14 @@ classify.xgboost.randomForest <- function (
   response=NULL,
   ntrees=DEFAULT.NTREES,
   mincount=DEFAULT.MINCOUNT,
-  maxdepth=DEFAULT.MAXDEPTH) {
+  maxdepth=DEFAULT.MAXDEPTH,
+  prefix='xgboost',
+  na.action=NULL) {
   
   stopifnot(
     !is.null(dataset),
     !is.null(dtrain),
+    !is.null(prefix),
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
@@ -550,7 +555,7 @@ classify.xgboost.randomForest <- function (
   write.csv(
     x=prtr, 
     file=predicted.file(
-      prefix=paste('xgboost.exact',suffix,sep='-'),
+      prefix=paste(prefix,suffix,sep='-'),
       dataset=dataset,
       problem='classify'),
     row.names=FALSE,quote=FALSE)
@@ -561,7 +566,7 @@ classify.xgboost.randomForest <- function (
   auctime <- proc.time() - start
   
   list(
-    model='xgboost',
+    model=prefix,
     ntrain=nrow(dtrain),
     ntest=nrow(dtest),
     datatime=datatime['elapsed'],
@@ -583,11 +588,14 @@ classify.xgboost.exact.randomForest <- function (
   response=NULL,
   ntrees=DEFAULT.NTREES,
   mincount=DEFAULT.MINCOUNT,
-  maxdepth=DEFAULT.MAXDEPTH) {
+  maxdepth=DEFAULT.MAXDEPTH,
+  prefix='xgboost.exact',
+  na.action=NULL) {
   
   stopifnot(
     !is.null(dataset),
     !is.null(dtrain),
+    !is.null(prefix),
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
@@ -640,7 +648,7 @@ classify.xgboost.exact.randomForest <- function (
   write.csv(
     x=prtr, 
     file=predicted.file(
-      prefix=paste('xgboost.exact',suffix,sep='-'),
+      prefix=paste(prefix,suffix,sep='-'),
       dataset=dataset,
       problem='classify'),
     row.names=FALSE,quote=FALSE)
@@ -651,7 +659,7 @@ classify.xgboost.exact.randomForest <- function (
   auctime <- proc.time() - start
   
   list(
-    model='xgboost',
+    model=prefix,
     ntrain=nrow(dtrain),
     ntest=nrow(dtest),
     datatime=datatime['elapsed'],
@@ -673,11 +681,14 @@ l2.xgboost.randomForest <- function (
   response=NULL,
   ntrees=DEFAULT.NTREES,
   mincount=DEFAULT.MINCOUNT,
-  maxdepth=DEFAULT.MAXDEPTH) {
+  maxdepth=DEFAULT.MAXDEPTH,
+  prefix='xgboost',
+  na.action=NULL) {
   
   stopifnot(
     !is.null(dataset),
     !is.null(dtrain),
+    !is.null(prefix),
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
@@ -733,13 +744,13 @@ l2.xgboost.randomForest <- function (
   write.csv(
     x=prtr, 
     file=predicted.file(
-      prefix=paste('xgboost.exact',suffix,sep='-'),
+      prefix=paste(prefix,suffix,sep='-'),
       dataset=dataset,
       problem='l2'),
     row.names=FALSE,quote=FALSE)
   
   list(
-    model='xgboost',
+    model=prefix,
     ntrain=nrow(dtrain),
     ntest=nrow(dtest),
     datatime=datatime['elapsed'],
@@ -761,11 +772,14 @@ l2.xgboost.exact.randomForest <- function (
   response=NULL,
   ntrees=DEFAULT.NTREES,
   mincount=DEFAULT.MINCOUNT,
-  maxdepth=DEFAULT.MAXDEPTH) {
+  maxdepth=DEFAULT.MAXDEPTH,
+  prefix='xgboost.exact',
+  na.action=NULL) {
   
   stopifnot(
     !is.null(dataset),
     !is.null(dtrain),
+    !is.null(prefix),
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
@@ -822,13 +836,13 @@ l2.xgboost.exact.randomForest <- function (
   write.csv(
     x=prtr, 
     file=predicted.file(
-      prefix=paste('xgboost.exact',suffix,sep='-'),
+      prefix=paste(prefix,suffix,sep='-'),
       dataset=dataset,
       problem='l2'),
     row.names=FALSE,quote=FALSE)
   
   list(
-    model='xgboost',
+    model=prefix,
     ntrain=nrow(dtrain),
     ntest=nrow(dtest),
     datatime=datatime['elapsed'],
@@ -852,11 +866,14 @@ classify.randomForest <- function (
   response=NULL,
   ntrees=DEFAULT.NTREES,
   mincount=DEFAULT.MINCOUNT,
-  maxdepth=DEFAULT.MAXDEPTH) {
+  maxdepth=DEFAULT.MAXDEPTH,
+  prefix='randomForest',
+  na.action=NULL) {
   
   stopifnot(
     !is.null(dataset),
     !is.null(dtrain),
+    !is.null(prefix),
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
@@ -895,7 +912,7 @@ classify.randomForest <- function (
       prediction=yhat,
       truth=ifelse(dtest[[response]]=='Y',1,0)),
     file=predicted.file(
-      prefix=paste('randomForest',suffix,sep='-'),
+      prefix=paste(prefix,suffix,sep='-'),
       dataset=dataset,
       problem='classify'),
     row.names=FALSE,quote=FALSE)
@@ -907,7 +924,7 @@ classify.randomForest <- function (
   auctime <- proc.time() - start
   
   list(
-    model='randomForest',
+    model=prefix,
     ntrain=nrow(dtrain),
     ntest=nrow(dtest),
     datatime=datatime['elapsed'],
@@ -929,11 +946,14 @@ l2.randomForest <- function (
   response=NULL,
   ntrees=DEFAULT.NTREES,
   mincount=DEFAULT.MINCOUNT,
-  maxdepth=DEFAULT.MAXDEPTH) {
+  maxdepth=DEFAULT.MAXDEPTH,
+  prefix='randomForest',
+  na.action=NULL) {
   
   stopifnot(
     !is.null(dataset),
     !is.null(dtrain),
+    !is.null(prefix),
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
@@ -977,13 +997,13 @@ l2.randomForest <- function (
   write.csv(
     x=prtr,
     file=predicted.file(
-      prefix=paste('randomForest',suffix,sep='-'),
+      prefix=paste(prefix,suffix,sep='-'),
       dataset=dataset,
       problem='l2'),
     row.names=FALSE,quote=FALSE)
   
   list(
-    model='randomForest',
+    model=prefix,
     ntrain=nrow(dtrain),
     ntest=nrow(dtest),
     datatime=datatime['elapsed'],
@@ -1009,11 +1029,14 @@ classify.parallel.randomForest <- function (
   response=NULL,
   ntrees=DEFAULT.NTREES,
   mincount=DEFAULT.MINCOUNT,
-  maxdepth=DEFAULT.MAXDEPTH) {
+  maxdepth=DEFAULT.MAXDEPTH,
+  prefix='parallel.randomForest',
+  na.action=NULL) {
   
   stopifnot(
     !is.null(dataset),
     !is.null(dtrain),
+    !is.null(prefix),
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
@@ -1064,7 +1087,7 @@ classify.parallel.randomForest <- function (
       prediction=yhat,
       truth=ifelse(dtest[[response]]=='Y',1,0)),
     file=predicted.file(
-      prefix=paste('parallel.randomForest',suffix,sep='-'),
+      prefix=paste(prefix,suffix,sep='-'),
       dataset=dataset,
       problem='classify'),
     row.names=FALSE,quote=FALSE)
@@ -1078,7 +1101,7 @@ classify.parallel.randomForest <- function (
   #gc()
   #sapply(ls(),function(x) object.size(get(x))/1e6)
   list(
-    model='parallel_randomForest',
+    model=prefix,
     ntrain=nrow(dtrain),
     ntest=nrow(dtest),
     datatime=datatime['elapsed'],
@@ -1298,8 +1321,8 @@ qcost.randomForestSRC <- function (
   stopifnot(
     !is.null(dataset),
     !is.null(dtrain),
-    !is.null(suffix),
     !is.null(prefix),
+    !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
     is.numeric(dtrain[[response]]),
@@ -1400,11 +1423,14 @@ qcost.quantregForest <- function (
   ntrees=DEFAULT.NTREES,
   mincount=DEFAULT.MINCOUNT,
   maxdepth=DEFAULT.MAXDEPTH,
+  prefix='quantregForest',
+  na.action=NULL,
   p=(0.1*(1:9))) {
   
   stopifnot(
     !is.null(dataset),
     !is.null(dtrain),
+    !is.null(prefix),
     !is.null(suffix),
     !is.null(dtest),
     !is.null(response),
@@ -1469,7 +1495,7 @@ qcost.quantregForest <- function (
   predicttime <- proc.time() - start   
   
   prfile <- predicted.file(
-    prefix=paste('quantregForest',suffix,sep='-'),
+    prefix=paste(prefix,suffix,sep='-'),
     dataset=dataset,
     problem='qcost') 
   write.csv(
@@ -1479,7 +1505,7 @@ qcost.quantregForest <- function (
     quote=FALSE)
   
   list(
-    model='quantregForest',
+    model=prefix,
     ntrain=length(ytrain),
     ntest=length(ytest),
     datatime=datatime['elapsed'],
