@@ -1,2 +1,2 @@
-model,ntrain,ntest,datatime,traintime,predicttime
-randomForestSRC,32768,131072,0.159999999999997,2952.22,6093.84
+model,ntrain,ntest,datatime,traintime,predicttime,mincount,maxdepth,ntrees
+randomForestSRC,32768,131072,0.219999999999999,2331,9563.05,255,1024,127
