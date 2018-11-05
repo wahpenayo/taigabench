@@ -1,9 +1,9 @@
 % !TEX TS-program = arara
-% arara: xelatex: { synctex: on, options: '-halt-on-error' } 
+% arara: xelatex: { synctex: on, options: [-halt-on-error] } 
 % arara: biber
 % arara: makeindex
-% arara: xelatex: { synctex: on, options: '-halt-on-error'  } 
-% arara: xelatex: { synctex: on, options: '-halt-on-error'   } 
+% arara: xelatex: { synctex: on, options: [-halt-on-error]  } 
+% arara: xelatex: { synctex: on, options: [-halt-on-error]   } 
 % arara: clean: { files: [ taigabench.aux, taigabench.bbl] }
 % arara: clean: { files: [ taigabench.bcf, taigabench.blg] }
 % arara: clean: { files: [ taigabench.glg, taigabench.glo] }
