@@ -14,8 +14,8 @@
             [taigabench.ontime.data :as data]
             #_[taigabench.classify.ontime.data :as data]
             [taigabench.classify.ontime.traintest :as cl]))
-;; clj12g src\scripts\clojure\taigabench\scripts\classify\ontime\bench.clj > ontime.bench.txt
-;; clj48g src\scripts\clojure\taigabench\scripts\classify\ontime\bench.clj > ontime.bench.txt
+;; .\clj12g src\scripts\clojure\taigabench\scripts\classify\ontime\bench.clj > ontime.bench.txt
+;; .\clj48g src\scripts\clojure\taigabench\scripts\classify\ontime\bench.clj > ontime.bench.txt
 ;;----------------------------------------------------------------
 (with-open [w (z/print-writer 
                 (data/output-file "classify" "taiga.results" "csv"))]

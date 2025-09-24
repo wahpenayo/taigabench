@@ -8,14 +8,14 @@
             https://www.r-bloggers.com/benchmarking-random-forest-implementations/
             http://stat-computing.org/dataexpo/2009/" }
     
-    taigabench.scripts.ontime.classify.auc
+    taigabench.scripts.classify.ontime.auc
   
   (:require [clojure.string :as s]
             [zana.api :as z]
             [taigabench.pt :as pt]
             [taigabench..metrics :as metrics]
             [taigabench.classify.ontime.data :as data]))
-;; clj src\scripts\clojure\taigabench\scripts\classify\ontime\auc.clj
+;; .\clj src\scripts\clojure\taigabench\scripts\classify\ontime\auc.clj
 ;;------------------------------------------------------------------------------
 (with-open [w (z/print-writer (data/output-file "auc" "csv"))]
   (.println w "model,ntrain,ntest,auc")

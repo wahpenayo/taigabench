@@ -15,7 +15,7 @@
             [taigabench.ontime.data :as data]
             [taigabench.l2.ontime.traintest :as l2]))
 ;; clj12g src\scripts\clojure\taigabench\scripts\l2\ontime\bench.clj > ontime.bench.txt
-;; clj48g src\scripts\clojure\taigabench\scripts\l2\ontime\bench.clj > ontime.bench.txt
+;; .\clj48g src\scripts\clojure\taigabench\scripts\l2\ontime\bench.clj > ontime.bench.txt
 ;;----------------------------------------------------------------
 (defn- write-csv [^java.util.List records ^java.io.File f]
   (io/make-parents f)
