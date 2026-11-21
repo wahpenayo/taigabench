@@ -1,15 +1,9 @@
 @echo off
 :: wahpenayo (at) gmail (dot) com
-:: 2017-11-17
+:: 2026-11-20
 
-::set GC=-XX:+AggressiveHeap -XX:+UseStringDeduplication 
+::set GC=-XX:+AggressiveHeap -XX:+UseStringDeduplication
 set GC=
-
-set COMPRESSED=
-::set COMPRESSED=-XX:CompressedClassSpaceSize=3g 
-
-set TRACE=
-::set TRACE=-XX:+PrintGCDetails -XX:+TraceClassUnloading -XX:+TraceClassLoading
 
 set XMX=-Xms56g -Xmx56g -Xmn24g
 
@@ -17,6 +11,10 @@ set OPENS=--add-opens java.base/java.lang=ALL-UNNAMED
 set CP=-cp ./src/scripts/clojure;lib/*
 set JAVA="%JAVA_HOME%\bin\java"
 
-set CMD=%JAVA% -ea %GC% %XMX% %COMPRESSED% %TRACE% %OPENS% %CP% clojure.main %*
+:: TODO: safer way of serializing arbitrary clojure functions built thru calls to fn
+:: see https://clojure.org/news/2026/11/18/clojure-1-12-7
+set SERIALIZED_FNS=-Dclojure.serializable.fns=true
+
+set CMD=%JAVA% -dsa -ea %GC% %XMX% %SERIALIZED_FNS% %OPENS% %CP% clojure.main %*
 ::echo %CMD%
 %CMD%

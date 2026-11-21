@@ -1,7 +1,9 @@
+*.iml
 pom.xml
 pom.xml.asc
 *.jar
 *.class
+/.idea/
 /lib/
 /classes/
 /target/
@@ -13,17 +15,10 @@ pom.xml.asc
 .nrepl-port
 /.classpath
 /.project
-/classes/
-/.classpath
-/.project
-/lib/
 /logs/
 /data/
 ~*
-*.jar
-*.class
-/java.hprof.txt
-/target/
+java.hprof.txt
 *.bbl
 *.blg
 *.lof
@@ -44,7 +39,6 @@ pom.xml.asc
 *.gls
 *.ilg
 *.ind
-*.out
 *.xdy
 *.ist
 *syntex*
