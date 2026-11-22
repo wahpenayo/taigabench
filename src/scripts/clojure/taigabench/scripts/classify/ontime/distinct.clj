@@ -2,17 +2,16 @@
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com"
       :since "2016-11-03"
-      :date "2017-11-17"
+      :date "2026-11-21"
       :doc "Public airline ontime data benchmark:
             https://www.r-bloggers.com/benchmarking-random-forest-implementations/
             http://stat-computing.org/dataexpo/2009/" }
 
     taigabench.scripts.classify.ontime.distinct
 
-  (:require [clojure.string :as s]
-            [zana.api :as z]
-            [taiga.api :as taiga]
-            [taigabench.classify.ontime.data :as data]))
+  (:require
+   [taigabench.classify.ontime.data :as data]
+   [zana.api :as z]))
 ;; clj src\scripts\clojure\taigabench\scripts\classify\ontime\distinct.clj > output\classify\ontime\distinct.txt
 ;;----------------------------------------------------------------
 (let [data (z/mapcat

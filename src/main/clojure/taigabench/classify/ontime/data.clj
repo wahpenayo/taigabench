@@ -2,7 +2,7 @@
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com"
       :since "2016-11-10"
-      :date "2017-11-27"
+      :date "2026-11-21"
       :doc "[Public airline ontime data for benchmarking](http://stat-computing.org/dataexpo/2009/).
             <p>
             <b>Note:</b>Using attributes mostly as defined as in
@@ -130,7 +130,7 @@
                    (str fname "." ext))]
     (io/make-parents f)
     f))
-(defn results-file ^java.io.File [fname mincount]
+(defn results-file ^java.io.File [fname _mincount]
   (let [f (output-file fname ".results.csv")]
     (io/make-parents f)
     f))

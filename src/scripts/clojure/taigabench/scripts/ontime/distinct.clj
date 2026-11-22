@@ -1,27 +1,27 @@
-(set! *warn-on-reflection* true) 
+(set! *warn-on-reflection* true)
 (set! *unchecked-math* :warn-on-boxed)
-(ns ^{:author "wahpenayo at gmail dot com" 
+(ns ^{:author "wahpenayo at gmail dot com"
       :since "2016-11-03"
-      :date "2017-11-21"
+      :date "2026-11-21"
       :doc "Determine possible values for enums in
             public airline ontime data benchmark:
             https://www.r-bloggers.com/benchmarking-random-forest-implementations/
             http://stat-computing.org/dataexpo/2009/" }
-    
+
     taigabench.scripts.ontime.distinct
-  
-  (:require [clojure.string :as s]
-            [clojure.pprint :as pp]
-            [zana.api :as z]
-            [taiga.api :as taiga]
-            [taigabench.ontime.data :as data]))
+
+  (:require
+   [clojure.pprint :as pp]
+   [clojure.string :as s]
+   [taigabench.ontime.data :as data]
+   [zana.api :as z]))
 ;; clj48g src\scripts\clojure\taigabench\scripts\ontime\distinct.clj > distinct.txt
 ;;----------------------------------------------------------------
 (defn- split [^String s] (s/split s #"\,"))
 
 (defn- record [header tokens]
   (let [r (zipmap header tokens)]
-    {:origin (:origin r) 
+    {:origin (:origin r)
      :dest (:dest r)
      :uniquecarrier (:uniquecarrier r)}))
 
@@ -38,7 +38,7 @@
         (pp/pprint (first records))
         records))))
 ;;----------------------------------------------------------------
-(let [data (z/seconds 
+(let [data (z/seconds
              "read train"
              (z/mapcat
                read-csv
@@ -47,7 +47,7 @@
       carriers (z/sort (z/distinct :uniquecarrier data))
       airports (z/sort (z/union (z/distinct :origin data)
                                 (z/distinct :dest data)))]
-  (pp/pprint {:records (z/count data) 
+  (pp/pprint {:records (z/count data)
               :carriers (z/count carriers)
               :airports (z/count airports)})
   (pp/pprint carriers)

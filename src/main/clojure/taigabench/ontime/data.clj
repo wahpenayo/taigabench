@@ -1,7 +1,7 @@
 (set! *warn-on-reflection* true)
 (set! *unchecked-math* :warn-on-boxed)
 (ns ^{:author "wahpenayo at gmail dot com"
-      :date "2018-01-21"
+      :date "2026-11-21"
       :doc "[Public airline ontime data for benchmarking](http://stat-computing.org/dataexpo/2009/).
             <p>
             <b>Note:</b>Using attributes mostly as defined as in
@@ -27,16 +27,16 @@
     taigabench.ontime.data
 
     (:refer-clojure :exclude [parse-double])
-    (:require [clojure.string :as s]
-              [clojure.java.io :as io]
-              [zana.api :as z]
-              [taiga.api :as taiga])
-    (:import [java.time DayOfWeek LocalDate Month]
-             [org.apache.commons.math3.distribution
-              RealDistribution]
-             [clojure.lang IFn$OD]
-             [taigabench.java.ontime Airline Airport DayOfMonth]))
-             ;;----------------------------------------------------------------
+    (:require
+     [clojure.java.io :as io]
+     [clojure.string :as s]
+     [zana.api :as z])
+    (:import
+     [clojure.lang IFn$OD]
+     [java.io File]
+     [java.time DayOfWeek LocalDate Month]
+     [taigabench.java.ontime Airline Airport DayOfMonth]))
+     ;;----------------------------------------------------------------
 (defn- parse-double ^double [^String s]
   (if (= "NA" s)
     Double/NaN
@@ -240,7 +240,7 @@
     z/name
     (conj (vals predictors) arrdelay)))
 ;;----------------------------------------------------------------
-(defn raw-data-file ^java.io.File [year]
+(defn raw-data-file ^File [year]
   (io/file "data" "ontime" (str year ".csv.bz2")))
 (defn read-raw-data ^Iterable  [year]
   (read-tsv-file (raw-data-file year) #"\,"))
@@ -248,7 +248,7 @@
 ;; TODO: fix z/define-datum io so round trip csv <-> data
 ;; consistency is easy to ensure, also save writing and reading
 ;; redundant attributes (categorial and numerical).
-(defn- data-file ^java.io.File [fname ext]
+(defn- data-file ^File [fname ext]
   (io/file "data" "ontime" (str fname "." ext)))
 (def ^{:private true :tag String} csv-header
   (s/join "," (map z/name csv-attributes)))
@@ -276,12 +276,12 @@
 (defn read-data-file ^Iterable [^String prefix]
   (read-tsv-file (data-file prefix "csv.gz") #"\,"))
 ;;----------------------------------------------------------------
-(defn output-file ^java.io.File [problem fname ext]
+(defn output-file ^File [problem fname ext]
   (let [f (io/file "output" problem "ontime" (str fname "." ext))]
     (io/make-parents f)
     f))
-(defn results-file ^java.io.File [problem fname]
-  (let [f (output-file fname "results.csv")]
+(defn results-file ^File [_problem fname]
+  (let [f (output-file fname "results" "csv")]
     (io/make-parents f)
     f))
 ;;----------------------------------------------------------------

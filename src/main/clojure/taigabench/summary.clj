@@ -1,23 +1,23 @@
-(set! *warn-on-reflection* true) 
+(set! *warn-on-reflection* true)
 (set! *unchecked-math* :warn-on-boxed)
-(ns ^{:author "wahpenayo at gmail dot com" 
+(ns ^{:author "wahpenayo at gmail dot com"
       :since "2016-11-28"
-      :date "2017-11-20"
+      :date "2026-11-21"
       :doc "Compute summary statistics for sanity checking." }
-    
+
     taigabench.summary
-  
+
   (:require [clojure.string :as s]
             [clojure.java.io :as io]
             [zana.api :as z]))
-;;------------------------------------------------------------------------------ 
+;;------------------------------------------------------------------------------
 (defn- distinct-missing-summary [z data]
   (let [n (z/count data)
         not-missing (z/drop-missing z data)
         distinct (z/count (z/distinct z not-missing))
         not-missing (z/count not-missing)
-        missing-fraction (if (zero? n) 
-                           0.0 
+        missing-fraction (if (zero? n)
+                           0.0
                            (- 1.0 (double (/ not-missing n))))]
     {:n n
      :not-missing not-missing
@@ -46,17 +46,17 @@
 
 (defn- attribute-summary [z data]
   (merge {:attribute (z/name z)}
-         (distinct-missing-summary z data) 
+         (distinct-missing-summary z data)
          (numerical-summary z data)
          (vector-summary z data)))
-;;------------------------------------------------------------------------------ 
+;;------------------------------------------------------------------------------
 (defn- summary [options]
   (println (:type options) (z/count (:data options)))
   (when-not (z/empty? (:data options))
     (let [data (:data options)
           attribute-map (:attributes options)
           options (dissoc options :data :attributes)]
-      (z/pmap (fn [[k v]] (merge options (attribute-summary v data)))
+      (z/pmap (fn [[_k v]] (merge options (attribute-summary v data)))
               (sort-by key attribute-map)))))
 
 (defn- write-records [records ^java.io.File file]
@@ -66,21 +66,21 @@
       (doseq [record records]
         (.println w (s/join "\t" (mapv #(get record %) header))))))
   (z/echo "wrote" (z/count records) "to" (z/pathname file)))
-;;------------------------------------------------------------------------------   
+;;------------------------------------------------------------------------------
 (defn- check [options]
   (assert (string? (:feature-set options))
           (str "No :feature-set name given:\n"
                (z/pprint-map-str options)))
   (assert (and (instance? java.util.Map (:report-attributes options))
-               (not (z/empty? (:report-attributes options)))) 
+               (not (z/empty? (:report-attributes options))))
           (str "Invalid :report-attributes in:\n"
                (z/pprint-map-str options))))
-;;------------------------------------------------------------------------------ 
+;;------------------------------------------------------------------------------
 (defn report [options ^java.io.File f]
   (check options)
   (z/seconds
     (print-str "report")
-    (let [records (concat 
+    (let [records (concat
                     (summary {:attributes (:report-attributes options)
                               :data (:train-data options) :type "train"})
                     (summary {:attributes (:report-attributes options)
@@ -90,4 +90,4 @@
       (when-not (z/empty? records)
         (io/make-parents f)
         (write-records (z/sort-by #(vector (:attribute %) (:type %)) records) f)))))
-;;------------------------------------------------------------------------------ 
+;;------------------------------------------------------------------------------
